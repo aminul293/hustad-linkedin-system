@@ -1,10 +1,10 @@
 services:
-  # Static Site deployment for the LinkedIn Desk Dashboard
+  # Web Application deployment for LinkedIn Desk + Upload Interface
   - type: web
     name: hustad-linkedin-system
-    env: static
-    buildCommand: pip install -r requirements.txt && make sample
-    staticPublishPath: ./site
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 tools/upload_ui.py
     envVars:
       - key: SUPABASE_URL
         value: https://aqbmuagyokdnkolwhwws.supabase.co

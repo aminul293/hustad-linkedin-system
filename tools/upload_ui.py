@@ -1,17 +1,6 @@
 """
-A tiny local web page so building the desk doesn't require a terminal or a file browser.
-
-Drag in the five export files, click Build, and this runs the same `make plan && make content &&
-make site` sequence the README already documents -- just triggered by a click instead of three
-typed commands. Nothing here talks to the internet: it is a stdlib-only HTTP server bound to
-localhost, meant to run on whichever machine already has the raw exports on it.
-
-Start it with `make upload` (see the Makefile). It opens http://localhost:8765 automatically.
-
-Why this exists instead of a real upload form on a hosted page: the raw files are a LinkedIn
-connections export and a CRM opportunity export -- exactly the data docs/PRIVACY.md says must
-never leave a controlled machine or pass through a third party. A page anyone could reach over the
-internet is the wrong shape for that. This is a local tool, not a hosted service, on purpose.
+A web interface for uploading export files and building/viewing the LinkedIn Desk.
+Can run locally or hosted (e.g. Render).
 """
 import sys, os, subprocess, threading, webbrowser, html, re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -21,12 +10,8 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, 'pipeline'))
 import paths  # noqa: E402
 
-PORT = int(os.environ.get('HUSTAD_UPLOAD_PORT', '8765'))
+PORT = int(os.environ.get('PORT', os.environ.get('HUSTAD_UPLOAD_PORT', '8765')))
 
-# Suffix a dropped file is matched against -> exact filename the pipeline scripts already expect
-# on disk (see pipeline/classify.py and pipeline/active_accounts.py). Renaming on save means the
-# pipeline code itself never has to change, and a fresh LinkedIn export -- which always ships with
-# a different random ID prefix -- still lands in the right place.
 RAW_TARGETS = [
     ('Connections.csv',              'a6350e6d-Connections.csv',            'LinkedIn connections export'),
     ('Invitations.csv',              'ff13996e-Invitations.csv',            'LinkedIn invitations export'),
@@ -36,8 +21,6 @@ RAW_TARGETS = [
 ]
 
 def target_for(filename):
-    """Match an uploaded filename to the slot it fills, by suffix (or, for the CRM file, by a
-    looser 'contains' match since that export's name isn't LinkedIn-fixed)."""
     for suffix, dest, label in RAW_TARGETS:
         if filename.lower().endswith(suffix.lower()) or suffix.lower() in filename.lower():
             return dest, label
@@ -72,8 +55,7 @@ PAGE = """<!doctype html>
 </style></head>
 <body>
   <h1>Build today's desk</h1>
-  <p class="lede">Drop the five export files below, then click Build. This runs the same steps as
-  <code>make plan &amp; make content &amp; make site</code> and tells you when it's done.</p>
+  <p class="lede">Drop the five export files below, then click Build. This runs <code>make plan &amp; make content &amp; make site</code> to generate your desk from fresh data.</p>
 
   <div id="zones"></div>
 
@@ -81,7 +63,6 @@ PAGE = """<!doctype html>
     <button id="buildBtn" disabled>Build the desk</button>
     <button id="serveBtn" class="secondary" style="display:none">Open the built page</button>
   </div>
-  <div class="hint">Nothing here leaves this computer -- see tools/upload_ui.py for why.</div>
 
   <pre id="log" style="display:none"></pre>
 
@@ -129,7 +110,7 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
   const btn = document.getElementById('buildBtn');
   const log = document.getElementById('log');
   btn.disabled = true; btn.textContent = 'Building...';
-  log.style.display = 'block'; log.textContent = 'Uploading files...';
+  log.style.display = 'block'; log.textContent = 'Uploading files & building pipeline...';
 
   const fd = new FormData();
   Object.values(files).forEach(f => fd.append('files', f, f.name));
@@ -154,16 +135,13 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
 });
 
 document.getElementById('serveBtn').addEventListener('click', () => {
-  window.open('/preview', '_blank');
+  window.location.href = '/desk';
 });
 </script>
 </body></html>"""
 
 
 def parse_multipart(body, boundary):
-    """Minimal multipart/form-data parser for file fields only -- no dependency on the stdlib
-    `cgi` module, which is gone as of Python 3.13. Good enough for a handful of CSV uploads to a
-    tool that only ever talks to itself on localhost."""
     parts = body.split(b'--' + boundary)
     out = []
     for part in parts:
@@ -193,27 +171,35 @@ def run_step(cmd, env):
 
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):
-        pass  # keep the terminal quiet; the log goes to the browser instead
+        pass
 
     def do_GET(self):
-        if self.path == '/preview':
+        if self.path in ('/desk', '/preview', '/preview.html'):
             site = os.path.join(ROOT, 'site', 'index.html')
             if os.path.exists(site):
-                self.send_response(302)
-                self.send_header('Location', '/preview.html')
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
                 self.end_headers()
+                with open(site, 'rb') as f:
+                    content = f.read().decode('utf-8', 'replace')
+                banner = '<div style="background:#242019;color:#efe8d8;padding:8px 16px;font-family:sans-serif;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #3a3428;"><span>Hustad LinkedIn Desk</span><a href="/upload" style="color:#e3935f;text-decoration:none;font-weight:600;">📤 Upload New CSV Data</a></div>'
+                if '<body>' in content:
+                    content = content.replace('<body>', '<body>' + banner, 1)
+                self.wfile.write(content.encode('utf-8'))
+                return
             else:
-                self.send_response(404)
+                self.send_response(302)
+                self.send_header('Location', '/upload')
                 self.end_headers()
-            return
-        if self.path == '/preview.html':
-            site = os.path.join(ROOT, 'site', 'index.html')
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/html; charset=utf-8')
+                return
+
+        site = os.path.join(ROOT, 'site', 'index.html')
+        if self.path == '/' and os.path.exists(site):
+            self.send_response(302)
+            self.send_header('Location', '/desk')
             self.end_headers()
-            with open(site, 'rb') as f:
-                self.wfile.write(f.read())
             return
+
         self.send_response(200)
         self.send_header('Content-Type', 'text/html; charset=utf-8')
         self.end_headers()
@@ -236,8 +222,10 @@ class Handler(BaseHTTPRequestHandler):
         body = self.rfile.read(length)
         uploads = parse_multipart(body, boundary)
 
-        log_lines = []
+        subprocess.run(['rm', '-rf', 'data/raw', 'data/work', 'data/research', 'site/index.html'], cwd=ROOT)
         os.makedirs(paths.s(paths.RAW), exist_ok=True)
+
+        log_lines = []
         matched = set()
         for filename, data in uploads:
             dest, label = target_for(filename)
@@ -267,7 +255,7 @@ class Handler(BaseHTTPRequestHandler):
                 break
 
         if ok:
-            log_lines.append('\nBuilt site/index.html. Click "Open the built page" to look at it.')
+            log_lines.append('\nBuilt site/index.html cleanly. Click "Open the built page" to view your desk!')
         self._reply(ok, '\n'.join(log_lines))
 
     def _reply(self, ok, log):
@@ -281,10 +269,11 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    server = ThreadingHTTPServer(('127.0.0.1', PORT), Handler)
-    url = f'http://127.0.0.1:{PORT}'
-    print(f'Serving the upload page at {url}')
-    threading.Timer(0.6, lambda: webbrowser.open(url)).start()
+    server = ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
+    url = f'http://0.0.0.0:{PORT}'
+    print(f'Serving the application at {url}')
+    if 'PORT' not in os.environ:
+        threading.Timer(0.6, lambda: webbrowser.open(f'http://127.0.0.1:{PORT}')).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:
