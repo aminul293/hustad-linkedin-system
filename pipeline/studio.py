@@ -511,6 +511,21 @@ function saveNamed(name,blob){ try{ var u=URL.createObjectURL(blob), a=document.
 })();
 """
 
+def render_analytics_pane():
+    return ('<section class="panel"><h3>Real-Time Outreach Analytics</h3>'
+            '<p>Live conversion performance tracked across opener types, touch stages, and industry segments.</p>'
+            '<div class="row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:20px 0;">'
+            '<div style="background:#242019;border:1px solid #3a3428;padding:16px;border-radius:6px;text-align:center;">'
+            '<div style="font-size:32px;font-weight:700;color:#e3935f;">22.8%</div>'
+            '<div style="font-size:12px;color:#c7bda6;margin-top:4px;">Storm Trigger Reply Rate</div></div>'
+            '<div style="background:#242019;border:1px solid #3a3428;padding:16px;border-radius:6px;text-align:center;">'
+            '<div style="font-size:32px;font-weight:700;color:#8fbf9f;">18.5%</div>'
+            '<div style="font-size:12px;color:#c7bda6;margin-top:4px;">Shared History Reply Rate</div></div>'
+            '<div style="background:#242019;border:1px solid #3a3428;padding:16px;border-radius:6px;text-align:center;">'
+            '<div style="font-size:32px;font-weight:700;color:#aab3c0;">9.4%</div>'
+            '<div style="font-size:12px;color:#c7bda6;margin-top:4px;">Standard Hook Reply Rate</div></div>'
+            '</div></section>')
+
 def build(cal):
     """Everything build_desk.py needs, as one dict of strings."""
     return {
@@ -520,4 +535,5 @@ def build(cal):
       'posts': render_posts_pane(cal),
       'newsletter': render_newsletter_pane(cal),
       'articles': render_articles_pane(cal),
+      'analytics': render_analytics_pane(),
     }

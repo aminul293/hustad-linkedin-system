@@ -174,6 +174,30 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
     def do_GET(self):
+        if self.path.startswith('/api/desk'):
+            import api
+            import json
+            data = api.get_desk_data()
+            body = json.dumps(data).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
+        if self.path.startswith('/api/stats'):
+            import api
+            import json
+            data = api.get_analytics_data()
+            body = json.dumps(data).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         if self.path in ('/desk', '/preview', '/preview.html'):
             site = os.path.join(ROOT, 'site', 'index.html')
             if os.path.exists(site):
@@ -207,6 +231,24 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(PAGE.replace('__TARGETS__', targets_json).encode('utf-8'))
 
     def do_POST(self):
+        if self.path.startswith('/api/ingest_replies'):
+            import ingest_replies
+            import json
+            length = int(self.headers.get('Content-Length', 0))
+            payload = json.loads(self.rfile.read(length).decode('utf-8') or '{}')
+            res = ingest_replies.ingest_reply(
+                sender_email=payload.get('email', ''),
+                sender_name=payload.get('name', ''),
+                message_body=payload.get('body', '')
+            )
+            body = json.dumps(res).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         if self.path != '/build':
             self.send_response(404)
             self.end_headers()
