@@ -364,36 +364,43 @@ def render_replies_pane():
 # CSS and JS the desk template splices in. Plain strings, no f-strings, so braces are safe.
 # ---------------------------------------------------------------------------
 STUDIO_CSS = """
-.tabrail{display:flex;gap:2px;margin:0;padding:0 0 0;overflow-x:auto}
+/* ---- Ultra-Premium Modern Studio Styles ---- */
+.tabrail{display:flex;gap:4px;margin:0;padding:4px 0;overflow-x:auto;scrollbar-width:none}
+.tabrail::-webkit-scrollbar{display:none}
 .tabrail button{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  background:transparent;color:var(--ink-2);border:0;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;white-space:nowrap}
-.tabrail button.is-on{color:var(--ink);border-bottom-color:var(--copper)}
-.tabrail button:hover{color:var(--ink)}
-.pane{display:none}.pane.is-on{display:block}
-.wk{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:26px 0 10px}
-.postbody p{margin:0 0 12px}.postbody p:last-child{margin-bottom:0}
-.postbody .cta{font-weight:600}
-.tagline{color:var(--ink-3);font-size:14px}
-.factline{margin:12px 0 0;font-size:13px;color:var(--ink-2);line-height:1.55}
+  background:rgba(255,255,255,0.03);color:var(--ink-2);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:9px 16px;cursor:pointer;white-space:nowrap;transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1)}
+.tabrail button.is-on{background:linear-gradient(135deg, rgba(212,136,40,0.2), rgba(245,158,11,0.1));color:var(--copper);border-color:var(--copper);box-shadow:0 0 16px rgba(212,136,40,0.15)}
+.tabrail button:hover:not(.is-on){background:rgba(255,255,255,0.07);color:var(--ink)}
+.pane{display:none;animation:fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)}.pane.is-on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.wk{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);margin:32px 0 14px;display:flex;align-items:center;gap:10px}
+.wk::after{content:'';flex:1;height:1px;background:linear-gradient(90deg, var(--line-2), transparent)}
+.postbody p{margin:0 0 14px;line-height:1.68}.postbody p:last-child{margin-bottom:0}
+.postbody .cta{font-weight:600;color:var(--copper)}
+.tagline{color:var(--ink-3);font-size:14px;font-weight:500}
+.factline{margin:14px 0 0;font-size:13px;color:var(--ink-2);line-height:1.6;background:rgba(255,255,255,0.02);padding:10px 14px;border-radius:6px;border-left:3px solid var(--copper)}
 .factline i{color:var(--ink-3);font-style:normal}
-.asset{display:flex;gap:14px;margin-top:12px;align-items:flex-start;flex-wrap:wrap}
-.asset-fr{width:230px;flex:0 0 auto;border:1px solid var(--line);background:var(--paper)}
+.asset{display:flex;gap:18px;margin-top:16px;align-items:flex-start;flex-wrap:wrap}
+.asset-fr{width:240px;flex:0 0 auto;border:1px solid var(--line-2);background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.35);transition:transform 0.25s ease}
+.asset-fr:hover{transform:scale(1.02)}
 .asset-fr svg{display:block;width:100%;height:auto}
 .asset-side{flex:1 1 220px;min-width:200px}
 .asset-side .hint{margin-top:0}
-.slides{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;flex:1 1 100%;max-width:100%}
-.slide{flex:0 0 168px;border:1px solid var(--line)}
+.slides{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;flex:1 1 100%;max-width:100%}
+.slide{flex:0 0 180px;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.25);transition:transform 0.2s ease}
+.slide:hover{transform:translateY(-3px)}
 .slide svg{display:block;width:100%;height:auto}
-.chip-ch-company{background:var(--navy-soft);color:var(--navy);border-color:transparent}
-.chip-ok{background:var(--good-soft);color:var(--good);border-color:transparent}
-.chip-warn{background:var(--copper-soft);color:var(--copper);border-color:transparent}
-.cstat{font-family:inherit;font-size:13px;font-weight:600;padding:6px 8px;background:var(--card);color:var(--ink);border:1px solid var(--line-2)}
-#rfilter{width:100%;margin-top:12px;font-family:inherit;font-size:14px;padding:9px 11px;background:var(--paper);border:1px solid var(--line-2);color:var(--ink)}
-.twrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}
-th{ text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);padding:6px 10px 6px 0;border-bottom:1px solid var(--line-2)}
-td{padding:8px 10px 8px 0;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top;line-height:1.5}
-.rc .row-head{margin-bottom:2px}
+.chip-ch-company{background:rgba(99,102,241,0.15);color:#818CF8;border-color:rgba(99,102,241,0.3)}
+.chip-ok{background:rgba(16,185,129,0.15);color:#34D399;border-color:rgba(16,185,129,0.3)}
+.chip-warn{background:rgba(245,158,11,0.15);color:#FBBF24;border-color:rgba(245,158,11,0.3)}
+.cstat{font-family:inherit;font-size:13px;font-weight:600;padding:7px 12px;background:var(--card);color:var(--ink);border:1px solid var(--line-2);border-radius:6px;outline:none}
+#rfilter{width:100%;margin-top:14px;font-family:inherit;font-size:14px;padding:12px 16px;background:var(--paper);border:1px solid var(--line-2);border-radius:8px;color:var(--ink);transition:all 0.2s ease}
+#rfilter:focus{border-color:var(--copper);box-shadow:0 0 0 3px rgba(212,136,40,0.15)}
+.twrap{overflow-x:auto;border-radius:8px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:10px 14px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--line-2)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top;line-height:1.55}
+.rc .row-head{margin-bottom:4px}
 .is-filtered{display:none}
 #printhost{display:none}
 @media print{
@@ -402,7 +409,7 @@ td{padding:8px 10px 8px 0;border-bottom:1px solid var(--line);color:var(--ink-2)
   #printhost svg{width:100%;height:auto;page-break-after:always;display:block}
   @page{size:216mm 270mm;margin:0}
 }
-@media (max-width:720px){.asset-fr{width:100%}.slides .slide{flex-basis:140px}}
+@media (max-width:720px){.asset-fr{width:100%}.slides .slide{flex-basis:145px}}
 """
 
 STUDIO_JS = """
