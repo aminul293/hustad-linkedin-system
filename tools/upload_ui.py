@@ -198,6 +198,42 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
             return
 
+        if self.path.startswith('/api/sync_crm'):
+            import crm_sync
+            import json
+            data = crm_sync.export_crm_payload()
+            body = json.dumps(data).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
+        if self.path.startswith('/api/friday_report'):
+            import friday_review
+            import json
+            data = friday_review.generate_friday_report()
+            body = json.dumps(data).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
+        if self.path.startswith('/api/health'):
+            import json
+            res = subprocess.run(['python3', 'scripts/check_invariants.py'], cwd=ROOT, capture_output=True, text=True)
+            data = {'ok': res.returncode == 0, 'status': 'PASS' if res.returncode == 0 else 'FAIL', 'output': res.stdout}
+            body = json.dumps(data).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         if self.path.startswith('/api/digest'):
             sys.path.insert(0, os.path.join(ROOT, 'scripts'))
             import email_digest
