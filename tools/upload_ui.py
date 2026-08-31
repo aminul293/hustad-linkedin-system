@@ -231,6 +231,36 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(PAGE.replace('__TARGETS__', targets_json).encode('utf-8'))
 
     def do_POST(self):
+        if self.path.startswith('/api/webhook/graph'):
+            import ingest_replies
+            import json
+            # Handle Microsoft Graph subscription validation
+            if 'validationToken=' in self.path:
+                token = self.path.split('validationToken=')[1].split('&')[0]
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(token.encode('utf-8'))
+                return
+
+            length = int(self.headers.get('Content-Length', 0))
+            payload = json.loads(self.rfile.read(length).decode('utf-8') or '{}')
+            value = payload.get('value', [{}])[0]
+            resource_data = value.get('resourceData', {})
+            
+            res = ingest_replies.ingest_reply(
+                sender_email=resource_data.get('sender', {}).get('emailAddress', {}).get('address', ''),
+                sender_name=resource_data.get('sender', {}).get('emailAddress', {}).get('name', ''),
+                message_body=resource_data.get('bodyPreview', '')
+            )
+            body = json.dumps(res).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         if self.path.startswith('/api/ingest_replies'):
             import ingest_replies
             import json

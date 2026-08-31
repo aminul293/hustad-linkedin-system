@@ -451,6 +451,30 @@ function paintContent(){
         cp.textContent='Copied'; cp.classList.add('ok');
         setTimeout(function(){ cp.textContent='Copy'; cp.classList.remove('ok'); },1400); }); }); }
   });
+  // ---- Keyboard shortcuts for Review Queue: Space (Approve & Copy) and ArrowRight (Skip) ----
+  window.addEventListener('keydown', function(e){
+    if (['INPUT','TEXTAREA','SELECT'].indexOf(e.target.tagName)>=0) return;
+    var cards = document.querySelectorAll('#pane-outreach .row.card, #pane-outreach .row.post');
+    if (!cards || !cards.length) return;
+    var activeIdx = 0;
+    for (var i=0; i<cards.length; i++){
+      var rect = cards[i].getBoundingClientRect();
+      if (rect.top >= -50 && rect.bottom > 100){ activeIdx = i; break; }
+    }
+    var activeCard = cards[activeIdx];
+    if (!activeCard) return;
+    if (e.code === 'Space'){
+      e.preventDefault();
+      var cp = activeCard.querySelector('.copy, .ccopy');
+      if (cp) cp.click();
+      var nextCard = cards[activeIdx + 1];
+      if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (e.code === 'ArrowRight'){
+      e.preventDefault();
+      var nextCard = cards[activeIdx + 1];
+      if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
   paintContent();
 })();
 // ---- PNG / SVG download for graphic assets --------------------------------
