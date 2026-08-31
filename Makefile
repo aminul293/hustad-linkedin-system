@@ -6,7 +6,7 @@ DAY     ?= $(shell TZ=America/Chicago date +%F)
 PLAN    ?= data/work/plan_with_copy_final.csv
 LOG     ?= data/work/send_log.csv
 
-.PHONY: help setup dirs sample content assets thread desk site serve plan copy folder workbook playbook clean check
+.PHONY: help setup dirs sample content assets thread desk site serve upload plan copy folder workbook playbook clean check
 
 help:
 	@echo "make setup      install python deps"
@@ -14,6 +14,7 @@ help:
 	@echo "make desk       build the desk page for DAY=$(DAY) as an artifact fragment"
 	@echo "make site       build the desk page as a standalone document into site/index.html"
 	@echo "make serve      serve site/ on http://localhost:8000"
+	@echo "make upload     start local drag-and-drop builder UI on http://localhost:8765"
 	@echo "make plan       full rebuild: classify, select, scale, calendar, copy, level"
 	@echo "make copy       regenerate message copy only (after editing hooks.py or copy_engine.py)"
 	@echo "                copy is deterministic: rerunning it must not change a message already sent"
@@ -50,6 +51,9 @@ site: dirs content
 
 serve:
 	$(PY) -m http.server 8000 --directory site
+
+upload: dirs
+	$(PY) tools/upload_ui.py
 
 plan: dirs
 	$(PY) pipeline/active_accounts.py
