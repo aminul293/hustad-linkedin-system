@@ -169,11 +169,77 @@ def run_step(cmd, env):
     return proc.returncode == 0, out
 
 
+ACCESS_KEY = os.environ.get('HUSTAD_ACCESS_KEY', 'hustad2026')
+
+LOGIN_PAGE = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hustad System — Authorized Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap">
+<style>
+:root { --paper: #0B0F17; --card: #131924; --copper: #E5A93B; --ink: #F3F4F6; --ink-2: #9CA3AF; --line: rgba(255,255,255,0.08); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Plus Jakarta Sans", sans-serif; background: var(--paper); color: var(--ink); display: flex; align-items: center; justify-content: center; min-height: 100vh; background-image: radial-gradient(ellipse at 50% 0%, rgba(229,169,59,0.12) 0%, transparent 70%); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
+.logo { font-family: Outfit, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .25em; color: var(--copper); text-transform: uppercase; margin-bottom: 8px; }
+h1 { font-family: Outfit, sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+p { font-size: 14px; color: var(--ink-2); margin-bottom: 28px; }
+form { display: flex; flex-direction: column; gap: 16px; }
+input { font-family: inherit; font-size: 16px; padding: 14px 16px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 10px; color: var(--ink); outline: none; transition: all 0.2s ease; text-align: center; letter-spacing: 2px; }
+input:focus { border-color: var(--copper); box-shadow: 0 0 0 3px rgba(229,169,59,0.15); }
+button { font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 14px; background: linear-gradient(135deg, #E5A93B, #D48828); color: #0F141E; border: 0; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 16px rgba(229,169,59,0.25); }
+button:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(229,169,59,0.35); }
+.err { color: #EF4444; font-size: 13px; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">HUSTAD COMPANIES</div>
+  <h1>Authorized Access</h1>
+  <p>Enter system passcode to access the LinkedIn Outreach & Content Desk.</p>
+  <form method="POST" action="/login">
+    <input type="password" name="passcode" placeholder="••••••••" required autofocus>
+    <button type="submit">Sign In to Desk</button>
+  </form>
+  __ERR__
+</div>
+</body>
+</html>"""
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    def check_auth(self):
+        cookie = self.headers.get('Cookie', '')
+        return 'hustad_session=authenticated' in cookie
+
     def do_GET(self):
+        if self.path == '/logout':
+            self.send_response(302)
+            self.send_header('Set-Cookie', 'hustad_session=; Path=/; Max-Age=0')
+            self.send_header('Location', '/login')
+            self.end_headers()
+            return
+
+        if self.path == '/login':
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(LOGIN_PAGE.replace('__ERR__', '').encode('utf-8'))
+            return
+
+        if not self.check_auth() and not self.path.startswith('/api/webhook'):
+            self.send_response(302)
+            self.send_header('Location', '/login')
+            self.end_headers()
+            return
+
         if self.path.startswith('/api/desk'):
             import api
             import json
@@ -308,6 +374,26 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(PAGE.replace('__TARGETS__', targets_json).encode('utf-8'))
 
     def do_POST(self):
+        if self.path == '/login':
+            import urllib.parse
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length).decode('utf-8', 'ignore')
+            params = urllib.parse.parse_qs(body)
+            submitted_pass = params.get('passcode', [''])[0]
+            if submitted_pass == ACCESS_KEY:
+                self.send_response(302)
+                self.send_header('Set-Cookie', 'hustad_session=authenticated; Path=/; HttpOnly; SameSite=Lax')
+                self.send_header('Location', '/desk')
+                self.end_headers()
+                return
+            else:
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                err_msg = '<p class="err">Invalid passcode. Please try again.</p>'
+                self.wfile.write(LOGIN_PAGE.replace('__ERR__', err_msg).encode('utf-8'))
+                return
+
         if self.path.startswith('/api/webhook/graph'):
             import ingest_replies
             import json

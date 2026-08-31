@@ -254,6 +254,7 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
     <select id="dayselect" aria-label="Send day"></select>
     <button type="button" id="nextday" aria-label="Next send day">&rarr;</button>
     <button type="button" id="today">Today</button>
+    <a href="/logout" style="font-family:inherit;font-size:12px;font-weight:700;padding:8px 12px;background:var(--card);color:var(--ink-2);border:1px solid var(--line-2);border-radius:8px;text-decoration:none;transition:all 0.2s ease;">🔒 Sign Out</a>
   </div>
   <div class="prog"><b id="pdone">0</b><span id="ptot"> of 0 sent</span><div class="bar"><i id="pbar"></i></div></div>
 </div>
