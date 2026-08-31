@@ -198,6 +198,35 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
             return
 
+        if self.path.startswith('/api/digest'):
+            sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+            import email_digest
+            body = email_digest.generate_weekly_digest_html().encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
+        if self.path.startswith('/api/workbook'):
+            wb_path = os.path.join(ROOT, 'data', 'out', 'master_workbook.xlsx')
+            if not os.path.exists(wb_path):
+                subprocess.run(['make', 'workbook'], cwd=ROOT)
+            if os.path.exists(wb_path):
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                self.send_header('Content-Disposition', 'attachment; filename="master_workbook.xlsx"')
+                with open(wb_path, 'rb') as f:
+                    data = f.read()
+                self.send_header('Content-Length', str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+            else:
+                self.send_response(404)
+                self.end_headers()
+            return
+
         if self.path.startswith('/api/stats'):
             import api
             import json
