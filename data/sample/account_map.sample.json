@@ -1,0 +1,28 @@
+{
+ "_comment": "Synthetic stand-in so the repo runs with no real data. Same shape as data/work/account_map.json, which is the real one and is never committed.",
+ "crm_to_linkedin": {
+  "Northgate Residential": {
+   "linkedin": [
+    "Northgate Residential",
+    "Northgate Residential LLC"
+   ],
+   "note": ""
+  },
+  "Beacon Student Living": {
+   "linkedin": [
+    "Beacon Student Living"
+   ],
+   "note": ""
+  },
+  "Cedar Ridge Senior": {
+   "linkedin": [
+    "Cedar Ridge Senior Living"
+   ],
+   "note": "verify: Cedar Ridge Senior Living and Cedar Ridge Communities may be unrelated"
+  }
+ },
+ "individuals_and_internal": [
+  "Sample Residential Customer",
+  "Hustad Companies Internal"
+ ]
+}

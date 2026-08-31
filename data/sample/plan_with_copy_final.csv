@@ -1,0 +1,1261 @@
+target_id,plan_role,week,touch1_date,touch2_date,touch3_date,day_seq,full_name,first_name_used,first_name_clean,First Name,Company,Position,URL,Connected On,days_since_connected,outreach_lane,segment,target_tier,icp_score,role_seniority,role_function,company_class,engagement_state,url_key,company_hook,why_now,overlap_note,proof_used,give_offered,touch1_dm,touch1_words,touch1_qa,touch2_dm,touch2_words,touch2_qa,touch3_dm,touch3_words,touch3_qa,past_employer_dm,past_employer_words,past_employer_qa,research_confidence,company_hq,company_type,company_scale,company_markets,exterior_relevance,recent_news,sources,active_account_flag,active_account_crm,active_account_owner
+S001,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,1,Jonah Sandoval,Jonah,Jonah,Jonah,Stonefield Communities,Director of Procurement,https://example.invalid/in/sample-record,2025-11-10,330,Procurement / Risk,HOA / Condo,T1 Priority,86,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-1,,Sample why now line,,Sample Client,the sample one pager,"Hi Jonah,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a procurement contact.
+
+Sample closing question?",42,PASS,"Hi Jonah,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Jonah,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Jonah,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S002,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,2,Wei Rourke,Wei,Wei,Wei,Ashgrove Communities,"Vice President, Asset Management",https://example.invalid/in/sample-record,2026-04-24,78,Asset management,Commercial,T1 Priority,94,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-2,,Sample why now line,,Sample Client,the sample one pager,"Hi Wei,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",43,PASS,"Hi Wei,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Wei,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Wei,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S003,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,3,Claire Ellis,Claire,Claire,Claire,Coldwater Living,President,https://example.invalid/in/sample-record,2026-07-07,334,Ownership / Executive,Retail,T1 Priority,92,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-3,,Sample why now line,,Sample Client,the sample one pager,"Hi Claire,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a ownership contact.
+
+Sample closing question?",42,PASS,"Hi Claire,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Claire,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Claire,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S004,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,4,Jonah Vogel,Jonah,Jonah,Jonah,Bellamy Property Group,Director of Construction,https://example.invalid/in/sample-record,2026-07-21,300,CapEx / Construction,Student housing,T1 Priority,82,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-4,,Sample why now line,,Sample Client,the sample one pager,"Hi Jonah,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",42,PASS,"Hi Jonah,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Jonah,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Jonah,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S005,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,5,Marcus Brennan,Marcus,Marcus,Marcus,Dunmore Partners,Vice President of Operations,https://example.invalid/in/sample-record,2026-07-13,267,VP / Director Operations,Student housing,T1 Priority,90,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-5,,Sample why now line,,Sample Client,the sample one pager,"Hi Marcus,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",42,PASS,"Hi Marcus,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Marcus,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Marcus,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S006,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,6,Jonah Tate,Jonah,Jonah,Jonah,Vantage Park Partners,Director of Procurement,https://example.invalid/in/sample-record,2026-03-31,357,Procurement / Risk,Student housing,T1 Priority,89,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-6,,Sample why now line,,Sample Client,the sample one pager,"Hi Jonah,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a procurement contact.
+
+Sample closing question?",42,PASS,"Hi Jonah,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Jonah,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Jonah,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S007,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,7,Kara Alvarez,Kara,Kara,Kara,Thornbury Property Group,Director of Construction,https://example.invalid/in/sample-record,2025-08-27,172,CapEx / Construction,Multifamily,T1 Priority,93,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-7,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",42,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S008,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,8,Mona Chu,Mona,Mona,Mona,Overton Living,Director of Construction,https://example.invalid/in/sample-record,2026-04-02,292,CapEx / Construction,Senior living,T1 Priority,89,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-8,,Sample why now line,,Sample Client,the sample one pager,"Hi Mona,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",42,PASS,"Hi Mona,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Mona,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Mona,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S009,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,9,Dana Chu,Dana,Dana,Dana,Redbourne Management,Director of Facilities,https://example.invalid/in/sample-record,2026-06-03,178,Facilities / Maintenance,Multifamily,T1 Priority,92,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-9,,Sample why now line,,Sample Client,the sample one pager,"Hi Dana,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a facilities contact.
+
+Sample closing question?",42,PASS,"Hi Dana,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Dana,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Dana,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S010,PRIMARY,1,2026-08-27,2026-09-03,2026-09-10,10,Priya Alvarez,Priya,Priya,Priya,Northgate Residential,Director of Procurement,https://example.invalid/in/sample-record,2026-04-10,137,Procurement / Risk,Commercial,T1 Priority,81,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-10,,Sample why now line,,Sample Client,the sample one pager,"Hi Priya,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a procurement contact.
+
+Sample closing question?",42,PASS,"Hi Priya,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Priya,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Priya,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S011,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,1,Kara Moreau,Kara,Kara,Kara,Redbourne Management,Director of Construction,https://example.invalid/in/sample-record,2026-06-21,319,CapEx / Construction,HOA / Condo,T1 Priority,86,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-11,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",45,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S012,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,2,Quinn Imai,Quinn,Quinn,Quinn,Nightfall Property Group,Regional Manager,https://example.invalid/in/sample-record,2026-02-08,37,Regional / Portfolio,Multifamily,T1 Priority,93,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-12,,Sample why now line,,Sample Client,the sample one pager,"Hi Quinn,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a regional contact.
+
+Sample closing question?",42,PASS,"Hi Quinn,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Quinn,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Quinn,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S013,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,3,Tom Ellis,Tom,Tom,Tom,Halcyon Property Group,Vice President of Operations,https://example.invalid/in/sample-record,2026-07-23,60,VP / Director Operations,Commercial,T1 Priority,94,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-13,,Sample why now line,,Sample Client,the sample one pager,"Hi Tom,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",42,PASS,"Hi Tom,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Tom,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Tom,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S014,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,4,Kara Farkas,Kara,Kara,Kara,Larkspur Management,Director of Construction,https://example.invalid/in/sample-record,2025-12-11,290,CapEx / Construction,Retail,T1 Priority,86,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-14,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",42,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S015,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,5,Silas Ellis,Silas,Silas,Silas,Umberland Living,"Vice President, Asset Management",https://example.invalid/in/sample-record,2026-05-30,232,Asset management,Commercial,T1 Priority,93,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-15,,Sample why now line,,Sample Client,the sample one pager,"Hi Silas,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",43,PASS,"Hi Silas,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Silas,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Silas,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S016,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,6,Sam Alvarez,Sam,Sam,Sam,Quarry Hill Residential,Regional Manager,https://example.invalid/in/sample-record,2026-07-18,137,Regional / Portfolio,Retail,T1 Priority,85,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-16,,Sample why now line,,Sample Client,the sample one pager,"Hi Sam,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a regional contact.
+
+Sample closing question?",42,PASS,"Hi Sam,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Sam,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Sam,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S017,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,7,Hugo Vogel,Hugo,Hugo,Hugo,Ironwood Living,Director of Construction,https://example.invalid/in/sample-record,2026-07-07,104,CapEx / Construction,Retail,T1 Priority,86,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-17,,Sample why now line,,Sample Client,the sample one pager,"Hi Hugo,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",42,PASS,"Hi Hugo,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Hugo,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Hugo,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S018,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,8,Jonah Imai,Jonah,Jonah,Jonah,Vantage Park Partners,President,https://example.invalid/in/sample-record,2026-02-27,227,Ownership / Executive,Retail,T1 Priority,82,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-18,,Sample why now line,,Sample Client,the sample one pager,"Hi Jonah,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a ownership contact.
+
+Sample closing question?",45,PASS,"Hi Jonah,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Jonah,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Jonah,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S019,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,9,Priya Chu,Priya,Priya,Priya,Pinehurst Partners,Vice President of Operations,https://example.invalid/in/sample-record,2026-07-21,337,VP / Director Operations,Retail,T1 Priority,91,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-19,,Sample why now line,,Sample Client,the sample one pager,"Hi Priya,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",42,PASS,"Hi Priya,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Priya,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Priya,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S020,PRIMARY,1,2026-08-28,2026-09-04,2026-09-11,10,Beth Vogel,Beth,Beth,Beth,Westmoor Residential,"Vice President, Asset Management",https://example.invalid/in/sample-record,2025-11-23,324,Asset management,Student housing,T1 Priority,84,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-20,,Sample why now line,,Sample Client,the sample one pager,"Hi Beth,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",43,PASS,"Hi Beth,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Beth,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Beth,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S021,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,1,Hugo Farkas,Hugo,Hugo,Hugo,Nightfall Property Group,Director of Construction,https://example.invalid/in/sample-record,2026-04-03,342,CapEx / Construction,Student housing,T1 Priority,87,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-21,,Sample why now line,,Sample Client,the sample one pager,"Hi Hugo,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",45,PASS,"Hi Hugo,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Hugo,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Hugo,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S022,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,2,Silas Gray,Silas,Silas,Silas,Bellamy Property Group,Vice President of Operations,https://example.invalid/in/sample-record,2025-10-18,130,VP / Director Operations,Commercial,T1 Priority,92,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-22,,Sample why now line,,Sample Client,the sample one pager,"Hi Silas,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",45,PASS,"Hi Silas,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Silas,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Silas,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S023,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,3,Kara Vogel,Kara,Kara,Kara,Brightwater Management,President,https://example.invalid/in/sample-record,2026-06-05,85,Ownership / Executive,HOA / Condo,T1 Priority,81,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-23,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a ownership contact.
+
+Sample closing question?",42,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S024,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,4,Liam Imai,Liam,Liam,Liam,Stonefield Communities,Vice President of Operations,https://example.invalid/in/sample-record,2026-03-19,245,VP / Director Operations,Commercial,T1 Priority,99,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-24,,Sample why now line,,Sample Client,the sample one pager,"Hi Liam,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",45,PASS,"Hi Liam,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Liam,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Liam,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S025,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,5,Kara Janssen,Kara,Kara,Kara,Halcyon Property Group,Director of Facilities,https://example.invalid/in/sample-record,2026-05-25,146,Facilities / Maintenance,Student housing,T1 Priority,95,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-25,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a facilities contact.
+
+Sample closing question?",45,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S026,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,6,Mona Vogel,Mona,Mona,Mona,Pinehurst Partners,Director of Facilities,https://example.invalid/in/sample-record,2026-04-11,134,Facilities / Maintenance,Multifamily,T1 Priority,80,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-26,,Sample why now line,,Sample Client,the sample one pager,"Hi Mona,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a facilities contact.
+
+Sample closing question?",45,PASS,"Hi Mona,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Mona,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Mona,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S027,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,7,Priya Imai,Priya,Priya,Priya,Overton Living,"Vice President, Asset Management",https://example.invalid/in/sample-record,2026-06-28,53,Asset management,HOA / Condo,T1 Priority,85,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-27,,Sample why now line,,Sample Client,the sample one pager,"Hi Priya,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",46,PASS,"Hi Priya,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Priya,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Priya,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S028,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,8,Claire Lindqvist,Claire,Claire,Claire,Kestrel Residential,Director of Facilities,https://example.invalid/in/sample-record,2026-06-11,215,Facilities / Maintenance,Retail,T1 Priority,84,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-28,,Sample why now line,,Sample Client,the sample one pager,"Hi Claire,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a facilities contact.
+
+Sample closing question?",42,PASS,"Hi Claire,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Claire,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Claire,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S029,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,9,Jonah Keller,Jonah,Jonah,Jonah,Larkspur Management,Director of Construction,https://example.invalid/in/sample-record,2025-09-29,47,CapEx / Construction,Commercial,T1 Priority,80,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-29,,Sample why now line,,Sample Client,the sample one pager,"Hi Jonah,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",45,PASS,"Hi Jonah,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Jonah,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Jonah,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S030,PRIMARY,1,2026-08-31,2026-09-08,2026-09-15,10,Kara Lindqvist,Kara,Kara,Kara,Northgate Residential,Director of Construction,https://example.invalid/in/sample-record,2026-07-18,336,CapEx / Construction,Senior living,T1 Priority,82,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-30,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",45,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S031,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,1,Kara Chu,Kara,Kara,Kara,Overton Living,Director of Construction,https://example.invalid/in/sample-record,2026-05-20,67,CapEx / Construction,Senior living,T1 Priority,82,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-31,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",40,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S032,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,2,Jonah Sandoval,Jonah,Jonah,Jonah,Brightwater Management,Regional Manager,https://example.invalid/in/sample-record,2025-08-02,96,Regional / Portfolio,Commercial,T1 Priority,90,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-32,,Sample why now line,,Sample Client,the sample one pager,"Hi Jonah,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a regional contact.
+
+Sample closing question?",45,PASS,"Hi Jonah,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Jonah,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Jonah,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S033,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,3,Beth Chu,Beth,Beth,Beth,Halcyon Property Group,Director of Construction,https://example.invalid/in/sample-record,2025-12-27,45,CapEx / Construction,HOA / Condo,T1 Priority,95,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-33,,Sample why now line,,Sample Client,the sample one pager,"Hi Beth,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",40,PASS,"Hi Beth,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Beth,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Beth,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S034,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,4,Nils Alvarez,Nils,Nils,Nils,Thornbury Property Group,Director of Facilities,https://example.invalid/in/sample-record,2026-01-15,328,Facilities / Maintenance,Commercial,T1 Priority,80,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-34,,Sample why now line,,Sample Client,the sample one pager,"Hi Nils,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a facilities contact.
+
+Sample closing question?",45,PASS,"Hi Nils,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Nils,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Nils,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S035,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,5,Opal Chu,Opal,Opal,Opal,Juniper Partners,President,https://example.invalid/in/sample-record,2026-03-19,243,Ownership / Executive,Multifamily,T1 Priority,90,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-35,,Sample why now line,,Sample Client,the sample one pager,"Hi Opal,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a ownership contact.
+
+Sample closing question?",42,PASS,"Hi Opal,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Opal,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Opal,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S036,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,6,Hugo Tate,Hugo,Hugo,Hugo,Yarrow Management,"Vice President, Asset Management",https://example.invalid/in/sample-record,2025-10-24,72,Asset management,HOA / Condo,T1 Priority,96,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-36,,Sample why now line,,Sample Client,the sample one pager,"Hi Hugo,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",43,PASS,"Hi Hugo,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Hugo,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Hugo,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S037,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,7,Liam Alvarez,Liam,Liam,Liam,Ironwood Living,Regional Manager,https://example.invalid/in/sample-record,2025-11-24,41,Regional / Portfolio,Retail,T1 Priority,87,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-37,,Sample why now line,,Sample Client,the sample one pager,"Hi Liam,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a regional contact.
+
+Sample closing question?",45,PASS,"Hi Liam,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Liam,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Liam,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S038,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,8,Rhea Delgado,Rhea,Rhea,Rhea,Coldwater Living,"Vice President, Asset Management",https://example.invalid/in/sample-record,2026-03-20,35,Asset management,Retail,T1 Priority,91,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-38,,Sample why now line,,Sample Client,the sample one pager,"Hi Rhea,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",46,PASS,"Hi Rhea,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Rhea,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Rhea,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S039,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,9,Claire Ellis,Claire,Claire,Claire,Pinehurst Partners,Director of Construction,https://example.invalid/in/sample-record,2025-11-05,116,CapEx / Construction,Retail,T1 Priority,90,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-39,,Sample why now line,,Sample Client,the sample one pager,"Hi Claire,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",40,PASS,"Hi Claire,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Claire,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Claire,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S040,PRIMARY,1,2026-09-01,2026-09-08,2026-09-15,10,Quinn Ortega,Quinn,Quinn,Quinn,Nightfall Property Group,"Vice President, Asset Management",https://example.invalid/in/sample-record,2026-01-02,370,Asset management,Student housing,T1 Priority,88,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-40,,Sample why now line,,Sample Client,the sample one pager,"Hi Quinn,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",41,PASS,"Hi Quinn,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Quinn,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Quinn,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S041,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,1,Sam Nakamura,Sam,Sam,Sam,Larkspur Management,Director of Procurement,https://example.invalid/in/sample-record,2026-01-13,142,Procurement / Risk,Student housing,T1 Priority,98,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-41,,Sample why now line,,Sample Client,the sample one pager,"Hi Sam,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a procurement contact.
+
+Sample closing question?",40,PASS,"Hi Sam,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Sam,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Sam,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S042,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,2,Andre Gray,Andre,Andre,Andre,Ashgrove Communities,Vice President of Operations,https://example.invalid/in/sample-record,2026-01-30,50,VP / Director Operations,Student housing,T1 Priority,82,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-42,,Sample why now line,,Sample Client,the sample one pager,"Hi Andre,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",45,PASS,"Hi Andre,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Andre,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Andre,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S043,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,3,Owen Farkas,Owen,Owen,Owen,Bellamy Property Group,President,https://example.invalid/in/sample-record,2026-03-10,139,Ownership / Executive,HOA / Condo,T1 Priority,93,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-43,,Sample why now line,,Sample Client,the sample one pager,"Hi Owen,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a ownership contact.
+
+Sample closing question?",40,PASS,"Hi Owen,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Owen,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Owen,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S044,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,4,Hugo Rourke,Hugo,Hugo,Hugo,Thornbury Property Group,"Vice President, Asset Management",https://example.invalid/in/sample-record,2025-07-27,349,Asset management,Commercial,T1 Priority,94,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-44,,Sample why now line,,Sample Client,the sample one pager,"Hi Hugo,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",41,PASS,"Hi Hugo,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Hugo,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Hugo,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S045,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,5,Andre Chu,Andre,Andre,Andre,Redbourne Management,Director of Procurement,https://example.invalid/in/sample-record,2025-09-20,51,Procurement / Risk,Multifamily,T1 Priority,88,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-45,,Sample why now line,,Sample Client,the sample one pager,"Hi Andre,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a procurement contact.
+
+Sample closing question?",40,PASS,"Hi Andre,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Andre,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Andre,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S046,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,6,Nils Lindqvist,Nils,Nils,Nils,Yarrow Management,Regional Manager,https://example.invalid/in/sample-record,2025-10-13,39,Regional / Portfolio,Commercial,T1 Priority,84,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-46,,Sample why now line,,Sample Client,the sample one pager,"Hi Nils,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a regional contact.
+
+Sample closing question?",45,PASS,"Hi Nils,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Nils,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Nils,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S047,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,7,Hugo Ortega,Hugo,Hugo,Hugo,Coldwater Living,Vice President of Operations,https://example.invalid/in/sample-record,2026-03-14,151,VP / Director Operations,Multifamily,T1 Priority,84,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-47,,Sample why now line,,Sample Client,the sample one pager,"Hi Hugo,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",40,PASS,"Hi Hugo,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Hugo,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Hugo,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S048,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,8,Marcus Delgado,Marcus,Marcus,Marcus,Vantage Park Partners,"Vice President, Asset Management",https://example.invalid/in/sample-record,2025-10-27,365,Asset management,Multifamily,T1 Priority,91,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-48,,Sample why now line,,Sample Client,the sample one pager,"Hi Marcus,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",41,PASS,"Hi Marcus,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Marcus,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Marcus,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S049,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,9,Priya Gray,Priya,Priya,Priya,Juniper Partners,Vice President of Operations,https://example.invalid/in/sample-record,2026-04-28,395,VP / Director Operations,HOA / Condo,T1 Priority,80,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-49,,Sample why now line,,Sample Client,the sample one pager,"Hi Priya,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",45,PASS,"Hi Priya,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Priya,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Priya,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S050,PRIMARY,1,2026-09-02,2026-09-09,2026-09-16,10,Kara Sandoval,Kara,Kara,Kara,Cedar Ridge Communities,Director of Construction,https://example.invalid/in/sample-record,2026-04-04,169,CapEx / Construction,Multifamily,T1 Priority,91,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-50,,Sample why now line,,Sample Client,the sample one pager,"Hi Kara,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",42,PASS,"Hi Kara,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Kara,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Kara,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S051,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,1,Mona Rourke,Mona,Mona,Mona,Ashgrove Communities,Director of Facilities,https://example.invalid/in/sample-record,2026-05-08,231,Facilities / Maintenance,Retail,T1 Priority,87,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-51,,Sample why now line,,Sample Client,the sample one pager,"Hi Mona,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a facilities contact.
+
+Sample closing question?",40,PASS,"Hi Mona,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Mona,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Mona,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S052,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,2,Priya Nakamura,Priya,Priya,Priya,Cedar Ridge Communities,Director of Construction,https://example.invalid/in/sample-record,2025-12-10,262,CapEx / Construction,HOA / Condo,T1 Priority,86,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-52,,Sample why now line,,Sample Client,the sample one pager,"Hi Priya,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",45,PASS,"Hi Priya,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Priya,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Priya,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S053,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,3,Pete Alvarez,Pete,Pete,Pete,Westmoor Residential,"Vice President, Asset Management",https://example.invalid/in/sample-record,2025-08-28,287,Asset management,Retail,T1 Priority,90,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-53,,Sample why now line,,Sample Client,the sample one pager,"Hi Pete,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",46,PASS,"Hi Pete,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Pete,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Pete,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S054,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,4,Jonah Keller,Jonah,Jonah,Jonah,Brightwater Management,Director of Construction,https://example.invalid/in/sample-record,2025-07-24,358,CapEx / Construction,Student housing,T1 Priority,83,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-54,,Sample why now line,,Sample Client,the sample one pager,"Hi Jonah,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",40,PASS,"Hi Jonah,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Jonah,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Jonah,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S055,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,5,Sam Hollis,Sam,Sam,Sam,Meridian Communities,"Vice President, Asset Management",https://example.invalid/in/sample-record,2025-10-27,194,Asset management,Multifamily,T1 Priority,88,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-55,,Sample why now line,,Sample Client,the sample one pager,"Hi Sam,
+
+Sample opener A: a stand in for one verified fact about their portfolio. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a asset management contact.
+
+Sample closing question?",43,PASS,"Hi Sam,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Sam,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Sam,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S056,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,6,Rhea Alvarez,Rhea,Rhea,Rhea,Ironwood Living,Regional Manager,https://example.invalid/in/sample-record,2026-07-09,255,Regional / Portfolio,Retail,T1 Priority,90,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-56,,Sample why now line,,Sample Client,the sample one pager,"Hi Rhea,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a regional contact.
+
+Sample closing question?",40,PASS,"Hi Rhea,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Rhea,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Rhea,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S057,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,7,Mona Nakamura,Mona,Mona,Mona,Dunmore Partners,Director of Procurement,https://example.invalid/in/sample-record,2026-07-14,141,Procurement / Risk,Senior living,T1 Priority,82,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-57,,Sample why now line,,Sample Client,the sample one pager,"Hi Mona,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a procurement contact.
+
+Sample closing question?",45,PASS,"Hi Mona,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Mona,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Mona,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S058,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,8,Ivy Brennan,Ivy,Ivy,Ivy,Kestrel Residential,Vice President of Operations,https://example.invalid/in/sample-record,2025-08-11,101,VP / Director Operations,Retail,T1 Priority,95,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-58,,Sample why now line,,Sample Client,the sample one pager,"Hi Ivy,
+
+Sample opener B: a stand in for a role truth used when no fact was found. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a vp contact.
+
+Sample closing question?",45,PASS,"Hi Ivy,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Ivy,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Ivy,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S059,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,9,Rosa Rourke,Rosa,Rosa,Rosa,Yarrow Management,Director of Construction,https://example.invalid/in/sample-record,2025-08-10,255,CapEx / Construction,Retail,T1 Priority,95,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-59,,Sample why now line,,Sample Client,the sample one pager,"Hi Rosa,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a capex contact.
+
+Sample closing question?",40,PASS,"Hi Rosa,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Rosa,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Rosa,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,
+S060,PRIMARY,1,2026-09-03,2026-09-10,2026-09-17,10,Nils Chu,Nils,Nils,Nils,Stonefield Communities,Director of Procurement,https://example.invalid/in/sample-record,2025-11-01,316,Procurement / Risk,Student housing,T1 Priority,89,VP,Operations,OWNER-OPERATOR,COLD: no interaction,sample-60,,Sample why now line,,Sample Client,the sample one pager,"Hi Nils,
+
+Sample opener C: a stand in for the budget season question. No real person, company or fact appears anywhere in this file.
+
+Sample second paragraph standing in for what Hustad does for a procurement contact.
+
+Sample closing question?",40,PASS,"Hi Nils,
+
+Sample follow up.
+
+Sample evidence line.
+
+Sample ask?",10,PASS,"Hi Nils,
+
+Sample close the loop.
+
+Sample exit line.",9,PASS,"Hi Nils,
+
+Sample shared history opener mentioning [CLIENT].
+
+Did you ever work with anyone from Hustad while you were there?",20,PASS,,,,,,,,,,,

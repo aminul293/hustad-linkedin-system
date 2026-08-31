@@ -1,0 +1,519 @@
+"""
+The Hustad Outreach Desk. One page, one bookmark, the whole outreach hour.
+
+This is the console and the morning verification desk merged. It carries a rolling window of the
+send calendar, today's live verification and storm triggers, every draft with a copy button, and
+the send log, which lives in the browser's own storage and therefore survives the daily rebuild.
+
+  python3 build_desk.py [--day 2026-08-27] [--days 15] [--state seed.json] [--out page.html]
+
+Rebuilt every weekday morning by the Outreach Desk task. Published to the standing URL.
+"""
+import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths
+import sys, json, html, base64, pandas as pd
+from datetime import date
+
+def opt(name, default):
+    a = sys.argv[1:]
+    return a[a.index(name) + 1] if name in a else default
+
+DAY    = opt('--day', '2026-08-27')
+WINDOW = int(opt('--days', '15'))
+PLAN   = opt('--plan', paths.s(paths.PLAN))
+STATE  = opt('--state', '')
+OUT    = opt('--out', paths.s(paths.DESK_HTML))
+
+# Today's storm triggers and verification notes name real people, so the live file lives in
+# data/work (never committed) and the tracked copy in pipeline/ is an empty template. Whichever
+# exists wins, live first. Missing entirely is fine: the desk just runs without a storm tab.
+EVENTS, STORM_DM, VERIFY, DESK_DATE = [], {}, {}, ''
+for _dir in (paths.s(paths.WORK), paths.s(paths.PIPELINE)):
+    _f = os.path.join(_dir, 'storm_openers.py')
+    if not os.path.exists(_f):
+        continue
+    _ns = {}
+    exec(compile(open(_f).read(), _f, 'exec'), _ns)
+    if _ns.get('STORM_DM') or _ns.get('VERIFY') or _ns.get('EVENTS'):
+        EVENTS  = _ns.get('EVENTS', [])
+        STORM_DM = _ns.get('STORM_DM', {})
+        VERIFY  = _ns.get('VERIFY', {})
+        DESK_DATE = _ns.get('DESK_DATE', '')
+        break
+evmap = {e['id']: e for e in EVENTS}
+desk_live = (DESK_DATE == DAY)
+
+# The content calendar feeds the Posts, Newsletter and Articles tabs. Real first, sample second,
+# and an empty dict renders honest empty states rather than failing the outreach build.
+CONTENT = {}
+for _f in (paths.WORK / 'content_calendar.json', paths.SAMPLE / 'content_calendar.json'):
+    try:
+        if _f.exists():
+            CONTENT = json.load(open(_f)); break
+    except Exception as e:
+        print('content calendar unreadable, tabs will be empty:', e)
+import studio
+STUDIO = studio.build(CONTENT)
+
+plan = pd.read_csv(PLAN)
+pri = plan[plan.plan_role == 'PRIMARY']
+
+alldays = sorted({d[:10] for c in ('touch1_date','touch2_date','touch3_date')
+                  for d in pri[c].dropna() if isinstance(d, str) and d})
+try:    i0 = alldays.index(DAY)
+except ValueError: i0 = 0
+days = alldays[max(0, i0 - 1): i0 + WINDOW]
+
+queue = []
+for _, r in pri.iterrows():
+    for n, (dcol, mcol) in enumerate([('touch1_date','touch1_dm'), ('touch2_date','touch2_dm'), ('touch3_date','touch3_dm')], 1):
+        d = r[dcol]
+        if not isinstance(d, str) or d[:10] not in days: continue
+        tid = r['target_id']
+        row = {'id': tid, 'touch': n, 'date': d[:10],
+               'seq': int(float(r['day_seq'])) if pd.notna(r['day_seq']) else 99,
+               'name': str(r['full_name']), 'company': str(r['Company']), 'position': str(r['Position']),
+               'lane': str(r['outreach_lane']), 'segment': str(r['segment']),
+               'url': str(r.get('URL') or ''), 'why': str(r.get('why_now') or ''),
+               'msg': str(r[mcol]).strip(),
+               'shared': str(r.get('past_employer_dm') or '').strip() if n == 1 else ''}
+        if n == 1 and desk_live:
+            if tid in STORM_DM:
+                ev, txt = STORM_DM[tid]
+                row['storm'] = txt
+                row['events'] = [{'d': evmap[x]['date'], 'w': evmap[x]['where'],
+                                  'x': evmap[x]['what'], 's': evmap[x]['src']} for x in ev if x in evmap]
+            if tid in VERIFY:
+                st, checked, trig = VERIFY[tid]
+                row['vstatus'] = st; row['vcheck'] = checked; row['vtrig'] = trig
+        queue.append(row)
+queue.sort(key=lambda q: (q['date'], q['touch'] != 2, q['touch'] != 3, q['seq']))
+
+seed = {'entries': {}, 'content': {}, 'v': 4}
+if STATE:
+    try: seed['entries'] = json.load(open(STATE)).get('entries', {})
+    except Exception as e: print('state load failed:', e)
+FROMLOG = opt('--from-log', '')
+if FROMLOG:
+    # Safety net for the daily rebuild: the live log lives in Eric's browser, but the archive
+    # send_log.csv in OneDrive can reseed the page if that browser storage is ever lost.
+    import csv
+    try:
+        for r in csv.DictReader(open(FROMLOG)):
+            k = f"{r['TargetID']}|{r['Touch']}"
+            if k in seed['entries']: continue
+            seed['entries'][k] = {'id': r['TargetID'], 'touch': int(r['Touch']), 'date': r['Date'],
+                                  'name': r['Name'], 'company': r['Company'],
+                                  'done': r['Status'] == 'Sent', 'at': r.get('SentAtLocal', ''),
+                                  'opener': r.get('Opener') or 'standard', 'pe': r.get('PastEmployer', ''),
+                                  'note': r.get('Notes', ''), 'ts': 1}
+        print('seeded', len(seed['entries']), 'entries from', FROMLOG)
+    except Exception as e:
+        print('log seed failed, publishing with what we have:', e)
+
+QJSON = json.dumps(queue, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
+DAYSJ = json.dumps(days)
+
+TEMPLATE = r'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hustad LinkedIn Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Lora:wght@500;600&family=Poppins:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F2F4F7;--card:#FFFFFF;--ink:#151E2B;--ink-2:#54637A;--ink-3:#8494A8;
+  --line:#DBE1EA;--line-2:#C3CCD9;--navy:#1F3A5F;--navy-soft:#E7EDF5;--copper:#9A6414;
+  --copper-soft:#F6EBD8;--good:#1F6B4A;--good-soft:#E4F1EA;--draft-bg:#FBFAF7;--focus:#1F3A5F;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F141C;--card:#18202C;--ink:#E7ECF3;--ink-2:#9DAABC;--ink-3:#6C7C90;
+  --line:#26303F;--line-2:#33404F;--navy:#8FB3DE;--navy-soft:#1B2836;--copper:#D8A251;
+  --copper-soft:#2A2113;--good:#5FBE8F;--good-soft:#152A20;--draft-bg:#141B25;--focus:#8FB3DE;}}
+:root[data-theme="dark"]{
+  --paper:#0F141C;--card:#18202C;--ink:#E7ECF3;--ink-2:#9DAABC;--ink-3:#6C7C90;
+  --line:#26303F;--line-2:#33404F;--navy:#8FB3DE;--navy-soft:#1B2836;--copper:#D8A251;
+  --copper-soft:#2A2113;--good:#5FBE8F;--good-soft:#152A20;--draft-bg:#141B25;--focus:#8FB3DE;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 90px}
+.lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+header.top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);padding:13px 0 11px;margin-bottom:20px}
+.top-in{max-width:880px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:13px;align-items:center;justify-content:space-between}
+.brand{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin:0}
+h1{font-size:21px;font-weight:700;margin:2px 0 0;letter-spacing:-.01em}
+.savestat{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:2px 0 0}
+.savestat.on{color:var(--good)}
+.daynav{display:flex;gap:7px;align-items:center}
+.daynav select{font-family:inherit;font-size:14px;font-weight:600;padding:7px 9px;background:var(--card);color:var(--ink);border:1px solid var(--line-2);max-width:210px}
+.daynav button{font-family:inherit;font-size:13px;font-weight:700;padding:7px 10px;background:var(--card);color:var(--navy);border:1px solid var(--line-2);cursor:pointer}
+.prog{text-align:right;min-width:120px}
+.prog b{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy)}
+.prog span{font-size:13px;color:var(--ink-2)}
+.bar{height:4px;background:var(--line);margin-top:5px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--copper);transition:width .25s ease}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:0 0 18px}
+@media(min-width:660px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--card);border:1px solid var(--line);padding:10px 12px}
+.tile b{display:block;font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy);line-height:1.15}
+.tile span{font-size:12px;color:var(--ink-2);display:block;margin-top:1px;line-height:1.35}
+.panel{background:var(--card);border:1px solid var(--line);padding:15px 17px;margin-bottom:18px}
+.panel h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin:0 0 7px}
+.panel p{margin:7px 0 0;font-size:14px;color:var(--ink-2);line-height:1.6}
+.panel p:first-of-type{margin-top:0}
+.panel ol{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2);line-height:1.65}
+.panel ol li::marker{color:var(--copper);font-weight:700}
+.row{background:var(--card);border:1px solid var(--line);padding:17px;margin-bottom:13px;transition:opacity .2s}
+.row.is-done{opacity:.5}
+.row.is-halted{opacity:.55;border-style:dashed}
+.row-head{display:flex;gap:13px;align-items:flex-start}
+.seq{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink-3);padding-top:4px;min-width:24px}
+.who{flex:1;min-width:0}
+.who h2{font-size:17px;font-weight:600;margin:0;letter-spacing:-.01em}
+.role{margin:1px 0 0;font-size:14px;color:var(--ink-2)}
+.org{margin:1px 0 0;font-size:14px;font-weight:600;color:var(--navy)}
+.marks{display:flex;gap:11px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.done,.replied{display:flex;gap:6px;align-items:center;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;user-select:none}
+.done input,.replied input{width:18px;height:18px;accent-color:var(--good);cursor:pointer}
+.replied input{accent-color:var(--copper)}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:11px 0 0}
+.chip{font-size:11px;font-weight:500;letter-spacing:.04em;padding:3px 8px;background:var(--paper);border:1px solid var(--line);color:var(--ink-2)}
+.chip-touch{background:var(--copper-soft);border-color:var(--copper);color:var(--copper);font-weight:700}
+.chip-id{font-variant-numeric:tabular-nums;color:var(--ink-3)}
+.chip-storm,.chip-warn{background:var(--copper-soft);border-color:var(--copper);color:var(--copper);font-weight:700}
+.chip-ok{background:var(--good-soft);border-color:var(--good);color:var(--good);font-weight:700}
+.chip-halt{background:var(--good-soft);border-color:var(--good);color:var(--good);font-weight:700}
+.profile{margin-left:auto;font-size:13px;font-weight:600;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:1px}
+.why{margin:12px 0 0;font-size:14px;color:var(--ink-2);line-height:1.55}
+.check{margin:11px 0 0;padding:11px 13px;background:var(--paper);border-left:2px solid var(--line-2)}
+.check p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.6}
+.check p+p{margin-top:9px}
+.ev{margin:10px 0 0}
+.ev ul{margin:0;padding-left:17px;font-size:13px;color:var(--ink-2);line-height:1.7}
+.ev a,.panel a{color:var(--navy);font-weight:600}
+.draft{margin-top:12px;border:1px solid var(--line-2);background:var(--draft-bg)}
+.draft-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 11px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tabs{display:flex;border:1px solid var(--line-2);flex-wrap:wrap}
+.tab{font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0;padding:5px 10px;cursor:pointer}
+.tab.is-on{background:var(--navy);color:var(--card)}
+.copy{font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--navy);color:var(--card);border:0;padding:6px 14px;cursor:pointer}
+.copy:hover{background:var(--ink)}
+.copy.ok{background:var(--good)}
+.msg{margin:0;padding:13px 15px;font-family:"Source Serif 4",Georgia,serif;font-size:16px;line-height:1.62;color:var(--ink);white-space:pre-line}
+.msg.is-hidden,.hint.is-hidden{display:none}
+.hint{margin:0;padding:0 15px 12px;font-size:13px;line-height:1.55;color:var(--copper)}
+.ph{background:var(--copper-soft);color:var(--copper);font-weight:700;padding:0 3px}
+.note-row{display:grid;gap:11px;grid-template-columns:1fr;margin-top:11px}
+@media(min-width:640px){.note-row{grid-template-columns:1fr 1.6fr}}
+.pemp,.note{width:100%;margin-top:3px;font-family:inherit;font-size:13px;padding:8px 10px;background:var(--paper);border:1px solid var(--line);color:var(--ink)}
+.export{margin-top:28px;background:var(--card);border:1px solid var(--line);padding:17px}
+.export h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin:0 0 6px}
+.export p{margin:0 0 11px;font-size:14px;color:var(--ink-2)}
+textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;padding:10px;background:var(--paper);border:1px solid var(--line);color:var(--ink);resize:vertical}
+.btns{display:flex;gap:9px;margin-top:9px;flex-wrap:wrap}
+.btn{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 15px;border:1px solid var(--navy);background:var(--navy);color:var(--card);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--navy)}
+.btn[hidden]{display:none}
+.foot{margin-top:24px;font-size:12px;color:var(--ink-3);line-height:1.65}
+.empty{background:var(--card);border:1px dashed var(--line-2);padding:24px;text-align:center;color:var(--ink-2);font-size:15px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+__STUDIO_CSS__
+.tabrail{max-width:880px;margin:9px auto 0;padding:0 20px}
+body.tab-other .daynav,body.tab-other .prog{display:none}
+</style></head><body>
+<div class="app-root">
+<header class="top"><div class="top-in">
+  <div><p class="brand">Hustad &middot; New Business Track</p><h1>LinkedIn Desk</h1>
+    <p class="savestat" id="savestat">log saved on this device</p></div>
+  <div class="daynav">
+    <button type="button" id="prevday" aria-label="Previous send day">&larr;</button>
+    <select id="dayselect" aria-label="Send day"></select>
+    <button type="button" id="nextday" aria-label="Next send day">&rarr;</button>
+    <button type="button" id="today">Today</button>
+  </div>
+  <div class="prog"><b id="pdone">0</b><span id="ptot"> of 0 sent</span><div class="bar"><i id="pbar"></i></div></div>
+</div>
+<nav class="tabrail" id="tabrail" role="tablist" aria-label="Sections">
+  <button type="button" data-pane="outreach" class="is-on" role="tab" aria-selected="true">DM Outreach</button>
+  <button type="button" data-pane="replies" role="tab" aria-selected="false">Reply Center</button>
+  <button type="button" data-pane="posts" role="tab" aria-selected="false">Posts</button>
+  <button type="button" data-pane="newsletter" role="tab" aria-selected="false">Newsletter</button>
+  <button type="button" data-pane="articles" role="tab" aria-selected="false">Articles</button>
+</nav></header>
+<div class="wrap">
+<div id="pane-outreach" class="pane is-on">
+  <div class="tiles" id="tiles"></div>
+  <section class="panel" id="deskpanel"></section>
+  <section class="panel">
+    <h3>The twenty second check, before every send</h3>
+    <ol>
+      <li>Open the profile. Confirm the title and company still match the row.</li>
+      <li>Read Experience. If a past employer is a current Hustad client and their time there overlaps our work, switch to <b>Shared history</b>, put that company where [CLIENT] sits, type it in the past employer box, and send it yourself.</li>
+      <li>If their <i>current</i> company is a Hustad account, skip and note it. That is warm outreach and it runs elsewhere.</li>
+      <li>If they replied on an earlier touch, tick <b>Replied</b>. Their later touches stop automatically.</li>
+      <li>Paste, send, tick <b>Sent</b>. The log writes itself.</li>
+    </ol>
+    <p>Order is deliberate: follow ups first, then first touches. If the hour runs short, defer first touches rather than rush a live conversation.</p>
+  </section>
+  <div id="rows"></div>
+  <section class="export">
+    <h3>Send log</h3>
+    <p>Every tick lands here automatically and stays in this browser, including across the nightly rebuild.
+    Copy for Excel pastes into real columns. Download hands you send_log.csv for the LinkedIn folder;
+    do that once a week so the Friday review has something to read.</p>
+    <textarea id="out" readonly placeholder="Tick a row and the log appears here."></textarea>
+    <div class="btns">
+      <button class="btn" id="copytsv" type="button">Copy for Excel</button>
+      <button class="btn ghost" id="copycsv" type="button">Copy CSV text</button>
+      <button class="btn ghost" id="download" type="button" hidden>Download send_log.csv</button>
+    </div>
+  </section>
+  <p class="foot">Cold new business only. Hustad does not do ground up construction and nothing here pitches it.
+  Past employment at a Hustad client is your own opener, never a handoff. Every message is sent by hand.
+  Storm figures come from National Weather Service reports and local coverage, linked per event; nothing claims
+  damage to a specific property or promises a claim outcome.</p>
+</div>
+<div id="pane-replies" class="pane">__PANE_REPLIES__</div>
+<div id="pane-posts" class="pane">__PANE_POSTS__
+  <section class="export"><h3>Content log</h3>
+  <p>Posted ticks, statuses and URLs from these three tabs, as columns for the tracker.</p>
+  <div class="btns"><button class="btn" id="copycontent" type="button">Copy content log</button></div></section>
+</div>
+<div id="pane-newsletter" class="pane">__PANE_NEWSLETTER__</div>
+<div id="pane-articles" class="pane">__PANE_ARTICLES__</div>
+</div>
+</div>
+<div id="printhost" aria-hidden="true"></div>
+<script id="hustad-queue" type="application/json">__QUEUE__</script>
+<script id="hustad-days" type="application/json">__DAYS__</script>
+<script id="hustad-state" type="application/json">__STATE__</script>
+<script id="hustad-tpl" type="text/plain">__B64__</script>
+<script>
+(function(){
+'use strict';
+var QUEUE = JSON.parse(document.getElementById('hustad-queue').textContent);
+var DAYS  = JSON.parse(document.getElementById('hustad-days').textContent);
+var EMBED = JSON.parse(document.getElementById('hustad-state').textContent);
+var B64   = document.getElementById('hustad-tpl').textContent.trim();
+var LSKEY = 'hustad-console-log-v2';
+function lsread(){ try { return JSON.parse(localStorage.getItem(LSKEY)) || {entries:{}}; } catch(e){ return {entries:{}}; } }
+function lswrite(s){ try { localStorage.setItem(LSKEY, JSON.stringify(s)); } catch(e){} }
+var state = {entries:{}, content:{}, v:4};
+(function(){ var L=lsread(), k;
+  var a=EMBED.entries||{}, b=L.entries||{};
+  for(k in a) state.entries[k]=a[k];
+  for(k in b) if(!state.entries[k] || (b[k].ts||0) >= (state.entries[k].ts||0)) state.entries[k]=b[k];
+  var ca=EMBED.content||{}, cb=L.content||{};
+  for(k in ca) state.content[k]=ca[k];
+  for(k in cb) if(!state.content[k] || (cb[k].ts||0) >= (state.content[k].ts||0)) state.content[k]=cb[k]; })();
+
+function centralToday(){ try { return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date()); }
+  catch(e){ return new Date().toISOString().slice(0,10); } }
+function defaultDay(){ var t=centralToday(), i;
+  for(i=0;i<DAYS.length;i++) if(DAYS[i]>=t) return DAYS[i];
+  return DAYS[DAYS.length-1]; }
+var day=null; try{ day=sessionStorage.getItem('hustad-day'); }catch(e){}
+if(!day || DAYS.indexOf(day)<0) day=defaultDay();
+
+function key(q){ return q.id+'|'+q.touch; }
+function ent(q){ return state.entries[key(q)]||{}; }
+function replied(id){ for(var k in state.entries){ var e=state.entries[k]; if(e.id===id && e.reply) return true; } return false; }
+function setEnt(q,patch){ var e=state.entries[key(q)]||{},k;
+  for(k in patch) e[k]=patch[k];
+  e.id=q.id;e.touch=q.touch;e.date=q.date;e.name=q.name;e.company=q.company;e.ts=Date.now();
+  state.entries[key(q)]=e; lswrite(state); paint(); buildLog(); saveSoon(); }
+function esc(s){ var d=document.createElement('div'); d.textContent=(s==null?'':String(s)); return d.innerHTML; }
+function dayQueue(){ return QUEUE.filter(function(q){ return q.date===day; }); }
+
+var VLABEL={clean:['Verified','ok'],revised:['Copy corrected','warn'],flagged:['Read this first','warn'],'no-trigger':['Verified','ok']};
+
+function rowHtml(q,i){
+  var e=ent(q), halted=q.touch>1 && replied(q.id) && !e.done, v=q.vstatus?VLABEL[q.vstatus]:null;
+  var chips='<span class="chip chip-touch">Touch '+q.touch+'</span><span class="chip">'+esc(q.lane)+'</span>'
+    +'<span class="chip">'+esc(q.segment)+'</span><span class="chip chip-id">'+esc(q.id)+'</span>'
+    +(v?'<span class="chip chip-'+v[1]+'">'+esc(v[0])+'</span>':'')
+    +(q.storm?'<span class="chip chip-storm">Storm trigger</span>':'')
+    +(halted?'<span class="chip chip-halt">Replied, halted</span>':'');
+  var tabs=[], panes=[];
+  tabs.push('<button class="tab is-on" type="button" data-v="std">'+(q.storm?'Planned':'Message')+'</button>');
+  panes.push('<p class="msg" data-v="std">'+esc(q.msg)+'</p>');
+  if(q.storm){ tabs.push('<button class="tab" type="button" data-v="storm">Storm trigger</button>');
+    panes.push('<p class="msg is-hidden" data-v="storm">'+esc(q.storm)+'</p>'
+      +'<p class="hint is-hidden" data-v="storm">True this week only, and it beats the planned opener where the market actually took weather. If you send this one, type <b>storm</b> in the note below so Friday can measure it.</p>'); }
+  if(q.shared){ tabs.push('<button class="tab" type="button" data-v="pe">Shared history</button>');
+    panes.push('<p class="msg is-hidden" data-v="pe">'+esc(q.shared).replace(/\[CLIENT\]/g,'<mark class="ph">[CLIENT]</mark>')+'</p>'
+      +'<p class="hint is-hidden" data-v="pe">Only if their profile shows a past employer that is a current Hustad client, and their time there overlaps the years we have worked it. Swap <b>[CLIENT]</b> for the company. You send it yourself.</p>'); }
+  var ev='';
+  if(q.events && q.events.length){ ev='<div class="ev"><span class="lbl">Verified events behind this</span><ul>'
+    +q.events.map(function(x){ return '<li><b>'+esc(x.d)+'</b> &middot; '+esc(x.w)+' &middot; '+esc(x.x)
+      +' <a href="'+esc(x.s)+'" target="_blank" rel="noopener">source</a></li>'; }).join('')+'</ul></div>'; }
+  var chk='';
+  if(q.vcheck){ chk='<div class="check"><p><span class="lbl">What the desk checked this morning</span>'+esc(q.vcheck)+'</p>'
+    +(q.vtrig?'<p><span class="lbl">Live trigger</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
+  return '<article class="row'+(e.done?' is-done':'')+(halted?' is-halted':'')+'" data-k="'+esc(key(q))+'">'
+   +'<header class="row-head"><span class="seq">'+String(i+1).padStart(2,'0')+'</span>'
+   +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
+   +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>Replied</span></label>'
+   +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>Sent</span></label></div></header>'
+   +'<div class="meta">'+chips+(q.url?'<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
+   +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
+   +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
+   +'<button class="copy" type="button">Copy</button></div>'+panes.join('')+'</div>'
+   +'<div class="note-row"><label><span class="lbl">Past employer on their profile</span>'
+   +'<input type="text" class="pemp" value="'+esc(e.pe||'')+'" placeholder="e.g. Asset Living"></label>'
+   +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></article>';
+}
+
+function render(){
+  var qs=dayQueue();
+  document.getElementById('dayselect').innerHTML=DAYS.map(function(d){
+    var n=QUEUE.filter(function(q){return q.date===d;});
+    var done=n.filter(function(q){return ent(q).done;}).length;
+    var mark=(n.length&&done>=n.length)?' ✓':(done?' · '+done+'/'+n.length:'');
+    return '<option value="'+d+'"'+(d===day?' selected':'')+'>'+d+' ('+n.length+')'+mark+'</option>';}).join('');
+  var t1=qs.filter(function(q){return q.touch===1;}),
+      t2=qs.filter(function(q){return q.touch===2;}).length,
+      t3=qs.filter(function(q){return q.touch===3;}).length,
+      storm=qs.filter(function(q){return q.storm;}).length,
+      rev=qs.filter(function(q){return q.vstatus==='revised'||q.vstatus==='flagged';}).length;
+  document.getElementById('tiles').innerHTML=
+     '<div class="tile"><b>'+t1.length+'</b><span>first touches</span></div>'
+    +'<div class="tile"><b>'+t2+'</b><span>touch 2 follow ups</span></div>'
+    +'<div class="tile"><b>'+t3+'</b><span>touch 3 close the loops</span></div>'
+    +'<div class="tile"><b>'+(storm||rev)+'</b><span>'+(storm?'with a live storm trigger':'verified by the desk')+'</span></div>';
+  var dp=document.getElementById('deskpanel');
+  if(storm||rev){ dp.style.display=''; dp.innerHTML='<h3>What the desk did this morning</h3>'
+    +'<p>Every first touch below was re-checked against live sources before the block: the stored company fact, recent news, leadership changes, and National Weather Service records for severe weather in each operator\'s markets. Stale numbers were corrected in the plan itself. Where a market actually took weather there is a second draft on the toggle.</p>'
+    +'<p>'+storm+' of today\'s first touches have a verified storm trigger. '+rev+' needed a correction or a read before sending.</p>'; }
+  else { dp.style.display='none'; }
+  document.getElementById('rows').innerHTML = qs.length ? qs.map(rowHtml).join('')
+    : '<div class="empty">No sends scheduled this day.</div>';
+  wire(); paint(); buildLog();
+}
+function paint(){
+  var qs=dayQueue(), n=0;
+  qs.forEach(function(q){ if(ent(q).done) n++; });
+  document.getElementById('pdone').textContent=n;
+  document.getElementById('ptot').textContent=' of '+qs.length+' sent';
+  document.getElementById('pbar').style.width=(qs.length?(n/qs.length*100):0)+'%';
+  qs.forEach(function(q){ var el=document.querySelector('[data-k="'+key(q)+'"]'); if(!el)return;
+    var e=ent(q); el.classList.toggle('is-done',!!e.done);
+    el.classList.toggle('is-halted', q.touch>1 && replied(q.id) && !e.done); });
+}
+function wire(){
+  Array.prototype.forEach.call(document.querySelectorAll('.row'),function(el){
+    var k=el.getAttribute('data-k'), q=QUEUE.filter(function(x){return key(x)===k;})[0];
+    if(!q) return;
+    el.querySelector('.chk').addEventListener('change',function(ev){
+      var shown=el.querySelector('.msg:not(.is-hidden)'), v=shown?shown.getAttribute('data-v'):'std';
+      setEnt(q,{done:ev.target.checked, at:new Date().toTimeString().slice(0,5),
+        opener: v==='pe'?'shared history':(v==='storm'?'storm trigger':'standard')}); });
+    el.querySelector('.rchk').addEventListener('change',function(ev){ setEnt(q,{reply:ev.target.checked?1:0}); });
+    el.querySelector('.pemp').addEventListener('input',function(ev){ setEnt(q,{pe:ev.target.value}); });
+    el.querySelector('.note').addEventListener('input',function(ev){ setEnt(q,{note:ev.target.value}); });
+    Array.prototype.forEach.call(el.querySelectorAll('.tab'),function(tab){
+      tab.addEventListener('click',function(){ var v=tab.getAttribute('data-v');
+        Array.prototype.forEach.call(el.querySelectorAll('[data-v]'),function(x){
+          if(x.classList.contains('tab')) x.classList.toggle('is-on',x.getAttribute('data-v')===v);
+          else x.classList.toggle('is-hidden',x.getAttribute('data-v')!==v); });
+        setEnt(q,{variant:v}); }); });
+    el.querySelector('.copy').addEventListener('click',function(ev){
+      var shown=el.querySelector('.msg:not(.is-hidden)');
+      navigator.clipboard.writeText(shown.textContent.trim()).then(function(){
+        var b=ev.currentTarget; b.textContent='Copied'; b.classList.add('ok');
+        setTimeout(function(){ b.textContent='Copy'; b.classList.remove('ok'); },1400); }); });
+  });
+}
+var HDR=['Date','TargetID','Touch','Name','Company','Status','SentAtLocal','Opener','PastEmployer','Notes'];
+function logRows(){ var rows=[];
+  Object.keys(state.entries).sort().forEach(function(k){ var e=state.entries[k];
+    if(!e.done && !e.note && !e.pe && !e.reply) return;
+    rows.push([e.date||'',e.id||'',e.touch||'',e.name||'',e.company||'',
+      e.done?'Sent':(e.note||e.pe?'Noted':'Replied'), e.at||'', e.opener||'', e.pe||'',
+      (e.note||'')+(e.reply?((e.note?'; ':'')+'replied'):'')]); });
+  return rows; }
+function toCsv(r){ function q(v){ v=(v==null?'':String(v)); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+  return [HDR.join(',')].concat(r.map(function(x){return x.map(q).join(',');})).join('\n'); }
+function toTsv(r){ return [HDR.join('\t')].concat(r.map(function(x){
+  return x.map(function(v){return String(v==null?'':v).replace(/[\t\n]/g,' ');}).join('\t');})).join('\n'); }
+function buildLog(){ var r=logRows(); document.getElementById('out').value=r.length?toCsv(r):''; }
+function bindCopy(id,fn,label){ document.getElementById(id).addEventListener('click',function(ev){
+  var r=logRows(); if(!r.length) return;
+  navigator.clipboard.writeText(fn(r)).then(function(){ ev.currentTarget.textContent='Copied';
+    setTimeout(function(){ ev.currentTarget.textContent=label; },1400); }); }); }
+bindCopy('copytsv',toTsv,'Copy for Excel'); bindCopy('copycsv',toCsv,'Copy CSV text');
+function go(d){ day=d; try{ sessionStorage.setItem('hustad-day',d); }catch(e){} render(); }
+document.getElementById('dayselect').addEventListener('change',function(e){ go(e.target.value); });
+document.getElementById('prevday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i>0) go(DAYS[i-1]); });
+document.getElementById('nextday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i<DAYS.length-1) go(DAYS[i+1]); });
+document.getElementById('today').addEventListener('click',function(){ go(defaultDay()); });
+
+var cap=null, saveTimer=null, dirty=false;
+function hydrate(){ return atob(B64).replace('__B64'+'QUINE__',B64)
+  .replace('__STATE'+'QUINE__', JSON.stringify(state).replace(/<\//g,'<\\/')); }
+function saveSoon(){ dirty=true; if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(doSave,5000); }
+function doSave(){ if(!cap||!dirty) return; dirty=false;
+  try{ sessionStorage.setItem('hustad-scroll',String(window.scrollY)); sessionStorage.setItem('hustad-day',day); }catch(e){}
+  cap.publish(hydrate()).then(function(){ var el=document.getElementById('savestat');
+    el.textContent='log saved on every device'; el.classList.add('on'); })
+  .catch(function(err){ var c=err&&err.code;
+    if(c==='conflict'){ dirty=false; return; }
+    if(c==='rate_limited'){ dirty=true; saveTimer=setTimeout(doSave,20000); return; }
+    cap=null; document.getElementById('savestat').textContent='log saved on this device'; }); }
+window.addEventListener('pagehide',function(){ if(dirty) doSave(); });
+// Download works two ways: through the host capability inside the Claude viewer, which
+// sandboxes ordinary downloads, and through a plain Blob anywhere else. Same button.
+var dlcap=null;
+function blobSave(data){ try{
+  var b=new Blob([data],{type:'text/csv;charset=utf-8'}), u=URL.createObjectURL(b), a=document.createElement('a');
+  a.href=u; a.download='send_log.csv'; document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(u); a.parentNode && a.parentNode.removeChild(a); },0);
+}catch(e){} }
+(function(){ var b=document.getElementById('download'); b.hidden=false;
+  b.addEventListener('click',function(){ var r=logRows(); if(!r.length) return;
+    var data=toCsv(r)+'\n';
+    if(dlcap) dlcap.save({filename:'send_log.csv', data:data}).catch(function(){ blobSave(data); });
+    else blobSave(data); }); })();
+if(window.claude && window.claude.use){
+  window.claude.use('artifact').then(function(ns){ cap=ns; if(ns&&dirty) doSave(); });
+  window.claude.use('downloads').then(function(ns){ dlcap=ns; }); }
+try{ var sy=sessionStorage.getItem('hustad-scroll');
+  if(sy){ window.scrollTo(0,parseInt(sy,10)||0); sessionStorage.removeItem('hustad-scroll'); } }catch(e){}
+render();
+__STUDIO_JS__
+})();
+</script></body></html>'''
+
+def _splice(t):
+    sj = STUDIO['js']
+    return (t.replace('__STUDIO_CSS__', STUDIO['css'])
+             .replace('__PANE_REPLIES__', STUDIO['replies'])
+             .replace('__PANE_POSTS__', STUDIO['posts'])
+             .replace('__PANE_NEWSLETTER__', STUDIO['newsletter'])
+             .replace('__PANE_ARTICLES__', STUDIO['articles'])
+             .replace('__STUDIO_JS__', sj))
+TEMPLATE = _splice(TEMPLATE)
+
+runtime = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ) \
+                  .replace('__STATE__', '__STATEQUINE__').replace('__B64__', '__B64QUINE__')
+b64 = base64.b64encode(runtime.encode()).decode()
+full = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ) \
+               .replace('__STATE__', json.dumps(seed, ensure_ascii=False).replace('</', '<\\/')) \
+               .replace('__B64__', b64)
+
+regen = base64.b64decode(b64).decode().replace('__B64QUINE__', b64) \
+        .replace('__STATEQUINE__', json.dumps(seed, ensure_ascii=False).replace('</', '<\\/'))
+assert regen == full, 'quine mismatch'
+
+# The Claude Artifact tool wraps a fragment in its own document skeleton at publish time; a web
+# server needs the whole document. --standalone chooses the second.
+STANDALONE = '--standalone' in sys.argv
+if STANDALONE:
+    page = full
+else:
+    page = full[full.index('<title>'):full.index('</head>')] + full[full.index('<body>') + 6: full.rindex('</body>')]
+open(OUT, 'w').write(page)
+print(f'wrote {OUT} {len(page):,} bytes ({"standalone document" if STANDALONE else "artifact fragment"}) | {len(days)} days, {len(queue)} rows, '
+      f'{sum(1 for q in queue if q.get("storm"))} storm, {len(seed["entries"])} log entries | quine stable')

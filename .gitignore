@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Personal data. Read docs/PRIVACY.md before you change anything here.
+#
+# The LinkedIn export and the CRM opportunity export identify several thousand
+# real people by name, title, employer and profile URL. The generated plan and
+# the built page embed that same data. None of it belongs in git.
+# ---------------------------------------------------------------------------
+data/raw/
+data/work/
+data/out/
+data/research/
+site/index.html
+site/*.html
+!site/.gitkeep
+
+# The one exception: synthetic records, safe by construction.
+!data/sample/
+!data/sample/**
+
+# Anything a run leaves behind
+*.xlsx
+*.docx
+*.pdf
+*.zip
+send_log.csv
+reply_log.csv
+sendqueue_*.csv
+storm_openers.py.bak
+
+# Ordinary noise
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.DS_Store
+.env
+.env.*
+*.log
