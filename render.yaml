@@ -1,0 +1,12 @@
+services:
+  # Static Site deployment for the LinkedIn Desk Dashboard
+  - type: web
+    name: hustad-linkedin-system
+    env: static
+    buildCommand: pip install -r requirements.txt && make sample
+    staticPublishPath: ./site
+    envVars:
+      - key: SUPABASE_URL
+        value: https://aqbmuagyokdnkolwhwws.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: sb_publishable_NS-Z-DRvv1Sqy6k0h84fKQ_HNw-Er4Q
