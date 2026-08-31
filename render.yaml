@@ -3,6 +3,7 @@ services:
   - type: web
     name: hustad-linkedin-system
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: python3 tools/upload_ui.py
     envVars:
