@@ -267,27 +267,15 @@ today, wrong past a few hundred targets a day.
 Whatever the deploy target, put an identity check in front of it. Cloudflare Access or a
 Netlify/Vercel password is an afternoon; do not skip it because the URL is unguessable.
 
-**2. Move the log to a real store.** A single table gets you everything the current design cannot:
-
-```sql
-create table send_log (
-  id          bigserial primary key,
-  target_id   text        not null,
-  touch       smallint    not null,
-  send_date   date        not null,
-  status      text        not null,       -- sent | skipped | replied
-  sent_at     timestamptz,
-  opener      text,                       -- standard | shared history | storm trigger
-  past_employer text,
-  note        text,
-  updated_at  timestamptz not null default now(),
-  unique (target_id, touch)
-);
-```
-
-Keep localStorage as the offline write path and sync on reconnect; Eric's hour should not depend on
-the network. Once this exists the Friday review reads the database instead of a file someone has to
-remember to export, and the desk knows what is already sent without being told.
+**2. Move the log to a real store. Done** &mdash; `backend/db/schema.sql` plus a pair of hooks in
+`build_desk.py` and `studio.py`. Set `SUPABASE_URL` and `SUPABASE_ANON_KEY` (`backend/db/README.md`
+has the exact steps) and every tick syncs to Postgres in the background; leave them unset and
+nothing changes, same as before this existed. localStorage stays the offline write path exactly as
+planned &mdash; Eric's hour still never depends on the network, it just also has somewhere durable to
+land when he's online. Auth still isn't done: signing in gates the *database*, not the *page* &mdash;
+the full day's queue is still baked into the page's own HTML, so item 1 above is not optional now
+that this exists, it's still first. Once someone is signed in, the Friday review can read the
+database directly instead of a CSV someone has to remember to export.
 
 **3. Server-side daily build.** Move the page build to a cron job in your own infrastructure. The
 research and storm scan can stay with Claude, which is the part that genuinely wants a model, but have it POST

@@ -23,6 +23,10 @@ help:
 	@echo "make assets     render post graphics to PNG and carousels to PDF (add FORCE=1)"
 	@echo "make thread     pull a replying firm's colleagues forward (dry run; add APPLY=1)"
 	@echo "make check      run the invariant checks"
+	@echo ""
+	@echo "export SUPABASE_URL and SUPABASE_ANON_KEY before make desk/site to sync every tick to a"
+	@echo "real database instead of only localStorage. Unset (the default), nothing changes. See"
+	@echo "backend/db/README.md to provision one."
 
 setup:
 	$(PY) -m pip install -r requirements.txt

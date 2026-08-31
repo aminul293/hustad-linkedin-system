@@ -24,6 +24,13 @@ PLAN   = opt('--plan', paths.s(paths.PLAN))
 STATE  = opt('--state', '')
 OUT    = opt('--out', paths.s(paths.DESK_HTML))
 
+# Optional real backing store. Unset (the default), the page behaves exactly as before: the log
+# lives only in this browser's localStorage. Set both and every tick also syncs to Postgres via
+# Supabase's REST API, readable from any device. See backend/db/README.md to provision one.
+# CLI flags win over env vars so a one-off local build can still point at nothing.
+SUPABASE_URL = opt('--supabase-url', os.environ.get('SUPABASE_URL', ''))
+SUPABASE_ANON_KEY = opt('--supabase-anon-key', os.environ.get('SUPABASE_ANON_KEY', ''))
+
 # Today's storm triggers and verification notes name real people, so the live file lives in
 # data/work (never committed) and the tracked copy in pipeline/ is an empty template. Whichever
 # exists wins, live first. Missing entirely is fine: the desk just runs without a storm tab.
@@ -113,6 +120,7 @@ if FROMLOG:
 
 QJSON = json.dumps(queue, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 DAYSJ = json.dumps(days)
+CONFIGJSON = json.dumps({'supabaseUrl': SUPABASE_URL, 'supabaseAnonKey': SUPABASE_ANON_KEY}, ensure_ascii=False)
 
 TEMPLATE = r'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -121,6 +129,7 @@ TEMPLATE = r'''<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Lora:wght@500;600&family=Poppins:wght@400;500;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{
   --paper:#F2F4F7;--card:#FFFFFF;--ink:#151E2B;--ink-2:#54637A;--ink-3:#8494A8;
@@ -226,7 +235,13 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
 <div class="app-root">
 <header class="top"><div class="top-in">
   <div><p class="brand">Hustad &middot; New Business Track</p><h1>LinkedIn Desk</h1>
-    <p class="savestat" id="savestat">log saved on this device</p></div>
+    <p class="savestat" id="savestat">log saved on this device</p>
+    <p class="savestat" id="sbstat" hidden></p>
+    <form id="sbsignin" hidden style="margin-top:6px;display:flex;gap:6px">
+      <input type="email" id="sbemail" placeholder="you@hustadcompanies.com" autocomplete="email"
+        style="font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line-2);background:var(--paper);color:var(--ink)">
+      <button type="submit" class="btn ghost" style="padding:5px 10px;font-size:11px">Send sign-in link</button>
+    </form></div>
   <div class="daynav">
     <button type="button" id="prevday" aria-label="Previous send day">&larr;</button>
     <select id="dayselect" aria-label="Send day"></select>
@@ -289,6 +304,7 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
 <script id="hustad-queue" type="application/json">__QUEUE__</script>
 <script id="hustad-days" type="application/json">__DAYS__</script>
 <script id="hustad-state" type="application/json">__STATE__</script>
+<script id="hustad-config" type="application/json">__CONFIG__</script>
 <script id="hustad-tpl" type="text/plain">__B64__</script>
 <script>
 (function(){
@@ -309,6 +325,88 @@ var state = {entries:{}, content:{}, v:4};
   for(k in ca) state.content[k]=ca[k];
   for(k in cb) if(!state.content[k] || (cb[k].ts||0) >= (state.content[k].ts||0)) state.content[k]=cb[k]; })();
 
+// ---- optional Supabase sync -------------------------------------------------
+// Unset config (the default): this whole block is inert and the page behaves exactly as it
+// always has. Set both build-time secrets and every tick also writes to Postgres, readable from
+// any signed-in device. This never replaces localStorage, only adds to it — see backend/db/README.md.
+var CONFIG = JSON.parse(document.getElementById('hustad-config').textContent);
+var sb = null, sbSession = null;
+if (CONFIG.supabaseUrl && CONFIG.supabaseAnonKey && window.supabase && window.supabase.createClient) {
+  try { sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey); } catch(e){ sb = null; }
+}
+function sbStatus(msg){ var el = document.getElementById('sbstat'); if (el){ el.hidden=false; el.textContent = msg; } }
+function sbUpsertEntry(e){
+  if (!sb || !sbSession) return;
+  sb.from('send_log').upsert({
+    target_id: e.id, touch: e.touch, send_date: e.date, name: e.name, company: e.company,
+    status: e.reply ? 'replied' : (e.done ? 'sent' : 'pending'),
+    sent_at: e.at || null, opener: e.opener || null, past_employer: e.pe || null,
+    note: e.note || null, updated_at: new Date().toISOString()
+  }, { onConflict: 'target_id,touch' }).then(function(r){
+    sbStatus(r.error ? ('synced to this browser only — ' + r.error.message) : ('synced to Supabase as ' + sbSession.user.email));
+  });
+}
+function sbUpsertContent(id, e){
+  if (!sb || !sbSession) return;
+  sb.from('content_log').upsert({
+    content_id: id, done: !!e.done, at: e.at || null, status: e.status || null,
+    note: e.note || null, updated_at: new Date().toISOString()
+  }, { onConflict: 'content_id' }).then(function(r){
+    sbStatus(r.error ? ('synced to this browser only — ' + r.error.message) : ('synced to Supabase as ' + sbSession.user.email));
+  });
+}
+function sbMergeRemote(){
+  if (!sb || !sbSession) return;
+  sb.from('send_log').select('*').then(function(r){
+    if (r.error || !r.data) return;
+    var changed = false;
+    r.data.forEach(function(row){
+      var k = row.target_id + '|' + row.touch;
+      var ts = row.updated_at ? new Date(row.updated_at).getTime() : 0;
+      if (!state.entries[k] || ts >= (state.entries[k].ts||0)) {
+        state.entries[k] = { id: row.target_id, touch: row.touch, date: row.send_date,
+          name: row.name, company: row.company, done: row.status === 'sent' || row.status === 'replied',
+          at: row.sent_at, opener: row.opener, pe: row.past_employer, note: row.note,
+          reply: row.status === 'replied' ? 1 : 0, ts: ts };
+        changed = true;
+      }
+    });
+    if (changed) { lswrite(state); render(); buildLog(); }
+  });
+  sb.from('content_log').select('*').then(function(r){
+    if (r.error || !r.data) return;
+    var changed = false;
+    r.data.forEach(function(row){
+      var ts = row.updated_at ? new Date(row.updated_at).getTime() : 0;
+      if (!state.content[row.content_id] || ts >= (state.content[row.content_id].ts||0)) {
+        state.content[row.content_id] = { done: row.done, at: row.at, status: row.status, note: row.note, ts: ts };
+        changed = true;
+      }
+    });
+    if (changed) { lswrite(state); if (window.paintContent) paintContent(); }
+  });
+}
+if (sb) {
+  sb.auth.getSession().then(function(r){
+    sbSession = r.data && r.data.session;
+    if (sbSession) { sbStatus('signed in as ' + sbSession.user.email); sbMergeRemote(); }
+    else { document.getElementById('sbsignin').hidden = false; sbStatus('not signed in — writes stay on this device only'); }
+  });
+  sb.auth.onAuthStateChange(function(_evt, session){
+    sbSession = session;
+    if (session) { document.getElementById('sbsignin').hidden = true; sbStatus('signed in as ' + session.user.email); sbMergeRemote(); }
+  });
+  document.getElementById('sbsignin').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var email = document.getElementById('sbemail').value.trim();
+    if (!email) return;
+    sbStatus('sending link to ' + email + '...');
+    sb.auth.signInWithOtp({ email: email }).then(function(r){
+      sbStatus(r.error ? ('sign-in failed — ' + r.error.message) : ('check ' + email + ' for a sign-in link'));
+    });
+  });
+}
+
 function centralToday(){ try { return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date()); }
   catch(e){ return new Date().toISOString().slice(0,10); } }
 function defaultDay(){ var t=centralToday(), i;
@@ -323,7 +421,7 @@ function replied(id){ for(var k in state.entries){ var e=state.entries[k]; if(e.
 function setEnt(q,patch){ var e=state.entries[key(q)]||{},k;
   for(k in patch) e[k]=patch[k];
   e.id=q.id;e.touch=q.touch;e.date=q.date;e.name=q.name;e.company=q.company;e.ts=Date.now();
-  state.entries[key(q)]=e; lswrite(state); paint(); buildLog(); saveSoon(); }
+  state.entries[key(q)]=e; lswrite(state); paint(); buildLog(); saveSoon(); sbUpsertEntry(e); }
 function esc(s){ var d=document.createElement('div'); d.textContent=(s==null?'':String(s)); return d.innerHTML; }
 function dayQueue(){ return QUEUE.filter(function(q){ return q.date===day; }); }
 
@@ -496,10 +594,10 @@ def _splice(t):
              .replace('__STUDIO_JS__', sj))
 TEMPLATE = _splice(TEMPLATE)
 
-runtime = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ) \
+runtime = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ).replace('__CONFIG__', CONFIGJSON) \
                   .replace('__STATE__', '__STATEQUINE__').replace('__B64__', '__B64QUINE__')
 b64 = base64.b64encode(runtime.encode()).decode()
-full = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ) \
+full = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ).replace('__CONFIG__', CONFIGJSON) \
                .replace('__STATE__', json.dumps(seed, ensure_ascii=False).replace('</', '<\\/')) \
                .replace('__B64__', b64)
 

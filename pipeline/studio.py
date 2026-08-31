@@ -424,7 +424,8 @@ STUDIO_JS = """
 // ---- content state: posted ticks, statuses, notes -------------------------
 function cent(id){ return (state.content=state.content||{})[id]||{}; }
 function setCent(id,patch){ var m=(state.content=state.content||{}), e=m[id]||{}, k;
-  for(k in patch) e[k]=patch[k]; e.ts=Date.now(); m[id]=e; lswrite(state); saveSoon(); paintContent(); }
+  for(k in patch) e[k]=patch[k]; e.ts=Date.now(); m[id]=e; lswrite(state); saveSoon(); paintContent();
+  if (typeof sbUpsertContent==='function') sbUpsertContent(id,e); }
 function paintContent(){
   Array.prototype.forEach.call(document.querySelectorAll('[data-cid]'),function(el){
     var e=cent(el.getAttribute('data-cid'));
