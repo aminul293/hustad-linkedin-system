@@ -196,8 +196,21 @@ def parse_multipart(body, boundary):
 def run_step(cmd, env):
     proc = subprocess.run(cmd, cwd=ROOT, env=env, capture_output=True, text=True)
     tag = f"$ {' '.join(cmd)}\n"
-    out = tag + proc.stdout + proc.stderr
     return proc.returncode == 0, out
+
+
+def ensure_site_built():
+    site = os.path.join(ROOT, 'site', 'index.html')
+    if not os.path.exists(site):
+        print("site/index.html missing. Building desk site...")
+        raw_conn = os.path.join(ROOT, 'data', 'raw', 'Connections.csv')
+        raw_conn_alt = os.path.join(ROOT, 'data', 'raw', 'a6350e6d-Connections.csv')
+        if os.path.exists(raw_conn) or os.path.exists(raw_conn_alt):
+            subprocess.run(['make', 'plan'], cwd=ROOT)
+            subprocess.run(['make', 'content'], cwd=ROOT)
+            subprocess.run(['make', 'site'], cwd=ROOT)
+        else:
+            subprocess.run(['make', 'sample'], cwd=ROOT)
 
 
 ACCESS_KEY = os.environ.get('HUSTAD_ACCESS_KEY', 'hustad2026')
