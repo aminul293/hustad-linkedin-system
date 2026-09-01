@@ -377,8 +377,16 @@ class Handler(BaseHTTPRequestHandler):
             import api
             import json
             data = api.get_analytics_data()
+        if self.path.startswith('/api/sync/fetch'):
+            sys.path.insert(0, os.path.join(ROOT, 'backend', 'db'))
+            import db_sync
+            import json
+            data = db_sync.fetch_all_entries()
             body = json.dumps(data).encode('utf-8')
             self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
             self.wfile.write(body)
             return
 
@@ -465,6 +473,18 @@ class Handler(BaseHTTPRequestHandler):
                 sender_name=payload.get('name', ''),
                 message_body=payload.get('body', '')
             )
+            body = json.dumps(res).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+        if self.path.startswith('/api/sync/send'):
+            sys.path.insert(0, os.path.join(ROOT, 'backend', 'db'))
+            import db_sync
+            import json
+            length = int(self.headers.get('Content-Length', 0))
+            payload = json.loads(self.rfile.read(length).decode('utf-8') or '{}')
+            res = db_sync.sync_send_entry(payload)
             body = json.dumps(res).encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')

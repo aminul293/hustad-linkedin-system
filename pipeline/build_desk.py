@@ -429,7 +429,8 @@ function replied(id){ for(var k in state.entries){ var e=state.entries[k]; if(e.
 function setEnt(q,patch){ var e=state.entries[key(q)]||{},k;
   for(k in patch) e[k]=patch[k];
   e.id=q.id;e.touch=q.touch;e.date=q.date;e.name=q.name;e.company=q.company;e.ts=Date.now();
-  state.entries[key(q)]=e; lswrite(state); paint(); buildLog(); saveSoon(); sbUpsertEntry(e); }
+  state.entries[key(q)]=e; lswrite(state); paint(); buildLog(); saveSoon(); sbUpsertEntry(e);
+  try{ fetch('/api/sync/send', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(e)}).catch(function(){}); }catch(err){} }
 function esc(s){ var d=document.createElement('div'); d.textContent=(s==null?'':String(s)); return d.innerHTML; }
 function dayQueue(){ return QUEUE.filter(function(q){ return q.date===day; }); }
 

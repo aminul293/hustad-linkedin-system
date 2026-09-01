@@ -76,7 +76,10 @@ _ce = _iu.module_from_spec(_spec); _spec.loader.exec_module(_ce)
 _bad = _ce.validate()
 # 9. reply ingestion engine is active and valid
 import ingest_replies
-check('reply ingestion engine is active and valid', hasattr(ingest_replies, 'record_reply_and_halt'))
+# 10. database sync engine is active and valid
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'backend', 'db'))
+import db_sync
+check('database sync engine is active and valid', hasattr(db_sync, 'sync_send_entry'))
 
 print()
 if FAIL:
