@@ -27,93 +27,115 @@ def target_for(filename):
     return None, None
 
 PAGE = """<!doctype html>
-<html><head><meta charset="utf-8"><title>Build the Desk</title>
+<html><head><meta charset="utf-8"><title>Build the Desk — Fast Uploader</title>
 <style>
   :root{color-scheme:dark light}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1c1a16;color:#efe8d8;
-       max-width:760px;margin:0 auto;padding:40px 24px 80px}
-  h1{font-size:26px;margin:0 0 6px}
-  p.lede{color:#c7bda6;margin:0 0 32px;max-width:60ch}
-  .zone{border:2px dashed #3a3428;border-radius:8px;padding:18px;margin-bottom:14px;
-        display:flex;align-items:center;justify-content:space-between;gap:16px;transition:border-color .15s}
-  .zone.filled{border-color:#8fbf9f;border-style:solid}
-  .zone.drag{border-color:#e3935f}
+       max-width:780px;margin:0 auto;padding:40px 24px 80px}
+  h1{font-size:26px;margin:0 0 6px;font-weight:700}
+  p.lede{color:#c7bda6;margin:0 0 24px;max-width:64ch;line-height:1.5}
+  .card-box{background:#242019;border:1px solid #3a3428;border-radius:12px;padding:24px;margin-bottom:28px}
+  .card-title{font-size:16px;font-weight:700;margin-bottom:6px;color:#e3935f;display:flex;align-items:center;gap:8px}
+  .card-desc{font-size:13px;color:#aab3c0;margin-bottom:16px}
+  .zone{border:2px dashed #3a3428;border-radius:8px;padding:18px;margin-bottom:12px;
+        display:flex;align-items:center;justify-content:space-between;gap:16px;transition:border-color .15s;background:#1c1a16;cursor:pointer}
+  .zone.filled{border-color:#8fbf9f;border-style:solid;background:rgba(143,191,159,0.05)}
+  .zone.drag{border-color:#e3935f;background:rgba(227,147,95,0.05)}
   .zone-label{font-weight:600}
   .zone-sub{font-size:13px;color:#aab3c0;margin-top:2px}
   .zone-status{font-family:ui-monospace,'JetBrains Mono',monospace;font-size:12.5px;color:#aab3c0;text-align:right;flex:0 0 auto}
-  .zone.filled .zone-status{color:#8fbf9f}
+  .zone.filled .zone-status{color:#8fbf9f;font-weight:700}
   input[type=file]{display:none}
-  button{font:inherit;font-weight:600;background:#e3935f;color:#1c1a16;border:none;border-radius:6px;
-         padding:12px 22px;cursor:pointer;margin-top:8px}
+  button{font:inherit;font-weight:700;background:linear-gradient(135deg, #e3935f, #c87642);color:#1c1a16;border:none;border-radius:8px;
+         padding:14px 26px;cursor:pointer;margin-top:8px;font-size:14px;transition:all 0.2s ease}
+  button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(227,147,95,0.25)}
   button:disabled{opacity:.5;cursor:not-allowed}
-  button.secondary{background:transparent;color:#c7bda6;border:1px solid #3a3428}
-  pre{background:#242019;border:1px solid #3a3428;border-radius:6px;padding:14px;font-size:12.5px;
+  button.secondary{background:transparent;color:#e3935f;border:1px solid #e3935f;margin-left:12px}
+  pre{background:#242019;border:1px solid #3a3428;border-radius:8px;padding:16px;font-size:12.5px;
       white-space:pre-wrap;word-break:break-word;max-height:420px;overflow:auto;margin-top:20px}
-  .row{display:flex;gap:10px;align-items:center}
+  .row{display:flex;gap:10px;align-items:center;margin-top:16px}
   .ok{color:#8fbf9f}.bad{color:#e0796b}
-  .hint{font-size:12.5px;color:#aab3c0;margin-top:6px}
+  .divider{text-align:center;margin:24px 0;position:relative;color:#7a7263;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+  .divider::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:#3a3428;z-index:0}
+  .divider span{position:relative;background:#1c1a16;padding:0 12px;z-index:1}
 </style></head>
 <body>
-  <h1>Build today's desk</h1>
-  <p class="lede">Drop the five export files below, then click Build. This runs <code>make plan &amp; make content &amp; make site</code> to generate your desk from fresh data.</p>
+  <h1>Build Today's Desk</h1>
+  <p class="lede">Drop your LinkedIn data ZIP file and your CRM file below. The system automatically extracts, classifies, scores, and generates your complete outreach desk!</p>
 
-  <div id="zones"></div>
+  <div class="card-box">
+    <div class="card-title">📦 Fast 2-Step Upload (ZIP &amp; Excel Supported)</div>
+    <div class="card-desc">Drop your LinkedIn export ZIP file and CRM Excel / CSV file here directly:</div>
+
+    <div class="zone" id="zipZone">
+      <div>
+        <div class="zone-label">1. LinkedIn Export Archive (.zip) or CSV files</div>
+        <div class="zone-sub">Drop Basic_LinkedInDataExport_09-01-2026.zip here</div>
+      </div>
+      <div class="zone-status" id="zipStatus">not added</div>
+      <input type="file" id="zipInput" accept=".zip,.csv" multiple />
+    </div>
+
+    <div class="zone" id="crmZone">
+      <div>
+        <div class="zone-label">2. CRM Opportunities (.xlsx or .csv)</div>
+        <div class="zone-sub">Drop Hustad_LinkedIn_Outreach_Record.xlsx or CSV here</div>
+      </div>
+      <div class="zone-status" id="crmStatus">not added</div>
+      <input type="file" id="crmInput" accept=".xlsx,.xls,.csv" />
+    </div>
+  </div>
 
   <div class="row">
-    <button id="buildBtn" disabled>Build the desk</button>
-    <button id="serveBtn" class="secondary" style="display:none">Open the built page</button>
+    <button id="buildBtn" disabled>Build the Desk</button>
+    <button id="serveBtn" class="secondary" style="display:none">Open Live Desk &rarr;</button>
   </div>
 
   <pre id="log" style="display:none"></pre>
 
 <script>
-const TARGETS = __TARGETS__;
-const zones = document.getElementById('zones');
-const files = {};
+const uploadedFiles = [];
 
-TARGETS.forEach(([suffix, dest, label]) => {
-  const z = document.createElement('div');
-  z.className = 'zone';
-  z.innerHTML = `
-    <div>
-      <div class="zone-label">${label}</div>
-      <div class="zone-sub">drop the CSV here, or click to browse</div>
-    </div>
-    <div class="zone-status">not added</div>
-    <input type="file" accept=".csv" />`;
-  const input = z.querySelector('input');
-  const status = z.querySelector('.zone-status');
+function setupZone(zoneId, inputId, statusId, isZip) {
+  const z = document.getElementById(zoneId);
+  const input = document.getElementById(inputId);
+  const status = document.getElementById(statusId);
 
-  function take(file) {
-    if (!file) return;
-    files[suffix] = file;
-    z.classList.add('filled');
-    status.textContent = file.name;
-    updateButton();
-  }
   z.addEventListener('click', () => input.click());
-  input.addEventListener('change', e => take(e.target.files[0]));
+  input.addEventListener('change', e => takeFiles(e.target.files, z, status));
   z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('drag'); });
   z.addEventListener('dragleave', () => z.classList.remove('drag'));
   z.addEventListener('drop', e => {
     e.preventDefault(); z.classList.remove('drag');
-    take(e.dataTransfer.files[0]);
+    takeFiles(e.dataTransfer.files, z, status);
   });
-  zones.appendChild(z);
-});
+}
+
+function takeFiles(filesList, zoneEl, statusEl) {
+  if (!filesList || filesList.length === 0) return;
+  for (let f of filesList) {
+    uploadedFiles.push(f);
+  }
+  zoneEl.classList.add('filled');
+  statusEl.textContent = filesList[0].name + (filesList.length > 1 ? ` (+${filesList.length - 1} more)` : '');
+  updateButton();
+}
+
+setupZone('zipZone', 'zipInput', 'zipStatus', true);
+setupZone('crmZone', 'crmInput', 'crmStatus', false);
 
 function updateButton() {
-  document.getElementById('buildBtn').disabled = Object.keys(files).length !== TARGETS.length;
+  document.getElementById('buildBtn').disabled = uploadedFiles.length === 0;
 }
 
 document.getElementById('buildBtn').addEventListener('click', async () => {
   const btn = document.getElementById('buildBtn');
   const log = document.getElementById('log');
-  btn.disabled = true; btn.textContent = 'Building...';
-  log.style.display = 'block'; log.textContent = 'Uploading files & building pipeline...';
+  btn.disabled = true; btn.textContent = 'Building Desk...';
+  log.style.display = 'block'; log.textContent = 'Uploading files, unzipping archives & running 12-stage AI pipeline...';
 
   const fd = new FormData();
-  Object.values(files).forEach(f => fd.append('files', f, f.name));
+  uploadedFiles.forEach(f => fd.append('files', f, f.name));
 
   try {
     const res = await fetch('/build', { method: 'POST', body: fd });
@@ -122,10 +144,10 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
     if (data.ok) {
       log.classList.add('ok');
       document.getElementById('serveBtn').style.display = 'inline-block';
-      btn.textContent = 'Build the desk again';
+      btn.textContent = 'Build completed! Click Open Live Desk';
     } else {
       log.classList.add('bad');
-      btn.textContent = 'Build failed -- see log';
+      btn.textContent = 'Build failed -- see log below';
     }
   } catch (err) {
     log.textContent = 'Request failed: ' + err;
@@ -460,17 +482,46 @@ class Handler(BaseHTTPRequestHandler):
         subprocess.run(['rm', '-rf', 'data/raw', 'data/work', 'data/research', 'site/index.html'], cwd=ROOT)
         os.makedirs(paths.s(paths.RAW), exist_ok=True)
 
+        import zipfile, io
+        import pandas as pd
+
         log_lines = []
         matched = set()
         for filename, data in uploads:
-            dest, label = target_for(filename)
-            if not dest:
-                log_lines.append(f"skipped {filename}: didn't recognize which export this is")
-                continue
-            with open(os.path.join(paths.s(paths.RAW), dest), 'wb') as f:
-                f.write(data)
-            matched.add(dest)
-            log_lines.append(f"saved {filename} -> data/raw/{dest} ({label})")
+            fname_lower = filename.lower()
+            if fname_lower.endswith('.zip'):
+                try:
+                    with zipfile.ZipFile(io.BytesIO(data)) as z:
+                        for zinfo in z.infolist():
+                            zname = os.path.basename(zinfo.filename)
+                            if not zname:
+                                continue
+                            dest, label = target_for(zname)
+                            if dest:
+                                with z.open(zinfo) as zf, open(os.path.join(paths.s(paths.RAW), dest), 'wb') as out_f:
+                                    out_f.write(zf.read())
+                                matched.add(dest)
+                                log_lines.append(f"extracted from {filename}: {zname} -> data/raw/{dest} ({label})")
+                except Exception as e:
+                    log_lines.append(f"error unzipping {filename}: {e}")
+            elif fname_lower.endswith(('.xlsx', '.xls')):
+                try:
+                    df = pd.read_excel(io.BytesIO(data))
+                    csv_path = os.path.join(paths.s(paths.RAW), 'opportunities_2026.csv')
+                    df.to_csv(csv_path, index=False)
+                    matched.add('opportunities_2026.csv')
+                    log_lines.append(f"converted Excel {filename} -> data/raw/opportunities_2026.csv")
+                except Exception as e:
+                    log_lines.append(f"error converting Excel {filename}: {e}")
+            else:
+                dest, label = target_for(filename)
+                if not dest:
+                    log_lines.append(f"skipped {filename}: unrecognized export format")
+                    continue
+                with open(os.path.join(paths.s(paths.RAW), dest), 'wb') as f:
+                    f.write(data)
+                matched.add(dest)
+                log_lines.append(f"saved {filename} -> data/raw/{dest} ({label})")
 
         missing = [dest for _, dest, label in RAW_TARGETS if dest not in matched]
         if missing:
