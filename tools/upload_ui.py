@@ -506,7 +506,16 @@ class Handler(BaseHTTPRequestHandler):
                     log_lines.append(f"error unzipping {filename}: {e}")
             elif fname_lower.endswith(('.xlsx', '.xls')):
                 try:
-                    df = pd.read_excel(io.BytesIO(data))
+                    xl = pd.ExcelFile(io.BytesIO(data))
+                    df = None
+                    for s in xl.sheet_names:
+                        temp_df = pd.read_excel(xl, sheet_name=s)
+                        cols_lower = [str(c).lower() for c in temp_df.columns]
+                        if any(k in cols_lower for k in ['company', 'company name', 'account', 'account name', 'organization']):
+                            df = temp_df
+                            break
+                    if df is None:
+                        df = pd.read_excel(io.BytesIO(data), sheet_name=0)
                     csv_path = os.path.join(paths.s(paths.RAW), 'opportunities_2026.csv')
                     df.to_csv(csv_path, index=False)
                     matched.add('opportunities_2026.csv')
