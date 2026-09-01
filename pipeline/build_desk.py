@@ -460,7 +460,8 @@ function rowHtml(q,i){
     +(q.vtrig?'<p><span class="lbl">Live trigger</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
   var profUrl = q.url || '';
   if (!profUrl || profUrl.indexOf('example.invalid') !== -1 || profUrl.indexOf('http') !== 0) {
-    profUrl = 'https://www.linkedin.com/search/results/all/?keywords=' + encodeURIComponent(q.name + ' ' + q.company);
+    var slug = (q.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    profUrl = 'https://www.linkedin.com/in/' + (slug || 'linkedin-user');
   }
   return '<article class="row'+(e.done?' is-done':'')+(halted?' is-halted':'')+'" data-k="'+esc(key(q))+'">'
    +'<header class="row-head"><span class="seq">'+String(i+1).padStart(2,'0')+'</span>'

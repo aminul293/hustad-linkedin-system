@@ -579,7 +579,7 @@ def build(plan_csv, research_json, out_csv):
     company_seen = {}
     day_hooks, company_hooks = {}, {}
     fam_mid, fam_ask = {}, {}
-    def fam(c): return ' '.join(str(c).lower().split()[:2])
+    def fam(c): return ' '.join(str(c).lower().replace(',', ' ').split()[:2])
     day_mid, day_ask, day_gives, day_tail = {}, {}, {}, {}
 
     GLOBAL_CAP = 8
@@ -623,7 +623,8 @@ def build(plan_csv, research_json, out_csv):
         dkey = str(r['touch1_date'])
 
         # ---- opener
-        n_at = company_seen.get(company, 0); company_seen[company] = n_at + 1
+        f_co = fam(company)
+        n_at = company_seen.get(f_co, 0); company_seen[f_co] = n_at + 1
         raw = hook if n_at == 0 else (HOOK_ALT.get(company, '') if n_at == 1 else '')
         if not hook_fits(raw, seg): raw = ''
         fb = FALLBACK_HOOK.get(seg, []) + FALLBACK_LANE.get(lane, FALLBACK_LANE['Site level'])
@@ -631,20 +632,26 @@ def build(plan_csv, research_json, out_csv):
         # colleagues who will compare DMs, whatever their LinkedIn spelling says.
         used_h = day_hooks.setdefault(dkey, set()); used_c = company_hooks.setdefault(fam(company), set())
         h = cap_hook(raw)
-        if not h or h in used_h or h in used_c:
+        used_c_norm = {x.strip().lower() for x in used_c}
+        used_h_norm = {x.strip().lower() for x in used_h}
+        if not h or h.strip().lower() in used_h_norm or h.strip().lower() in used_c_norm:
             h = ''
             for k in range(len(fb)):
                 cand = fb[(n_at + k) % len(fb)]
-                if cand not in used_h and cand not in used_c:
+                cn = cand.strip().lower()
+                if cn not in used_h_norm and cn not in used_c_norm:
                     h = cand; break
             if not h:
-                # The day's bank is spent. Two strangers opening alike is invisible; two colleagues
-                # opening alike is the one thing this program cannot afford. Firm wins.
                 for k in range(len(fb)):
                     cand = fb[(n_at + k) % len(fb)]
-                    if cand not in used_c:
+                    if cand.strip().lower() not in used_c_norm:
                         h = cand; break
-            h = h or fb[n_at % len(fb)]
+            if not h:
+                for cand in fb:
+                    if cand.strip().lower() not in used_c_norm:
+                        h = cand; break
+            if not h:
+                h = fb[n_at % len(fb)]
         used_h.add(h); used_c.add(h)
 
         # ---- give (role stack; acquisitions titles get the condition read)
