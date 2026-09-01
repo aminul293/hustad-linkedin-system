@@ -458,7 +458,8 @@ function rowHtml(q,i){
   var chk='';
   if(q.vcheck){ chk='<div class="check"><p><span class="lbl">What the desk checked this morning</span>'+esc(q.vcheck)+'</p>'
     +(q.vtrig?'<p><span class="lbl">Live trigger</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
-  var profUrl = (q.url && q.url.indexOf('http') === 0 && q.url.indexOf('example.invalid') === -1) ? q.url : ('https://www.linkedin.com/search/results/all/?keywords=' + encodeURIComponent(q.name + ' ' + q.company));
+  var profUrl = q.url || '';
+  if (profUrl && profUrl.indexOf('http') !== 0) { profUrl = 'https://' + profUrl; }
   return '<article class="row'+(e.done?' is-done':'')+(halted?' is-halted':'')+'" data-k="'+esc(key(q))+'">'
    +'<header class="row-head"><span class="seq">'+String(i+1).padStart(2,'0')+'</span>'
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
