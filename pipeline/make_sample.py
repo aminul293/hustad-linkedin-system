@@ -97,7 +97,7 @@ for i in range(N):
               'touch1_date': day.isoformat(), 'touch2_date': t2.isoformat(), 'touch3_date': t3.isoformat(),
               'day_seq': seq, 'full_name': f'{fn} {ln}', 'first_name_used': fn, 'first_name_clean': fn,
               'First Name': fn, 'Company': firm, 'Position': TITLES[lane],
-              'URL': f"https://www.linkedin.com/in/{fn.lower()}-{ln.lower()}",
+              'URL': 'https://example.invalid/in/sample-record',
               'Connected On': (start - timedelta(days=random.randint(30, 400))).isoformat(),
               'days_since_connected': random.randint(30, 400),
               'outreach_lane': lane, 'segment': seg, 'target_tier': 'T1 Priority',
