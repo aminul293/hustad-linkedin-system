@@ -32,9 +32,10 @@ PAGE = """<!doctype html>
   :root{color-scheme:dark light}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1c1a16;color:#efe8d8;
        max-width:780px;margin:0 auto;padding:40px 24px 80px}
-  h1{font-size:26px;margin:0 0 6px;font-weight:700}
+  .header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  h1{font-size:26px;margin:0;font-weight:700}
   p.lede{color:#c7bda6;margin:0 0 24px;max-width:64ch;line-height:1.5}
-  .card-box{background:#242019;border:1px solid #3a3428;border-radius:12px;padding:24px;margin-bottom:28px}
+  .card-box{background:#242019;border:1px solid #3a3428;border-radius:12px;padding:24px;margin-bottom:24px}
   .card-title{font-size:16px;font-weight:700;margin-bottom:6px;color:#e3935f;display:flex;align-items:center;gap:8px}
   .card-desc{font-size:13px;color:#aab3c0;margin-bottom:16px}
   .zone{border:2px dashed #3a3428;border-radius:8px;padding:18px;margin-bottom:12px;
@@ -47,48 +48,49 @@ PAGE = """<!doctype html>
   .zone.filled .zone-status{color:#8fbf9f;font-weight:700}
   input[type=file]{display:none}
   button{font:inherit;font-weight:700;background:linear-gradient(135deg, #e3935f, #c87642);color:#1c1a16;border:none;border-radius:8px;
-         padding:14px 26px;cursor:pointer;margin-top:8px;font-size:14px;transition:all 0.2s ease}
+         padding:14px 24px;cursor:pointer;font-size:14px;transition:all 0.2s ease}
   button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(227,147,95,0.25)}
-  button:disabled{opacity:.5;cursor:not-allowed}
-  button.secondary{background:transparent;color:#e3935f;border:1px solid #e3935f;margin-left:12px}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  button.secondary{background:rgba(227,147,95,0.15);color:#e3935f;border:1px solid #e3935f}
   pre{background:#242019;border:1px solid #3a3428;border-radius:8px;padding:16px;font-size:12.5px;
       white-space:pre-wrap;word-break:break-word;max-height:420px;overflow:auto;margin-top:20px}
-  .row{display:flex;gap:10px;align-items:center;margin-top:16px}
+  .row{display:flex;gap:12px;align-items:center;margin-top:16px;flex-wrap:wrap}
   .ok{color:#8fbf9f}.bad{color:#e0796b}
-  .divider{text-align:center;margin:24px 0;position:relative;color:#7a7263;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
-  .divider::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:#3a3428;z-index:0}
-  .divider span{position:relative;background:#1c1a16;padding:0 12px;z-index:1}
 </style></head>
 <body>
-  <h1>Build Today's Desk</h1>
-  <p class="lede">Drop your LinkedIn data ZIP file and your CRM file below. The system automatically extracts, classifies, scores, and generates your complete outreach desk!</p>
+  <div class="header-row">
+    <h1>Build Today's Desk</h1>
+    <a href="/desk" style="font-weight:700;color:#e3935f;text-decoration:none;font-size:14px;padding:8px 16px;background:rgba(227,147,95,0.12);border:1px solid #e3935f;border-radius:8px;">Open Live Desk &rarr;</a>
+  </div>
+  <p class="lede">Drop your LinkedIn data ZIP file and your CRM file below to upload new files, or click <b>Build Using Existing Files</b> to re-run the pipeline immediately.</p>
 
   <div class="card-box">
-    <div class="card-title">📦 Fast 2-Step Upload (ZIP &amp; Excel Supported)</div>
-    <div class="card-desc">Drop your LinkedIn export ZIP file and CRM Excel / CSV file here directly:</div>
+    <div class="card-title">📦 Upload Files (Click box or Drop files)</div>
+    <div class="card-desc">Click each box below to select your files from your Downloads folder:</div>
 
     <div class="zone" id="zipZone">
       <div>
         <div class="zone-label">1. LinkedIn Export Archive (.zip) or CSV files</div>
-        <div class="zone-sub">Drop Basic_LinkedInDataExport_09-01-2026.zip here</div>
+        <div class="zone-sub">Click to select Basic_LinkedInDataExport_09-01-2026.zip</div>
       </div>
-      <div class="zone-status" id="zipStatus">not added</div>
+      <div class="zone-status" id="zipStatus">click to select file</div>
       <input type="file" id="zipInput" accept=".zip,.csv" multiple />
     </div>
 
     <div class="zone" id="crmZone">
       <div>
         <div class="zone-label">2. CRM Opportunities (.xlsx or .csv)</div>
-        <div class="zone-sub">Drop Hustad_LinkedIn_Outreach_Record.xlsx or CSV here</div>
+        <div class="zone-sub">Click to select Hustad_LinkedIn_Outreach_Record.xlsx</div>
       </div>
-      <div class="zone-status" id="crmStatus">not added</div>
+      <div class="zone-status" id="crmStatus">click to select file</div>
       <input type="file" id="crmInput" accept=".xlsx,.xls,.csv" />
     </div>
   </div>
 
   <div class="row">
-    <button id="buildBtn" disabled>Build the Desk</button>
-    <button id="serveBtn" class="secondary" style="display:none">Open Live Desk &rarr;</button>
+    <button id="buildBtn" disabled>Build Desk With Selected Files</button>
+    <button id="buildExistingBtn" class="secondary">⚡ Build Using Existing Server Files</button>
+    <button id="serveBtn" class="secondary" onclick="window.location.href='/desk'">Open Live Desk &rarr;</button>
   </div>
 
   <pre id="log" style="display:none"></pre>
@@ -128,36 +130,43 @@ function updateButton() {
   document.getElementById('buildBtn').disabled = uploadedFiles.length === 0;
 }
 
-document.getElementById('buildBtn').addEventListener('click', async () => {
+async function runBuild(formData) {
   const btn = document.getElementById('buildBtn');
+  const exBtn = document.getElementById('buildExistingBtn');
   const log = document.getElementById('log');
-  btn.disabled = true; btn.textContent = 'Building Desk...';
-  log.style.display = 'block'; log.textContent = 'Uploading files, unzipping archives & running 12-stage AI pipeline...';
-
-  const fd = new FormData();
-  uploadedFiles.forEach(f => fd.append('files', f, f.name));
+  btn.disabled = true; exBtn.disabled = true;
+  btn.textContent = 'Building Desk...';
+  log.style.display = 'block'; log.textContent = 'Processing files & running 12-stage AI pipeline...';
 
   try {
-    const res = await fetch('/build', { method: 'POST', body: fd });
+    const res = await fetch('/build', { method: 'POST', body: formData });
     const data = await res.json();
     log.textContent = data.log;
     if (data.ok) {
       log.classList.add('ok');
       document.getElementById('serveBtn').style.display = 'inline-block';
-      btn.textContent = 'Build completed! Click Open Live Desk';
+      btn.textContent = 'Build Completed! Opening Desk...';
+      setTimeout(() => { window.location.href = '/desk'; }, 1200);
     } else {
       log.classList.add('bad');
-      btn.textContent = 'Build failed -- see log below';
+      btn.textContent = 'Build Failed -- see log below';
     }
   } catch (err) {
     log.textContent = 'Request failed: ' + err;
     btn.textContent = 'Try again';
   }
-  btn.disabled = false;
+  btn.disabled = false; exBtn.disabled = false;
+}
+
+document.getElementById('buildBtn').addEventListener('click', () => {
+  const fd = new FormData();
+  uploadedFiles.forEach(f => fd.append('files', f, f.name));
+  runBuild(fd);
 });
 
-document.getElementById('serveBtn').addEventListener('click', () => {
-  window.location.href = '/desk';
+document.getElementById('buildExistingBtn').addEventListener('click', () => {
+  const fd = new FormData();
+  runBuild(fd);
 });
 </script>
 </body></html>"""
@@ -363,32 +372,6 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
             return
 
-        if self.path in ('/desk', '/preview', '/preview.html'):
-            site = os.path.join(ROOT, 'site', 'index.html')
-            if os.path.exists(site):
-                self.send_response(200)
-                self.send_header('Content-Type', 'text/html; charset=utf-8')
-                self.end_headers()
-                with open(site, 'rb') as f:
-                    content = f.read().decode('utf-8', 'replace')
-                banner = '<div style="background:#242019;color:#efe8d8;padding:8px 16px;font-family:sans-serif;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #3a3428;"><span>Hustad LinkedIn Desk</span><a href="/upload" style="color:#e3935f;text-decoration:none;font-weight:600;">📤 Upload New CSV Data</a></div>'
-                if '<body>' in content:
-                    content = content.replace('<body>', '<body>' + banner, 1)
-                self.wfile.write(content.encode('utf-8'))
-                return
-            else:
-                self.send_response(302)
-                self.send_header('Location', '/upload')
-                self.end_headers()
-                return
-
-        site = os.path.join(ROOT, 'site', 'index.html')
-        if self.path == '/' and os.path.exists(site):
-            self.send_response(302)
-            self.send_header('Location', '/desk')
-            self.end_headers()
-            return
-
         self.send_response(200)
         self.send_header('Content-Type', 'text/html; charset=utf-8')
         self.end_headers()
@@ -479,8 +462,8 @@ class Handler(BaseHTTPRequestHandler):
         body = self.rfile.read(length)
         uploads = parse_multipart(body, boundary)
 
-        subprocess.run(['rm', '-rf', 'data/raw', 'data/work', 'data/research', 'site/index.html'], cwd=ROOT)
         os.makedirs(paths.s(paths.RAW), exist_ok=True)
+        os.makedirs(paths.s(paths.WORK), exist_ok=True)
 
         import zipfile, io
         import pandas as pd
@@ -564,6 +547,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    ensure_site_built()
     server = ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
     url = f'http://0.0.0.0:{PORT}'
     print(f'Serving the application at {url}')
