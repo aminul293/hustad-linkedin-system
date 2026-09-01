@@ -2,7 +2,7 @@
 A web interface for uploading export files and building/viewing the LinkedIn Desk.
 Can run locally or hosted (e.g. Render).
 """
-import sys, os, subprocess, threading, webbrowser, html, re
+import sys, os, subprocess, threading, webbrowser, html, re, hmac, hashlib, secrets, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +13,9 @@ import paths  # noqa: E402
 PORT = int(os.environ.get('PORT', os.environ.get('HUSTAD_UPLOAD_PORT', '8765')))
 
 RAW_TARGETS = [
-    ('Connections.csv',              'a6350e6d-Connections.csv',            'LinkedIn connections export'),
+    # Keep the canonical LinkedIn filename because the pipeline validates and
+    # loads this exact path after an upload.
+    ('Connections.csv',              'Connections.csv',                    'LinkedIn connections export'),
     ('Invitations.csv',              'ff13996e-Invitations.csv',            'LinkedIn invitations export'),
     ('messages.csv',                 '86563516-messages.csv',               'LinkedIn messages export'),
     ('Endorsement_Received_Info.csv', '3da803c8-Endorsement_Received_Info.csv', 'LinkedIn endorsements export'),
@@ -196,6 +198,9 @@ def parse_multipart(body, boundary):
 def run_step(cmd, env):
     proc = subprocess.run(cmd, cwd=ROOT, env=env, capture_output=True, text=True)
     tag = f"$ {' '.join(cmd)}\n"
+    out = tag + proc.stdout
+    if proc.stderr:
+        out += ("\n" if out and not out.endswith("\n") else "") + proc.stderr
     return proc.returncode == 0, out
 
 
@@ -218,7 +223,29 @@ def ensure_site_built():
 
 
 
-ACCESS_KEY = os.environ.get('HUSTAD_ACCESS_KEY', 'hustad2026')
+ACCESS_KEY = os.environ.get('HUSTAD_ACCESS_KEY', '')
+SESSION_SECRET = os.environ.get('HUSTAD_SESSION_SECRET', '')
+SESSION_TTL_SECONDS = int(os.environ.get('HUSTAD_SESSION_TTL_SECONDS', '43200'))
+MAX_UPLOAD_BYTES = int(os.environ.get('HUSTAD_MAX_UPLOAD_BYTES', str(50 * 1024 * 1024)))
+
+
+def _session_token(expires_at):
+    payload = str(expires_at)
+    signature = hmac.new(SESSION_SECRET.encode(), payload.encode(), hashlib.sha256).hexdigest()
+    return f"{payload}.{signature}"
+
+
+def _valid_session(token):
+    if not token or not SESSION_SECRET or '.' not in token:
+        return False
+    expires, supplied = token.rsplit('.', 1)
+    try:
+        if int(expires) < int(time.time()):
+            return False
+    except ValueError:
+        return False
+    expected = hmac.new(SESSION_SECRET.encode(), expires.encode(), hashlib.sha256).hexdigest()
+    return hmac.compare_digest(supplied, expected)
 
 LOGIN_PAGE = """<!doctype html>
 <html lang="en">
@@ -265,7 +292,21 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
     def check_auth(self):
-        return True
+        cookie = self.headers.get('Cookie', '')
+        for part in cookie.split(';'):
+            name, sep, value = part.strip().partition('=')
+            if sep and name == 'hustad_session':
+                return _valid_session(value)
+        return False
+
+    def require_auth(self):
+        if self.check_auth():
+            return True
+        self.send_response(401)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(b'{"ok":false,"error":"Authentication required"}')
+        return False
 
     def do_GET(self):
         if self.path == '/logout':
@@ -282,7 +323,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(LOGIN_PAGE.replace('__ERR__', '').encode('utf-8'))
             return
 
-        if not self.check_auth() and not self.path.startswith('/api/webhook'):
+        if not self.check_auth() and not self.path.startswith(('/api/webhook', '/api/health')):
             self.send_response(302)
             self.send_header('Location', '/login')
             self.end_headers()
@@ -381,6 +422,13 @@ class Handler(BaseHTTPRequestHandler):
             import api
             import json
             data = api.get_analytics_data()
+            body = json.dumps(data).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         if self.path.startswith('/api/sync/fetch'):
             sys.path.insert(0, os.path.join(ROOT, 'backend', 'db'))
             import db_sync
@@ -423,8 +471,10 @@ class Handler(BaseHTTPRequestHandler):
             params = urllib.parse.parse_qs(body)
             submitted_pass = params.get('passcode', [''])[0]
             if submitted_pass == ACCESS_KEY:
+                expires_at = int(time.time()) + SESSION_TTL_SECONDS
                 self.send_response(302)
-                self.send_header('Set-Cookie', 'hustad_session=authenticated; Path=/; HttpOnly; SameSite=Lax')
+                secure = '; Secure' if self.headers.get('X-Forwarded-Proto') == 'https' else ''
+                self.send_header('Set-Cookie', f'hustad_session={_session_token(expires_at)}; Path=/; Max-Age={SESSION_TTL_SECONDS}; HttpOnly; SameSite=Strict{secure}')
                 self.send_header('Location', '/desk')
                 self.end_headers()
                 return
@@ -464,6 +514,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
             self.wfile.write(body)
+            return
+
+        if not self.require_auth():
             return
 
         if self.path.startswith('/api/ingest_replies'):
@@ -508,6 +561,12 @@ class Handler(BaseHTTPRequestHandler):
             return
         boundary = m.group(1).strip().encode()
         length = int(self.headers.get('Content-Length', 0))
+        if length > MAX_UPLOAD_BYTES:
+            self.send_response(413)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(b'{"ok":false,"error":"Upload is too large"}')
+            return
         body = self.rfile.read(length)
         uploads = parse_multipart(body, boundary)
 
@@ -597,6 +656,10 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    if not ACCESS_KEY:
+        raise SystemExit('HUSTAD_ACCESS_KEY is required; refusing to start without authentication')
+    if not SESSION_SECRET or len(SESSION_SECRET) < 32:
+        raise SystemExit('HUSTAD_SESSION_SECRET must be at least 32 characters')
     ensure_site_built()
     server = ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
     url = f'http://0.0.0.0:{PORT}'
