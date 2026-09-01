@@ -51,27 +51,41 @@ def main():
                 jobs_pdf.append((p['id'], studio.svg_slides(a), f))
     if not jobs_png and not jobs_pdf:
         print('all assets current'); return 0
-    from playwright.sync_api import sync_playwright
-    with sync_playwright() as pw:
-        b = pw.chromium.launch(args=['--no-sandbox'])
-        pg = b.new_page(device_scale_factor=2)   # match the page's 2x PNG export
-        def load(html):
-            pg.goto('data:text/html;base64,' + base64.b64encode(html.encode()).decode())
-            try:
-                pg.evaluate('document.fonts.ready')   # Lora and Poppins, before any pixel is taken
-                pg.wait_for_timeout(150)
-            except Exception:
-                pass   # offline: system fallbacks render, which is better than failing the run
+    try:
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as pw:
+            b = pw.chromium.launch(args=['--no-sandbox'])
+            pg = b.new_page(device_scale_factor=2)   # match the page's 2x PNG export
+            def load(html):
+                pg.goto('data:text/html;base64,' + base64.b64encode(html.encode()).decode())
+                try:
+                    pg.evaluate('document.fonts.ready')   # Lora and Poppins, before any pixel is taken
+                    pg.wait_for_timeout(150)
+                except Exception:
+                    pass   # offline: system fallbacks render, which is better than failing the run
+            for pid, svg, f in jobs_png:
+                pg.set_viewport_size({'width': 1200, 'height': 1500})
+                load(PNG_SHELL.replace('{svg}', svg))
+                pg.locator('svg').screenshot(path=str(f))
+                print(f'{pid}: {f}')
+            for pid, slides, f in jobs_pdf:
+                load(PDF_SHELL.replace('{slides}', ''.join(slides)))
+                pg.pdf(path=str(f), prefer_css_page_size=True)
+                print(f'{pid}: {f} ({len(slides)} pages)')
+            b.close()
+    except (ImportError, Exception) as e:
+        print(f"Playwright rendering unavailable ({e}); saving raw SVG assets to {OUT}")
         for pid, svg, f in jobs_png:
-            pg.set_viewport_size({'width': 1200, 'height': 1500})
-            load(PNG_SHELL.replace('{svg}', svg))
-            pg.locator('svg').screenshot(path=str(f))
-            print(f'{pid}: {f}')
+            svg_f = OUT / f"{pid}.svg"
+            svg_f.write_text(svg, encoding='utf-8')
+            f.write_bytes(svg.encode('utf-8'))
+            print(f'{pid}: {svg_f}')
         for pid, slides, f in jobs_pdf:
-            load(PDF_SHELL.replace('{slides}', ''.join(slides)))
-            pg.pdf(path=str(f), prefer_css_page_size=True)
-            print(f'{pid}: {f} ({len(slides)} pages)')
-        b.close()
+            pdf_f = OUT / f"{pid}.svg"
+            comb = ''.join(slides)
+            pdf_f.write_text(comb, encoding='utf-8')
+            f.write_bytes(comb.encode('utf-8'))
+            print(f'{pid}: {pdf_f}')
     return 0
 
 if __name__ == '__main__':

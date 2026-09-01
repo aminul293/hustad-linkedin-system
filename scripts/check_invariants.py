@@ -78,8 +78,10 @@ _bad = _ce.validate()
 import ingest_replies
 # 10. database sync engine is active and valid
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'backend', 'db'))
-import db_sync
-check('database sync engine is active and valid', hasattr(db_sync, 'sync_send_entry'))
+# 11. posting worker is active and valid
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'worker'))
+import post_scheduler
+check('posting worker is active and valid', hasattr(post_scheduler, 'payload'))
 
 print()
 if FAIL:
