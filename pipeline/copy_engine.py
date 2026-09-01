@@ -114,6 +114,18 @@ MEANING_SEGMENT = {
  'Single family rental': [
    "Hundreds of individual roofs means the money's in small items and truck rolls. We route the inspections and fix what's fixable on the visit.",
  ],
+ 'Self storage': [
+   "Self storage assets need zero tenant disruption, flat roof drainage discipline, and a clean condition record across multi-building facilities.",
+ ],
+ 'Healthcare': [
+   "Medical office and healthcare facilities carry strict zero-water-intrusion standards and HVAC penetration seals; we document every square foot.",
+ ],
+ 'Hospitality': [
+   "Guest satisfaction means quiet staging, zero disruption to check-ins, and fast same-day containment for exterior leaks.",
+ ],
+ 'Data center': [
+   "Mission critical facilities require thermal envelope discipline, zero-downtime work windows, and pre-scheduled roof walks.",
+ ],
 }
 
 # ---------------------------------------------------------------------------
