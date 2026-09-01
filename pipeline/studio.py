@@ -285,7 +285,7 @@ def render_articles_pane(cal):
               + f'<p class="role">{esc(a["outlet"])} &middot; {esc(a["audience"])}</p></div>'
               + f'<div class="marks"><select class="cstat" aria-label="Status">{opts}</select></div></header>'
               + '<div class="meta">' + _chip(f'Tier {a["tier"]}') + _chip(a['month'], 'chip-id')
-              + f'<a class="profile" href="{esc(a["route"])}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href,\'_blank\');return false;">{esc(a["route_label"])} &rarr;</a></div>'
+              + f'<a class="profile" href="{esc(a["route"])}" target="_blank" rel="noopener">{esc(a["route_label"])} &rarr;</a></div>'
               + f'<p class="why"><span class="lbl">Angle</span>{esc(a["angle"])}</p>'
               + '<div class="note-row"><label><span class="lbl">Live link / notes</span>'
               + '<input type="text" class="cnote" placeholder="pitch sent date, editor name, live URL"></label></div>'
@@ -364,43 +364,36 @@ def render_replies_pane():
 # CSS and JS the desk template splices in. Plain strings, no f-strings, so braces are safe.
 # ---------------------------------------------------------------------------
 STUDIO_CSS = """
-/* ---- Ultra-Premium Modern Studio Styles ---- */
-.tabrail{display:flex;gap:4px;margin:0;padding:4px 0;overflow-x:auto;scrollbar-width:none}
-.tabrail::-webkit-scrollbar{display:none}
+.tabrail{display:flex;gap:2px;margin:0;padding:0 0 0;overflow-x:auto}
 .tabrail button{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  background:rgba(255,255,255,0.03);color:var(--ink-2);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:9px 16px;cursor:pointer;white-space:nowrap;transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1)}
-.tabrail button.is-on{background:linear-gradient(135deg, rgba(212,136,40,0.2), rgba(245,158,11,0.1));color:var(--copper);border-color:var(--copper);box-shadow:0 0 16px rgba(212,136,40,0.15)}
-.tabrail button:hover:not(.is-on){background:rgba(255,255,255,0.07);color:var(--ink)}
-.pane{display:none;animation:fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)}.pane.is-on{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.wk{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);margin:32px 0 14px;display:flex;align-items:center;gap:10px}
-.wk::after{content:'';flex:1;height:1px;background:linear-gradient(90deg, var(--line-2), transparent)}
-.postbody p{margin:0 0 14px;line-height:1.68}.postbody p:last-child{margin-bottom:0}
-.postbody .cta{font-weight:600;color:var(--copper)}
-.tagline{color:var(--ink-3);font-size:14px;font-weight:500}
-.factline{margin:14px 0 0;font-size:13px;color:var(--ink-2);line-height:1.6;background:rgba(255,255,255,0.02);padding:10px 14px;border-radius:6px;border-left:3px solid var(--copper)}
+  background:transparent;color:var(--ink-2);border:0;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;white-space:nowrap}
+.tabrail button.is-on{color:var(--ink);border-bottom-color:var(--copper)}
+.tabrail button:hover{color:var(--ink)}
+.pane{display:none}.pane.is-on{display:block}
+.wk{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:26px 0 10px}
+.postbody p{margin:0 0 12px}.postbody p:last-child{margin-bottom:0}
+.postbody .cta{font-weight:600}
+.tagline{color:var(--ink-3);font-size:14px}
+.factline{margin:12px 0 0;font-size:13px;color:var(--ink-2);line-height:1.55}
 .factline i{color:var(--ink-3);font-style:normal}
-.asset{display:flex;gap:18px;margin-top:16px;align-items:flex-start;flex-wrap:wrap}
-.asset-fr{width:240px;flex:0 0 auto;border:1px solid var(--line-2);background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.35);transition:transform 0.25s ease}
-.asset-fr:hover{transform:scale(1.02)}
+.asset{display:flex;gap:14px;margin-top:12px;align-items:flex-start;flex-wrap:wrap}
+.asset-fr{width:230px;flex:0 0 auto;border:1px solid var(--line);background:var(--paper)}
 .asset-fr svg{display:block;width:100%;height:auto}
 .asset-side{flex:1 1 220px;min-width:200px}
 .asset-side .hint{margin-top:0}
-.slides{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;flex:1 1 100%;max-width:100%}
-.slide{flex:0 0 180px;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.25);transition:transform 0.2s ease}
-.slide:hover{transform:translateY(-3px)}
+.slides{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;flex:1 1 100%;max-width:100%}
+.slide{flex:0 0 168px;border:1px solid var(--line)}
 .slide svg{display:block;width:100%;height:auto}
-.chip-ch-company{background:rgba(99,102,241,0.15);color:#818CF8;border-color:rgba(99,102,241,0.3)}
-.chip-ok{background:rgba(16,185,129,0.15);color:#34D399;border-color:rgba(16,185,129,0.3)}
-.chip-warn{background:rgba(245,158,11,0.15);color:#FBBF24;border-color:rgba(245,158,11,0.3)}
-.cstat{font-family:inherit;font-size:13px;font-weight:600;padding:7px 12px;background:var(--card);color:var(--ink);border:1px solid var(--line-2);border-radius:6px;outline:none}
-#rfilter{width:100%;margin-top:14px;font-family:inherit;font-size:14px;padding:12px 16px;background:var(--paper);border:1px solid var(--line-2);border-radius:8px;color:var(--ink);transition:all 0.2s ease}
-#rfilter:focus{border-color:var(--copper);box-shadow:0 0 0 3px rgba(212,136,40,0.15)}
-.twrap{overflow-x:auto;border-radius:8px;border:1px solid var(--line)}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:10px 14px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--line-2)}
-td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top;line-height:1.55}
-.rc .row-head{margin-bottom:4px}
+.chip-ch-company{background:var(--navy-soft);color:var(--navy);border-color:transparent}
+.chip-ok{background:var(--good-soft);color:var(--good);border-color:transparent}
+.chip-warn{background:var(--copper-soft);color:var(--copper);border-color:transparent}
+.cstat{font-family:inherit;font-size:13px;font-weight:600;padding:6px 8px;background:var(--card);color:var(--ink);border:1px solid var(--line-2)}
+#rfilter{width:100%;margin-top:12px;font-family:inherit;font-size:14px;padding:9px 11px;background:var(--paper);border:1px solid var(--line-2);color:var(--ink)}
+.twrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}
+th{ text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);padding:6px 10px 6px 0;border-bottom:1px solid var(--line-2)}
+td{padding:8px 10px 8px 0;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top;line-height:1.5}
+.rc .row-head{margin-bottom:2px}
 .is-filtered{display:none}
 #printhost{display:none}
 @media print{
@@ -409,7 +402,7 @@ td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vert
   #printhost svg{width:100%;height:auto;page-break-after:always;display:block}
   @page{size:216mm 270mm;margin:0}
 }
-@media (max-width:720px){.asset-fr{width:100%}.slides .slide{flex-basis:145px}}
+@media (max-width:720px){.asset-fr{width:100%}.slides .slide{flex-basis:140px}}
 """
 
 STUDIO_JS = """
@@ -431,8 +424,7 @@ STUDIO_JS = """
 // ---- content state: posted ticks, statuses, notes -------------------------
 function cent(id){ return (state.content=state.content||{})[id]||{}; }
 function setCent(id,patch){ var m=(state.content=state.content||{}), e=m[id]||{}, k;
-  for(k in patch) e[k]=patch[k]; e.ts=Date.now(); m[id]=e; lswrite(state); saveSoon(); paintContent();
-  if (typeof sbUpsertContent==='function') sbUpsertContent(id,e); }
+  for(k in patch) e[k]=patch[k]; e.ts=Date.now(); m[id]=e; lswrite(state); saveSoon(); paintContent(); }
 function paintContent(){
   Array.prototype.forEach.call(document.querySelectorAll('[data-cid]'),function(el){
     var e=cent(el.getAttribute('data-cid'));
@@ -457,30 +449,6 @@ function paintContent(){
       navigator.clipboard.writeText(JSON.parse(tx.textContent)).then(function(){
         cp.textContent='Copied'; cp.classList.add('ok');
         setTimeout(function(){ cp.textContent='Copy'; cp.classList.remove('ok'); },1400); }); }); }
-  });
-  // ---- Keyboard shortcuts for Review Queue: Space (Approve & Copy) and ArrowRight (Skip) ----
-  window.addEventListener('keydown', function(e){
-    if (['INPUT','TEXTAREA','SELECT'].indexOf(e.target.tagName)>=0) return;
-    var cards = document.querySelectorAll('#pane-outreach .row.card, #pane-outreach .row.post');
-    if (!cards || !cards.length) return;
-    var activeIdx = 0;
-    for (var i=0; i<cards.length; i++){
-      var rect = cards[i].getBoundingClientRect();
-      if (rect.top >= -50 && rect.bottom > 100){ activeIdx = i; break; }
-    }
-    var activeCard = cards[activeIdx];
-    if (!activeCard) return;
-    if (e.code === 'Space'){
-      e.preventDefault();
-      var cp = activeCard.querySelector('.copy, .ccopy');
-      if (cp) cp.click();
-      var nextCard = cards[activeIdx + 1];
-      if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else if (e.code === 'ArrowRight'){
-      e.preventDefault();
-      var nextCard = cards[activeIdx + 1];
-      if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
   });
   paintContent();
 })();
@@ -542,21 +510,6 @@ function saveNamed(name,blob){ try{ var u=URL.createObjectURL(blob), a=document.
 })();
 """
 
-def render_analytics_pane():
-    return ('<section class="panel"><h3>Real-Time Outreach Analytics</h3>'
-            '<p>Live conversion performance tracked across opener types, touch stages, and industry segments.</p>'
-            '<div class="row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:20px 0;">'
-            '<div style="background:#242019;border:1px solid #3a3428;padding:16px;border-radius:6px;text-align:center;">'
-            '<div style="font-size:32px;font-weight:700;color:#e3935f;">22.8%</div>'
-            '<div style="font-size:12px;color:#c7bda6;margin-top:4px;">Storm Trigger Reply Rate</div></div>'
-            '<div style="background:#242019;border:1px solid #3a3428;padding:16px;border-radius:6px;text-align:center;">'
-            '<div style="font-size:32px;font-weight:700;color:#8fbf9f;">18.5%</div>'
-            '<div style="font-size:12px;color:#c7bda6;margin-top:4px;">Shared History Reply Rate</div></div>'
-            '<div style="background:#242019;border:1px solid #3a3428;padding:16px;border-radius:6px;text-align:center;">'
-            '<div style="font-size:32px;font-weight:700;color:#aab3c0;">9.4%</div>'
-            '<div style="font-size:12px;color:#c7bda6;margin-top:4px;">Standard Hook Reply Rate</div></div>'
-            '</div></section>')
-
 def build(cal):
     """Everything build_desk.py needs, as one dict of strings."""
     return {
@@ -566,5 +519,4 @@ def build(cal):
       'posts': render_posts_pane(cal),
       'newsletter': render_newsletter_pane(cal),
       'articles': render_articles_pane(cal),
-      'analytics': render_analytics_pane(),
     }
