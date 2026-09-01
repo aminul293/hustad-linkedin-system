@@ -379,11 +379,24 @@ class Handler(BaseHTTPRequestHandler):
             data = api.get_analytics_data()
             body = json.dumps(data).encode('utf-8')
             self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.send_header('Content-Length', str(len(body)))
-            self.end_headers()
             self.wfile.write(body)
             return
+
+        if self.path in ('/', '/desk', '/preview', '/preview.html'):
+            site = os.path.join(ROOT, 'site', 'index.html')
+            if not os.path.exists(site):
+                ensure_site_built()
+            if os.path.exists(site):
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                with open(site, 'rb') as f:
+                    content = f.read().decode('utf-8', 'replace')
+                banner = '<div style="background:#242019;color:#efe8d8;padding:8px 16px;font-family:sans-serif;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #3a3428;"><span>Hustad LinkedIn Desk</span><a href="/upload" style="color:#e3935f;text-decoration:none;font-weight:600;">📤 Upload New CSV Data</a></div>'
+                if '<body>' in content:
+                    content = content.replace('<body>', '<body>' + banner, 1)
+                self.wfile.write(content.encode('utf-8'))
+                return
 
         self.send_response(200)
         self.send_header('Content-Type', 'text/html; charset=utf-8')
