@@ -168,7 +168,7 @@ h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:21px;font-weight:800;mar
 .upload-btn{color:var(--neon-gold);border-color:rgba(255,183,3,0.3);background:rgba(255,183,3,0.06)}
 .upload-btn:hover{border-color:var(--neon-gold);color:#FFFFFF;box-shadow:0 0 12px rgba(255,183,3,0.3)}
 .signout-btn:hover{border-color:var(--neon-cyan);color:var(--ink)}
-.tabrail{max-width:1280px;margin:16px auto 0;padding:0 32px;display:flex;align-items:center}
+.tabrail{max-width:1280px;margin:16px auto 0;padding:0 32px;display:flex;align-items:center;justify-content:center}
 .tabrail-segment{display:inline-flex;align-items:center;background:rgba(10,14,23,0.92);border:1px solid rgba(0,242,254,0.22);border-radius:12px;padding:4px;gap:4px;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .tabrail-segment button{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0!important;border-radius:8px!important;padding:8px 18px!important;cursor:pointer;transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);outline:none;margin:0!important}
 .tabrail-segment button:hover{color:var(--ink);background:rgba(255,255,255,0.05)}
