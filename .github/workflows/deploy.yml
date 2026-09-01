@@ -1,0 +1,69 @@
+# Build and deploy the desk to GitHub Pages.
+#
+# DISABLED ON PURPOSE. On GitHub Free and Team, a private repository's Pages site is PUBLIC, and
+# this page embeds names, employers and LinkedIn profile URLs for several thousand real people.
+# Read docs/PRIVACY.md and docs/DEPLOY.md before turning this on.
+#
+# To enable, you need all three:
+#   1. confirmation that the Pages site is not publicly reachable (Enterprise Cloud, or an access
+#      layer in front of it), and
+#   2. a way to get the real data onto the runner that is not "commit it", and
+#   3. remove the `if: false` below.
+#
+# For most setups the better answer is a static host with an identity check. See docs/DEPLOY.md.
+
+name: Deploy desk
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: false          # see the note above before removing this
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Real data must reach the runner somehow. Committing it is not an option.
+      # Restore it here from a secret store, an artifact, or a mounted volume.
+      - name: Restore data
+        run: |
+          echo "No data source configured." >&2
+          echo "Wire this step to your secret store before enabling the workflow." >&2
+          exit 1
+
+      - name: Build
+        run: make site
+
+      - name: Verify invariants
+        run: make check
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
