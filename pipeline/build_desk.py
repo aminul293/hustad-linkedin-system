@@ -299,9 +299,10 @@ nav.tabs button.is-on .count, nav.tabs button.active .count{color:var(--teal); b
 .chip-id{font-variant-numeric:tabular-nums;color:var(--ink-faint)}
 .chip-storm,.chip-warn{background:var(--amber-soft);border-color:rgba(224,164,88,0.35);color:var(--amber);font-weight:700}
 .chip-ok,.chip-halt{background:var(--good-soft);border-color:rgba(95,212,196,0.35);color:var(--good);font-weight:700}
-.profile{margin-left:auto;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:.03em;color:#211505;text-decoration:none;background:var(--amber);padding:6px 14px;border-radius:6px;transition:all 0.2s ease}
+.profile-action{display:flex;justify-content:flex-end;margin-top:12px}
+.profile{font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:.03em;color:#211505;text-decoration:none;background:var(--amber);padding:7px 16px;border-radius:6px;transition:all 0.2s ease;display:inline-block}
 .profile:hover{filter:brightness(1.08);transform:translateY(-1px)}
-.why{margin:16px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+.why{margin:18px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
 .check{margin:16px 0 0;padding:12px 16px;background:var(--surface-raised);border-left:3px solid var(--teal);border-radius:6px}
 .check p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
 .check p+p{margin-top:8px}
@@ -321,7 +322,7 @@ nav.tabs button.is-on .count, nav.tabs button.active .count{color:var(--teal); b
 .hint{margin:0;padding:0 20px 16px;font-size:12.5px;line-height:1.6;color:var(--amber)}
 .ph{background:var(--amber-soft);color:var(--amber);font-weight:600;padding:0 4px;border-radius:4px}
 .note-row{display:grid;gap:12px;grid-template-columns:1fr;margin-top:16px}
-@media(min-width:640px){.note-row{grid-template-columns:1fr 1.6fr}}
+@media(min-width:640px){.note-row{grid-template-columns:1fr 1fr}}
 .pemp,.note{width:100%;margin-top:4px;font-family:inherit;font-size:13px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);outline:none;transition:all 0.2s ease}
 .pemp:focus,.note:focus{border-color:var(--teal)}
 .export{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;box-shadow:var(--shadow)}
@@ -565,21 +566,21 @@ function rowHtml(q,i){
     +(q.storm?'<span class="chip chip-storm">Storm trigger</span>':'')
     +(halted?'<span class="chip chip-halt">Replied, halted</span>':'');
   var tabs=[], panes=[];
-  tabs.push('<button class="tab is-on" type="button" data-v="std">'+(q.storm?'Planned':'Message')+'</button>');
+  tabs.push('<button class="tab is-on" type="button" data-v="std">'+(q.storm?'PLANNED':'MESSAGE')+'</button>');
   panes.push('<p class="msg" data-v="std">'+esc(q.msg)+'</p>');
-  if(q.storm){ tabs.push('<button class="tab" type="button" data-v="storm">Storm trigger</button>');
+  if(q.storm){ tabs.push('<button class="tab" type="button" data-v="storm">STORM TRIGGER</button>');
     panes.push('<p class="msg is-hidden" data-v="storm">'+esc(q.storm)+'</p>'
       +'<p class="hint is-hidden" data-v="storm">True this week only, and it beats the planned opener where the market actually took weather. If you send this one, type <b>storm</b> in the note below so Friday can measure it.</p>'); }
-  if(q.shared){ tabs.push('<button class="tab" type="button" data-v="pe">Shared history</button>');
+  if(q.shared){ tabs.push('<button class="tab" type="button" data-v="pe">SHARED HISTORY</button>');
     panes.push('<p class="msg is-hidden" data-v="pe">'+esc(q.shared).replace(/\[CLIENT\]/g,'<mark class="ph">[CLIENT]</mark>')+'</p>'
       +'<p class="hint is-hidden" data-v="pe">Only if their profile shows a past employer that is a current Hustad client, and their time there overlaps the years we have worked it. Swap <b>[CLIENT]</b> for the company. You send it yourself.</p>'); }
   var ev='';
-  if(q.events && q.events.length){ ev='<div class="ev"><span class="lbl">Verified events behind this</span><ul>'
+  if(q.events && q.events.length){ ev='<div class="ev"><span class="lbl">VERIFIED EVENTS BEHIND THIS</span><ul>'
     +q.events.map(function(x){ return '<li><b>'+esc(x.d)+'</b> &middot; '+esc(x.w)+' &middot; '+esc(x.x)
       +' <a href="'+esc(x.s)+'" target="_blank" rel="noopener">source</a></li>'; }).join('')+'</ul></div>'; }
   var chk='';
-  if(q.vcheck){ chk='<div class="check"><p><span class="lbl">What the desk checked this morning</span>'+esc(q.vcheck)+'</p>'
-    +(q.vtrig?'<p><span class="lbl">Live trigger</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
+  if(q.vcheck){ chk='<div class="check"><p><span class="lbl">WHAT THE DESK CHECKED THIS MORNING</span>'+esc(q.vcheck)+'</p>'
+    +(q.vtrig?'<p><span class="lbl">LIVE TRIGGER</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
   var profUrl = q.url || '';
   if (!profUrl || profUrl.indexOf('example.invalid') !== -1 || profUrl.indexOf('http') !== 0) {
     var slug = (q.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -589,16 +590,17 @@ function rowHtml(q,i){
    +'<div class="row-grid"><div class="row-left">'
    +'<header class="row-head"><span class="seq">'+String(i+1).padStart(2,'0')+'</span>'
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
-   +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>Replied</span></label>'
-   +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>Sent</span></label></div></header>'
-   +'<div class="meta">'+chips+'<a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a></div>'
-   +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
+   +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>REPLIED</span></label>'
+   +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>SENT</span></label></div></header>'
+   +'<div class="meta">'+chips+'</div>'
+   +'<div class="profile-action"><a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a></div>'
+   +'<div class="why"><span class="lbl">WHY NOW</span><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6">'+esc(q.why)+'</p></div>'+chk+ev
    +'</div><div class="row-right">'
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
    +'<button class="copy" type="button">Copy</button></div>'+panes.join('')+'</div>'
-   +'<div class="note-row"><label><span class="lbl">Past employer on their profile</span>'
+   +'<div class="note-row"><label><span class="lbl">PAST EMPLOYER ON THEIR PROFILE</span>'
    +'<input type="text" class="pemp" value="'+esc(e.pe||'')+'" placeholder="e.g. Asset Living"></label>'
-   +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></div></div></article>';
+   +'<label><span class="lbl">NOTE</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></div></div></article>';
 }
 
 function render(){
