@@ -591,7 +591,7 @@ function rowHtml(q,i){
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
    +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>REPLIED</span></label>'
    +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>SENT</span></label></div></header>'
-   +'<div class="meta">'+chips+'<a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a></div>'
+   +'<div class="meta">'+chips+'<a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href,\'_blank\');return false;">Open profile &rarr;</a></div>'
    +'<div class="why"><span class="lbl">WHY NOW</span><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6">'+esc(q.why)+'</p></div>'+chk+ev
    +'</div><div class="row-right">'
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'

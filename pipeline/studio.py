@@ -285,7 +285,7 @@ def render_articles_pane(cal):
               + f'<p class="role">{esc(a["outlet"])} &middot; {esc(a["audience"])}</p></div>'
               + f'<div class="marks"><select class="cstat" aria-label="Status">{opts}</select></div></header>'
               + '<div class="meta">' + _chip(f'Tier {a["tier"]}') + _chip(a['month'], 'chip-id')
-              + f'<a class="profile" href="{esc(a["route"])}" target="_blank" rel="noopener">{esc(a["route_label"])} &rarr;</a></div>'
+              + f'<a class="profile" href="{esc(a["route"])}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href,\'_blank\');return false;">{esc(a["route_label"])} &rarr;</a></div>'
               + f'<p class="why"><span class="lbl">Angle</span>{esc(a["angle"])}</p>'
               + '<div class="note-row"><label><span class="lbl">Live link / notes</span>'
               + '<input type="text" class="cnote" placeholder="pitch sent date, editor name, live URL"></label></div>'
