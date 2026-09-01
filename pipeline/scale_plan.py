@@ -86,7 +86,11 @@ for d in days:
     if have < PER_DAY: need[k] = PER_DAY - have
 print(f'{len(days)} send days, {sum(need.values())} slots to fill')
 
-next_id = int(plan['target_id'].str[1:].astype(int).max()) + 1
+if len(plan) > 0 and 'target_id' in plan.columns:
+    valid_ids = pd.to_numeric(plan['target_id'].astype(str).str.extract(r'(\d+)', expand=False), errors='coerce').dropna()
+    next_id = int(valid_ids.max()) + 1 if len(valid_ids) > 0 else 1
+else:
+    next_id = 1
 rows, log = [], []
 pi = 0
 for k in sorted(need):

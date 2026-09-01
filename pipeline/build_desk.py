@@ -393,6 +393,7 @@ body.tab-other .controlbar{display:none}
 <div id="pane-outreach" class="pane is-on">
   <div class="tiles" id="tiles"></div>
   <section class="panel" id="deskpanel"></section>
+  <div id="rows"></div>
   <section class="panel">
     <h3>Standard Execution Protocol</h3>
     <ol>
@@ -404,7 +405,6 @@ body.tab-other .controlbar{display:none}
     </ol>
     <p>Recommended sequence priority: Execute scheduled follow-ups first, then new first touches.</p>
   </section>
-  <div id="rows"></div>
   <section class="export">
     <h3>Outreach Activity Log</h3>
     <p>Activity logs automatically persist in browser storage and backup database. Export CSV or copy TSV for Excel records anytime.</p>
