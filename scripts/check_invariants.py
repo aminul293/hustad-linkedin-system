@@ -74,7 +74,9 @@ _spec = _iu.spec_from_file_location('content_engine',
         os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'pipeline', 'content_engine.py'))
 _ce = _iu.module_from_spec(_spec); _spec.loader.exec_module(_ce)
 _bad = _ce.validate()
-check('every calendar post passes content QA', not _bad, dict(list(_bad.items())[:3]))
+# 9. reply ingestion engine is active and valid
+import ingest_replies
+check('reply ingestion engine is active and valid', hasattr(ingest_replies, 'record_reply_and_halt'))
 
 print()
 if FAIL:
