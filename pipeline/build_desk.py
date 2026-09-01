@@ -515,21 +515,25 @@ if (sb) {
   sb.auth.getSession().then(function(r){
     sbSession = r.data && r.data.session;
     if (sbSession) { sbStatus('signed in as ' + sbSession.user.email); sbMergeRemote(); }
-    else { document.getElementById('sbsignin').hidden = false; sbStatus('not signed in — writes stay on this device only'); }
+    else { var el = document.getElementById('sbsignin'); if (el) el.hidden = false; sbStatus('not signed in — writes stay on this device only'); }
   });
   sb.auth.onAuthStateChange(function(_evt, session){
     sbSession = session;
-    if (session) { document.getElementById('sbsignin').hidden = true; sbStatus('signed in as ' + session.user.email); sbMergeRemote(); }
+    if (session) { var el = document.getElementById('sbsignin'); if (el) el.hidden = true; sbStatus('signed in as ' + session.user.email); sbMergeRemote(); }
   });
-  document.getElementById('sbsignin').addEventListener('submit', function(ev){
-    ev.preventDefault();
-    var email = document.getElementById('sbemail').value.trim();
-    if (!email) return;
-    sbStatus('sending link to ' + email + '...');
-    sb.auth.signInWithOtp({ email: email }).then(function(r){
-      sbStatus(r.error ? ('sign-in failed — ' + r.error.message) : ('check ' + email + ' for a sign-in link'));
+  var sbf = document.getElementById('sbsignin');
+  if (sbf) {
+    sbf.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var emailEl = document.getElementById('sbemail');
+      var email = emailEl ? emailEl.value.trim() : '';
+      if (!email) return;
+      sbStatus('sending link to ' + email + '...');
+      sb.auth.signInWithOtp({ email: email }).then(function(r){
+        sbStatus(r.error ? ('sign-in failed — ' + r.error.message) : ('check ' + email + ' for a sign-in link'));
+      });
     });
-  });
+  }
 }
 
 function centralToday(){ try { return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date()); }
@@ -674,17 +678,17 @@ function toCsv(r){ function q(v){ v=(v==null?'':String(v)); return /[",\n]/.test
   return [HDR.join(',')].concat(r.map(function(x){return x.map(q).join(',');})).join('\n'); }
 function toTsv(r){ return [HDR.join('\t')].concat(r.map(function(x){
   return x.map(function(v){return String(v==null?'':v).replace(/[\t\n]/g,' ');}).join('\t');})).join('\n'); }
-function buildLog(){ var r=logRows(); document.getElementById('out').value=r.length?toCsv(r):''; }
-function bindCopy(id,fn,label){ document.getElementById(id).addEventListener('click',function(ev){
+function buildLog(){ var r=logRows(), el=document.getElementById('out'); if(el) el.value=r.length?toCsv(r):''; }
+function bindCopy(id,fn,label){ var el=document.getElementById(id); if(!el) return; el.addEventListener('click',function(ev){
   var r=logRows(); if(!r.length) return;
   navigator.clipboard.writeText(fn(r)).then(function(){ ev.currentTarget.textContent='Copied';
     setTimeout(function(){ ev.currentTarget.textContent=label; },1400); }); }); }
 bindCopy('copytsv',toTsv,'Copy for Excel'); bindCopy('copycsv',toCsv,'Copy CSV text');
 function go(d){ day=d; try{ sessionStorage.setItem('hustad-day',d); }catch(e){} render(); }
-document.getElementById('dayselect').addEventListener('change',function(e){ go(e.target.value); });
-document.getElementById('prevday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i>0) go(DAYS[i-1]); });
-document.getElementById('nextday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i<DAYS.length-1) go(DAYS[i+1]); });
-document.getElementById('today').addEventListener('click',function(){ go(defaultDay()); });
+var dsEl=document.getElementById('dayselect'); if(dsEl) dsEl.addEventListener('change',function(e){ go(e.target.value); });
+var pdEl=document.getElementById('prevday'); if(pdEl) pdEl.addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i>0) go(DAYS[i-1]); });
+var ndEl=document.getElementById('nextday'); if(ndEl) ndEl.addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i<DAYS.length-1) go(DAYS[i+1]); });
+var tdEl=document.getElementById('today'); if(tdEl) tdEl.addEventListener('click',function(){ go(defaultDay()); });
 
 var cap=null, saveTimer=null, dirty=false;
 function hydrate(){ return atob(B64).replace('__B64'+'QUINE__',B64)
@@ -692,12 +696,12 @@ function hydrate(){ return atob(B64).replace('__B64'+'QUINE__',B64)
 function saveSoon(){ dirty=true; if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(doSave,5000); }
 function doSave(){ if(!cap||!dirty) return; dirty=false;
   try{ sessionStorage.setItem('hustad-scroll',String(window.scrollY)); sessionStorage.setItem('hustad-day',day); }catch(e){}
-  cap.publish(hydrate()).then(function(){ var el=document.getElementById('savestat');
-    el.textContent='log saved on every device'; el.classList.add('on'); })
+  cap.publish(hydrate()).then(function(){ var el=document.getElementById('savestat'); if(el){
+    el.textContent='log saved on every device'; el.classList.add('on'); } })
   .catch(function(err){ var c=err&&err.code;
     if(c==='conflict'){ dirty=false; return; }
     if(c==='rate_limited'){ dirty=true; saveTimer=setTimeout(doSave,20000); return; }
-    cap=null; document.getElementById('savestat').textContent='log saved on this device'; }); }
+    cap=null; var el=document.getElementById('savestat'); if(el) el.textContent='log saved on this device'; }); }
 window.addEventListener('pagehide',function(){ if(dirty) doSave(); });
 // Download works two ways: through the host capability inside the Claude viewer, which
 // sandboxes ordinary downloads, and through a plain Blob anywhere else. Same button.
@@ -707,11 +711,11 @@ function blobSave(data){ try{
   a.href=u; a.download='send_log.csv'; document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(u); a.parentNode && a.parentNode.removeChild(a); },0);
 }catch(e){} }
-(function(){ var b=document.getElementById('download'); b.hidden=false;
+(function(){ var b=document.getElementById('download'); if(b){ b.hidden=false;
   b.addEventListener('click',function(){ var r=logRows(); if(!r.length) return;
     var data=toCsv(r)+'\n';
     if(dlcap) dlcap.save({filename:'send_log.csv', data:data}).catch(function(){ blobSave(data); });
-    else blobSave(data); }); })();
+    else blobSave(data); }); } })();
 if(window.claude && window.claude.use){
   window.claude.use('artifact').then(function(ns){ cap=ns; if(ns&&dirty) doSave(); });
   window.claude.use('downloads').then(function(ns){ dlcap=ns; }); }
