@@ -414,19 +414,6 @@ body.tab-other .controlbar{display:none}
       <button class="btn ghost" id="download" type="button" hidden>Download send_log.csv</button>
     </div>
   </section>
-  <div id="rows"></div>
-  <section class="export">
-    <h3>Send log</h3>
-    <p>Every tick lands here automatically and stays in this browser, including across the nightly rebuild.
-    Copy for Excel pastes into real columns. Download hands you send_log.csv for the LinkedIn folder;
-    do that once a week so the Friday review has something to read.</p>
-    <textarea id="out" readonly placeholder="Tick a row and the log appears here."></textarea>
-    <div class="btns">
-      <button class="btn" id="copytsv" type="button">Copy for Excel</button>
-      <button class="btn ghost" id="copycsv" type="button">Copy CSV text</button>
-      <button class="btn ghost" id="download" type="button" hidden>Download send_log.csv</button>
-    </div>
-  </section>
   <p class="foot">Cold new business only. Hustad does not do ground up construction and nothing here pitches it.
   Past employment at a Hustad client is your own opener, never a handoff. Every message is sent by hand.
   Storm figures come from National Weather Service reports and local coverage, linked per event; nothing claims
