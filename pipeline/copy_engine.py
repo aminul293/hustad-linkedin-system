@@ -803,8 +803,9 @@ def build(plan_csv, research_json, out_csv):
 
         # ---- shared-history opener
         pe_body, pe_close = pick(PAST_EMPLOYER, seed, 'pe')
+        clean_company = re.split(r'\s*[–—]\s*', str(company))[0].strip()
         m4 = para(f"Hi {first},",
-                  pe_body.format(company=company),
+                  pe_body.format(company=clean_company),
                   pe_close)
 
         res = research.get(company, {})

@@ -541,10 +541,11 @@ class Handler(BaseHTTPRequestHandler):
                 matched.add(dest)
                 log_lines.append(f"saved {filename} -> data/raw/{dest} ({label})")
 
-        missing = [dest for _, dest, label in RAW_TARGETS if dest not in matched]
+        required_dests = {'Connections.csv', 'opportunities_2026.csv'}
+        missing = [dest for dest in required_dests if not os.path.exists(os.path.join(paths.s(paths.RAW), dest))]
         if missing:
             log_lines.append('')
-            log_lines.append('Stopped: missing ' + ', '.join(missing))
+            log_lines.append('Stopped: missing required files: ' + ', '.join(missing))
             self._reply(False, '\n'.join(log_lines))
             return
 
