@@ -24,13 +24,6 @@ PLAN   = opt('--plan', paths.s(paths.PLAN))
 STATE  = opt('--state', '')
 OUT    = opt('--out', paths.s(paths.DESK_HTML))
 
-# Optional real backing store. Unset (the default), the page behaves exactly as before: the log
-# lives only in this browser's localStorage. Set both and every tick also syncs to Postgres via
-# Supabase's REST API, readable from any device. See backend/db/README.md to provision one.
-# CLI flags win over env vars so a one-off local build can still point at nothing.
-SUPABASE_URL = opt('--supabase-url', os.environ.get('SUPABASE_URL', ''))
-SUPABASE_ANON_KEY = opt('--supabase-anon-key', os.environ.get('SUPABASE_ANON_KEY', ''))
-
 # Today's storm triggers and verification notes name real people, so the live file lives in
 # data/work (never committed) and the tracked copy in pipeline/ is an empty template. Whichever
 # exists wins, live first. Missing entirely is fine: the desk just runs without a storm tab.
@@ -120,289 +113,156 @@ if FROMLOG:
 
 QJSON = json.dumps(queue, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 DAYSJ = json.dumps(days)
-CONFIGJSON = json.dumps({'supabaseUrl': SUPABASE_URL, 'supabaseAnonKey': SUPABASE_ANON_KEY}, ensure_ascii=False)
 
 TEMPLATE = r'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hustad LinkedIn Desk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700&display=swap">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Lora:wght@500;600&family=Poppins:wght@400;500;600&display=swap">
 <style>
 :root{
-  --ink:#eef1f5; --ink-soft:#9aa5b4; --ink-faint:#6b7484;
-  --ground:#12151b; --surface:#181c24; --surface-raised:#1f242e;
-  --line:#2a303c; --line-soft:#232833;
-  --amber:#e0a458; --amber-soft:#3a2e1c;
-  --teal:#5fd4c4; --teal-soft:#16302c;
-  --red:#e08a7a;
-  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.6);
-  --paper:#12151b;--card:#181c24;--ink-2:#9aa5b4;--ink-3:#6b7484;
-  --line-2:#2a303c;--neon-cyan:#5fd4c4;--neon-gold:#e0a458;
-  --neon-green:#5fd4c4;--copper:#e0a458;--copper-soft:#3a2e1c;--good:#5fd4c4;
-  --good-soft:rgba(95,212,196,0.15);--draft-bg:#12151b;--focus:#5fd4c4;
+  --paper:#F2F4F7;--card:#FFFFFF;--ink:#151E2B;--ink-2:#54637A;--ink-3:#8494A8;
+  --line:#DBE1EA;--line-2:#C3CCD9;--navy:#1F3A5F;--navy-soft:#E7EDF5;--copper:#9A6414;
+  --copper-soft:#F6EBD8;--good:#1F6B4A;--good-soft:#E4F1EA;--draft-bg:#FBFAF7;--focus:#1F3A5F;
 }
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F141C;--card:#18202C;--ink:#E7ECF3;--ink-2:#9DAABC;--ink-3:#6C7C90;
+  --line:#26303F;--line-2:#33404F;--navy:#8FB3DE;--navy-soft:#1B2836;--copper:#D8A251;
+  --copper-soft:#2A2113;--good:#5FBE8F;--good-soft:#152A20;--draft-bg:#141B25;--focus:#8FB3DE;}}
+:root[data-theme="dark"]{
+  --paper:#0F141C;--card:#18202C;--ink:#E7ECF3;--ink-2:#9DAABC;--ink-3:#6C7C90;
+  --line:#26303F;--line-2:#33404F;--navy:#8FB3DE;--navy-soft:#1B2836;--copper:#D8A251;
+  --copper-soft:#2A2113;--good:#5FBE8F;--good-soft:#152A20;--draft-bg:#141B25;--focus:#8FB3DE;}
 *{box-sizing:border-box}
-body{
-  background:var(--ground); color:var(--ink);
-  font-family:'Poppins',-apple-system,BlinkMacSystemFont,sans-serif;
-  margin:0; padding:0 0 120px;
-}
-.wrap{max-width:1080px; margin:40px auto 100px; padding:0 16px}
-.lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
-
-/* ================= HEADER ================= */
-header.desk{
-  background:var(--surface); border:1px solid var(--line); border-radius:10px;
-  box-shadow:var(--shadow); overflow:hidden; margin-bottom:40px;
-}
-
-.topbar{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 20px; border-bottom:1px solid var(--line-soft);
-}
-.org{
-  display:flex; align-items:center; gap:9px;
-  font-size:12.5px; color:var(--ink-soft); font-weight:500;
-}
-.org-mark{
-  width:20px; height:20px; border-radius:5px; background:var(--amber-soft);
-  border:1px solid var(--amber); color:var(--amber); font-family:'Lora',serif;
-  font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;
-  flex:0 0 auto;
-}
-.session{display:flex; align-items:center; gap:14px}
-.session-user{font-size:12.5px; color:var(--ink-soft)}
-.session-user b{color:var(--ink); font-weight:600}
-.btn-text{
-  font-family:'Poppins',sans-serif; font-size:12.5px; color:var(--ink-faint);
-  background:none; border:none; cursor:pointer; padding:4px 2px; text-decoration:none;
-  display:flex; align-items:center; gap:5px; transition:color .12s;
-}
-.btn-text:hover{color:var(--ink)}
-
-.masthead{
-  padding:26px 24px 20px; display:flex; align-items:flex-end; justify-content:space-between;
-  gap:24px; flex-wrap:wrap;
-}
-.masthead-left .eyebrow{
-  font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--amber); margin:0 0 8px; font-weight:600;
-}
-.masthead-left h1{
-  font-family:'Lora',Georgia,serif; font-weight:600; font-size:30px; margin:0;
-  letter-spacing:-.01em; color:var(--ink);
-}
-.masthead-right{display:flex; align-items:center; gap:10px}
-
-.stat-pill{
-  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink);
-  background:var(--surface-raised); border:1px solid var(--line); border-radius:100px;
-  padding:8px 16px; display:flex; align-items:center; gap:8px; white-space:nowrap;
-}
-.stat-pill b{color:var(--teal); font-size:14px}
-.stat-pill .bar{
-  width:44px; height:4px; border-radius:100px; background:var(--line); overflow:hidden;
-}
-.stat-pill .bar i{display:block; height:100%; width:0%; background:var(--teal); transition:width 0.3s ease}
-
-.btn-primary{
-  font-family:'Poppins',sans-serif; font-weight:600; font-size:13px;
-  background:var(--amber); color:#211505; border:none; border-radius:7px;
-  padding:10px 16px; cursor:pointer; display:flex; align-items:center; gap:7px;
-  white-space:nowrap; transition:filter .12s; text-decoration:none;
-}
-.btn-primary:hover{filter:brightness(1.08)}
-
-.controlbar{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:14px 24px; background:var(--surface-raised); border-top:1px solid var(--line-soft);
-  flex-wrap:wrap;
-}
-.daynav{display:flex; align-items:center; gap:2px}
-.daynav button.step{
-  width:30px; height:30px; border-radius:6px; border:1px solid var(--line);
-  background:var(--surface); color:var(--ink-soft); cursor:pointer; font-size:14px;
-  display:flex; align-items:center; justify-content:center; transition:all 0.12s;
-}
-.daynav button.step:hover{color:var(--ink); border-color:var(--ink-faint)}
-.daydisplay{
-  font-family:'JetBrains Mono',monospace; font-size:13px; padding:0 12px;
-  display:flex; align-items:baseline; gap:6px; min-width:150px; justify-content:center;
-}
-.btn-today{
-  font-family:'Poppins',sans-serif; font-size:12.5px; font-weight:600; color:var(--teal);
-  background:var(--teal-soft); border:1px solid rgba(95,212,196,.35); border-radius:6px;
-  padding:7px 13px; cursor:pointer; margin-left:6px; transition:all 0.12s;
-}
-.btn-today:hover{background:rgba(95,212,196,0.25)}
-
-/* ================= TABS ================= */
-nav.tabs{
-  display:flex; gap:2px; padding:0 20px; background:var(--surface);
-  border-top:1px solid var(--line);
-}
-nav.tabs button{
-  font-family:'Poppins',sans-serif; font-size:12.5px; font-weight:600; letter-spacing:.02em;
-  color:var(--ink-faint); text-decoration:none; padding:13px 16px 11px;
-  border:none; background:transparent; border-bottom:2px solid transparent; display:flex; align-items:center; gap:7px;
-  transition:color .12s, border-color .12s; cursor:pointer; margin-bottom:-1px; outline:none;
-}
-nav.tabs button .count{
-  font-family:'JetBrains Mono',monospace; font-size:10.5px; background:var(--surface-raised);
-  color:var(--ink-faint); border-radius:100px; padding:1px 6px;
-}
-nav.tabs button:hover{color:var(--ink-soft)}
-nav.tabs button.is-on, nav.tabs button.active{color:var(--teal); border-bottom-color:var(--teal)}
-nav.tabs button.is-on .count, nav.tabs button.active .count{color:var(--teal); background:var(--teal-soft)}
-
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0 0 24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 90px}
+.lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+header.top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);padding:13px 0 11px;margin-bottom:20px}
+.top-in{max-width:880px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:13px;align-items:center;justify-content:space-between}
+.brand{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin:0}
+h1{font-size:21px;font-weight:700;margin:2px 0 0;letter-spacing:-.01em}
+.savestat{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:2px 0 0}
+.savestat.on{color:var(--good)}
+.daynav{display:flex;gap:7px;align-items:center}
+.daynav select{font-family:inherit;font-size:14px;font-weight:600;padding:7px 9px;background:var(--card);color:var(--ink);border:1px solid var(--line-2);max-width:210px}
+.daynav button{font-family:inherit;font-size:13px;font-weight:700;padding:7px 10px;background:var(--card);color:var(--navy);border:1px solid var(--line-2);cursor:pointer}
+.prog{text-align:right;min-width:120px}
+.prog b{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy)}
+.prog span{font-size:13px;color:var(--ink-2)}
+.bar{height:4px;background:var(--line);margin-top:5px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--copper);transition:width .25s ease}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:0 0 18px}
 @media(min-width:660px){.tiles{grid-template-columns:repeat(4,1fr)}}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;box-shadow:var(--shadow);transition:all 0.25s ease}
-.tile:hover{transform:translateY(-2px);border-color:var(--teal)}
-.tile b{display:block;font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--amber);line-height:1.1}
-.tile span{font-size:12px;font-weight:500;color:var(--ink-soft);display:block;margin-top:4px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin-bottom:24px;box-shadow:var(--shadow)}
-.panel h3{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin:0 0 8px}
-.panel p{margin:6px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.65}
+.tile{background:var(--card);border:1px solid var(--line);padding:10px 12px}
+.tile b{display:block;font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy);line-height:1.15}
+.tile span{font-size:12px;color:var(--ink-2);display:block;margin-top:1px;line-height:1.35}
+.panel{background:var(--card);border:1px solid var(--line);padding:15px 17px;margin-bottom:18px}
+.panel h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin:0 0 7px}
+.panel p{margin:7px 0 0;font-size:14px;color:var(--ink-2);line-height:1.6}
 .panel p:first-of-type{margin-top:0}
-.panel ol{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-soft);line-height:1.7}
-.panel ol li::marker{color:var(--teal);font-weight:700}
-.row{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:24px;margin-bottom:20px;box-shadow:var(--shadow);transition:all 0.25s ease}
-.row:hover{border-color:var(--teal);transform:translateY(-2px)}
-.row.is-done{opacity:.4}
-.row.is-halted{opacity:.6;border-style:dashed;border-color:var(--good)}
-.row-grid{display:block}
-.row-left{min-width:0}
-.row-right{min-width:0;margin-top:16px}
-.row-head{display:flex;gap:14px;align-items:flex-start}
-.seq{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--teal);padding-top:2px;min-width:26px}
+.panel ol{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2);line-height:1.65}
+.panel ol li::marker{color:var(--copper);font-weight:700}
+.row{background:var(--card);border:1px solid var(--line);padding:17px;margin-bottom:13px;transition:opacity .2s}
+.row.is-done{opacity:.5}
+.row.is-halted{opacity:.55;border-style:dashed}
+.row-head{display:flex;gap:13px;align-items:flex-start}
+.seq{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink-3);padding-top:4px;min-width:24px}
 .who{flex:1;min-width:0}
-.who h2{font-family:'Lora',Georgia,serif;font-size:20px;font-weight:600;margin:0;letter-spacing:-.01em;color:var(--ink)}
-.role{margin:2px 0 0;font-size:13.5px;color:var(--ink-soft);font-weight:400}
-.org{margin:2px 0 0;font-size:13.5px;font-weight:600;color:var(--amber);display:inline-block}
-.marks{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.done,.replied{display:flex;gap:6px;align-items:center;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;user-select:none;padding:5px 12px;background:var(--surface-raised);border:1px solid var(--line);border-radius:6px;transition:all 0.2s ease}
-.done:hover,.replied:hover{border-color:var(--teal);color:var(--ink)}
-.done input,.replied input{width:16px;height:16px;accent-color:var(--good);cursor:pointer}
-.replied input{accent-color:var(--amber)}
-.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 0}
-.chip{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.04em;padding:4px 10px;border-radius:6px;background:var(--surface-raised);border:1px solid var(--line);color:var(--ink-soft)}
-.chip-touch{background:var(--teal-soft);border-color:rgba(95,212,196,0.35);color:var(--teal);font-weight:700}
-.chip-id{font-variant-numeric:tabular-nums;color:var(--ink-faint)}
-.chip-storm,.chip-warn{background:var(--amber-soft);border-color:rgba(224,164,88,0.35);color:var(--amber);font-weight:700}
-.chip-ok,.chip-halt{background:var(--good-soft);border-color:rgba(95,212,196,0.35);color:var(--good);font-weight:700}
-.profile{margin-left:auto;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:.03em;color:#211505;text-decoration:none;background:var(--amber);padding:7px 16px;border-radius:6px;transition:all 0.2s ease;display:inline-block}
-.profile:hover{filter:brightness(1.08);transform:translateY(-1px)}
-.why{margin:18px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
-.check{margin:16px 0 0;padding:12px 16px;background:var(--surface-raised);border-left:3px solid var(--teal);border-radius:6px}
-.check p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
-.check p+p{margin-top:8px}
-.ev{margin:14px 0 0}
-.ev ul{margin:0;padding-left:16px;font-size:13px;color:var(--ink-soft);line-height:1.7}
-.ev a,.panel a{color:var(--teal);font-weight:600}
-.draft{margin-top:16px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--ground)}
-.draft-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--surface-raised);border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
-.tabs{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;flex-wrap:wrap;background:var(--surface)}
-.tab{font-family:'Poppins',inherit;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:transparent;color:var(--ink-soft);border:0;padding:7px 14px;cursor:pointer;transition:all 0.2s ease}
-.tab.is-on{background:var(--teal);color:#05070B;font-weight:700}
-.copy{font-family:'Poppins',inherit;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--amber);color:#211505;border:0;border-radius:6px;padding:8px 18px;cursor:pointer;transition:all 0.2s ease}
-.copy:hover{filter:brightness(1.08);transform:scale(1.02)}
-.copy.ok{background:var(--teal);color:#05070B}
-.msg{margin:0;padding:18px 20px;font-family:'Poppins',sans-serif;font-size:14px;line-height:1.7;color:var(--ink);white-space:pre-line}
+.who h2{font-size:17px;font-weight:600;margin:0;letter-spacing:-.01em}
+.role{margin:1px 0 0;font-size:14px;color:var(--ink-2)}
+.org{margin:1px 0 0;font-size:14px;font-weight:600;color:var(--navy)}
+.marks{display:flex;gap:11px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.done,.replied{display:flex;gap:6px;align-items:center;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;user-select:none}
+.done input,.replied input{width:18px;height:18px;accent-color:var(--good);cursor:pointer}
+.replied input{accent-color:var(--copper)}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:11px 0 0}
+.chip{font-size:11px;font-weight:500;letter-spacing:.04em;padding:3px 8px;background:var(--paper);border:1px solid var(--line);color:var(--ink-2)}
+.chip-touch{background:var(--copper-soft);border-color:var(--copper);color:var(--copper);font-weight:700}
+.chip-id{font-variant-numeric:tabular-nums;color:var(--ink-3)}
+.chip-storm,.chip-warn{background:var(--copper-soft);border-color:var(--copper);color:var(--copper);font-weight:700}
+.chip-ok{background:var(--good-soft);border-color:var(--good);color:var(--good);font-weight:700}
+.chip-halt{background:var(--good-soft);border-color:var(--good);color:var(--good);font-weight:700}
+.profile{margin-left:auto;font-size:13px;font-weight:600;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:1px}
+.why{margin:12px 0 0;font-size:14px;color:var(--ink-2);line-height:1.55}
+.check{margin:11px 0 0;padding:11px 13px;background:var(--paper);border-left:2px solid var(--line-2)}
+.check p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.6}
+.check p+p{margin-top:9px}
+.ev{margin:10px 0 0}
+.ev ul{margin:0;padding-left:17px;font-size:13px;color:var(--ink-2);line-height:1.7}
+.ev a,.panel a{color:var(--navy);font-weight:600}
+.draft{margin-top:12px;border:1px solid var(--line-2);background:var(--draft-bg)}
+.draft-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 11px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tabs{display:flex;border:1px solid var(--line-2);flex-wrap:wrap}
+.tab{font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0;padding:5px 10px;cursor:pointer}
+.tab.is-on{background:var(--navy);color:var(--card)}
+.copy{font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--navy);color:var(--card);border:0;padding:6px 14px;cursor:pointer}
+.copy:hover{background:var(--ink)}
+.copy.ok{background:var(--good)}
+.msg{margin:0;padding:13px 15px;font-family:"Source Serif 4",Georgia,serif;font-size:16px;line-height:1.62;color:var(--ink);white-space:pre-line}
 .msg.is-hidden,.hint.is-hidden{display:none}
-.hint{margin:0;padding:0 20px 16px;font-size:12.5px;line-height:1.6;color:var(--amber)}
-.ph{background:var(--amber-soft);color:var(--amber);font-weight:600;padding:0 4px;border-radius:4px}
-.note-row{display:grid;gap:12px;grid-template-columns:1fr;margin-top:16px}
-@media(min-width:640px){.note-row{grid-template-columns:1fr 1fr}}
-.pemp,.note{width:100%;margin-top:4px;font-family:inherit;font-size:13px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);outline:none;transition:all 0.2s ease}
-.pemp:focus,.note:focus{border-color:var(--teal)}
-.export{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;box-shadow:var(--shadow)}
-.export h3{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin:0 0 6px}
-.export p{margin:0 0 12px;font-size:13.5px;color:var(--ink-soft)}
-textarea{width:100%;min-height:120px;font-family:'JetBrains Mono',monospace;font-size:12px;padding:12px;background:var(--ground);border:1px solid var(--line);border-radius:6px;color:var(--ink);resize:vertical;outline:none}
-textarea:focus{border-color:var(--teal)}
-.btns{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-.btn{font-family:'Poppins',inherit;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 20px;border:0;background:var(--teal);color:#05070B;border-radius:6px;cursor:pointer;transition:all 0.2s ease}
-.btn:hover{filter:brightness(1.08)}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
-.btn.ghost:hover{border-color:var(--teal);color:var(--teal)}
+.hint{margin:0;padding:0 15px 12px;font-size:13px;line-height:1.55;color:var(--copper)}
+.ph{background:var(--copper-soft);color:var(--copper);font-weight:700;padding:0 3px}
+.note-row{display:grid;gap:11px;grid-template-columns:1fr;margin-top:11px}
+@media(min-width:640px){.note-row{grid-template-columns:1fr 1.6fr}}
+.pemp,.note{width:100%;margin-top:3px;font-family:inherit;font-size:13px;padding:8px 10px;background:var(--paper);border:1px solid var(--line);color:var(--ink)}
+.export{margin-top:28px;background:var(--card);border:1px solid var(--line);padding:17px}
+.export h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin:0 0 6px}
+.export p{margin:0 0 11px;font-size:14px;color:var(--ink-2)}
+textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;padding:10px;background:var(--paper);border:1px solid var(--line);color:var(--ink);resize:vertical}
+.btns{display:flex;gap:9px;margin-top:9px;flex-wrap:wrap}
+.btn{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 15px;border:1px solid var(--navy);background:var(--navy);color:var(--card);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--navy)}
 .btn[hidden]{display:none}
-.foot{margin-top:36px;font-size:12px;color:var(--ink-faint);line-height:1.7}
-.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:36px;text-align:center;color:var(--ink-soft);font-size:14.5px}
-input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.foot{margin-top:24px;font-size:12px;color:var(--ink-3);line-height:1.65}
+.empty{background:var(--card);border:1px dashed var(--line-2);padding:24px;text-align:center;color:var(--ink-2);font-size:15px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 __STUDIO_CSS__
-body.tab-other .controlbar{display:none}
+.tabrail{max-width:880px;margin:9px auto 0;padding:0 20px}
+body.tab-other .daynav,body.tab-other .prog{display:none}
 </style></head><body>
 <div class="app-root">
+<header class="top"><div class="top-in">
+  <div><p class="brand">Hustad &middot; New Business Track</p><h1>LinkedIn Desk</h1>
+    <p class="savestat" id="savestat">log saved on this device</p></div>
+  <div class="daynav">
+    <button type="button" id="prevday" aria-label="Previous send day">&larr;</button>
+    <select id="dayselect" aria-label="Send day"></select>
+    <button type="button" id="nextday" aria-label="Next send day">&rarr;</button>
+    <button type="button" id="today">Today</button>
+  </div>
+  <div class="prog"><b id="pdone">0</b><span id="ptot"> of 0 sent</span><div class="bar"><i id="pbar"></i></div></div>
+</div>
+<nav class="tabrail" id="tabrail" role="tablist" aria-label="Sections">
+  <button type="button" data-pane="outreach" class="is-on" role="tab" aria-selected="true">DM Outreach</button>
+  <button type="button" data-pane="replies" role="tab" aria-selected="false">Reply Center</button>
+  <button type="button" data-pane="posts" role="tab" aria-selected="false">Posts</button>
+  <button type="button" data-pane="newsletter" role="tab" aria-selected="false">Newsletter</button>
+  <button type="button" data-pane="articles" role="tab" aria-selected="false">Articles</button>
+</nav></header>
 <div class="wrap">
-  <header class="desk">
-    <div class="topbar">
-      <div class="org">
-        <span class="org-mark">H</span>
-        Hustad LinkedIn Outreach &amp; Content System
-      </div>
-      <div class="session">
-        <span class="session-user">Signed in as <b>Eric Caturia</b></span>
-        <a href="/logout" class="btn-text">Sign out &rarr;</a>
-      </div>
-    </div>
-
-    <div class="masthead">
-      <div class="masthead-left">
-        <p class="eyebrow">Hustad Commercial &middot; Executive Outreach</p>
-        <h1>LinkedIn Command Center</h1>
-      </div>
-      <div class="masthead-right">
-        <div class="stat-pill">
-          <span><b id="pdone">0</b> of <span id="ptot">40</span> sent</span>
-          <span class="bar"><i id="pbar" style="width:0%"></i></span>
-        </div>
-        <a href="/upload" class="btn-primary">&#8593; Upload new export</a>
-      </div>
-    </div>
-
-    <div class="controlbar">
-      <div class="daynav">
-        <button class="step" type="button" id="prevday" aria-label="Previous send day">&larr;</button>
-        <div class="daydisplay">
-          <select id="dayselect" aria-label="Send day" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;background:transparent;color:var(--ink);border:none;outline:none;cursor:pointer;"></select>
-        </div>
-        <button class="step" type="button" id="nextday" aria-label="Next send day">&rarr;</button>
-        <button class="btn-today" type="button" id="today">Today</button>
-      </div>
-    </div>
-
-    <nav class="tabs" id="tabrail" role="tablist" aria-label="Sections">
-      <button type="button" data-pane="outreach" class="is-on active" role="tab" aria-selected="true">Outreach Queue <span class="count" id="outreach-count">40</span></button>
-      <button type="button" data-pane="replies" role="tab" aria-selected="false">Reply Inbox <span class="count">3</span></button>
-      <button type="button" data-pane="posts" role="tab" aria-selected="false">Post Publishing</button>
-      <button type="button" data-pane="newsletter" role="tab" aria-selected="false">Newsletter</button>
-      <button type="button" data-pane="articles" role="tab" aria-selected="false">Articles</button>
-    </nav>
-  </header>
 <div id="pane-outreach" class="pane is-on">
   <div class="tiles" id="tiles"></div>
   <section class="panel" id="deskpanel"></section>
-  <div id="rows"></div>
   <section class="panel">
-    <h3>Standard Execution Protocol</h3>
+    <h3>The twenty second check, before every send</h3>
     <ol>
-      <li><b>Verify Executive Profile</b>: Confirm lead title and organization match row before sending.</li>
-      <li><b>Check Past History</b>: If a past employer is an active Hustad client, switch draft to <i>Shared History</i> and state the account.</li>
-      <li><b>Exclude Active Accounts</b>: Skip warm outreach if the prospect's current organization is an active Hustad client.</li>
-      <li><b>Automated Sequence Halting</b>: Marking <i>Replied</i> automatically halts Touch 2 and Touch 3 follow-ups across all devices.</li>
-      <li><b>Execute & Log</b>: Copy draft message, send via LinkedIn DM, and check <i>Sent</i>. Activity logs automatically sync.</li>
+      <li>Open the profile. Confirm the title and company still match the row.</li>
+      <li>Read Experience. If a past employer is a current Hustad client and their time there overlaps our work, switch to <b>Shared history</b>, put that company where [CLIENT] sits, type it in the past employer box, and send it yourself.</li>
+      <li>If their <i>current</i> company is a Hustad account, skip and note it. That is warm outreach and it runs elsewhere.</li>
+      <li>If they replied on an earlier touch, tick <b>Replied</b>. Their later touches stop automatically.</li>
+      <li>Paste, send, tick <b>Sent</b>. The log writes itself.</li>
     </ol>
-    <p>Recommended sequence priority: Execute scheduled follow-ups first, then new first touches.</p>
+    <p>Order is deliberate: follow ups first, then first touches. If the hour runs short, defer first touches rather than rush a live conversation.</p>
   </section>
+  <div id="rows"></div>
   <section class="export">
-    <h3>Outreach Activity Log</h3>
-    <p>Activity logs automatically persist in browser storage and backup database. Export CSV or copy TSV for Excel records anytime.</p>
+    <h3>Send log</h3>
+    <p>Every tick lands here automatically and stays in this browser, including across the nightly rebuild.
+    Copy for Excel pastes into real columns. Download hands you send_log.csv for the LinkedIn folder;
+    do that once a week so the Friday review has something to read.</p>
     <textarea id="out" readonly placeholder="Tick a row and the log appears here."></textarea>
     <div class="btns">
       <button class="btn" id="copytsv" type="button">Copy for Excel</button>
@@ -429,7 +289,6 @@ body.tab-other .controlbar{display:none}
 <script id="hustad-queue" type="application/json">__QUEUE__</script>
 <script id="hustad-days" type="application/json">__DAYS__</script>
 <script id="hustad-state" type="application/json">__STATE__</script>
-<script id="hustad-config" type="application/json">__CONFIG__</script>
 <script id="hustad-tpl" type="text/plain">__B64__</script>
 <script>
 (function(){
@@ -450,92 +309,6 @@ var state = {entries:{}, content:{}, v:4};
   for(k in ca) state.content[k]=ca[k];
   for(k in cb) if(!state.content[k] || (cb[k].ts||0) >= (state.content[k].ts||0)) state.content[k]=cb[k]; })();
 
-// ---- optional Supabase sync -------------------------------------------------
-// Unset config (the default): this whole block is inert and the page behaves exactly as it
-// always has. Set both build-time secrets and every tick also writes to Postgres, readable from
-// any signed-in device. This never replaces localStorage, only adds to it — see backend/db/README.md.
-var CONFIG = JSON.parse(document.getElementById('hustad-config').textContent);
-var sb = null, sbSession = null;
-if (CONFIG.supabaseUrl && CONFIG.supabaseAnonKey && window.supabase && window.supabase.createClient) {
-  try { sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey); } catch(e){ sb = null; }
-}
-function sbStatus(msg){ var el = document.getElementById('sbstat'); if (el){ el.hidden=false; el.textContent = msg; } }
-function sbUpsertEntry(e){
-  if (!sb || !sbSession) return;
-  sb.from('send_log').upsert({
-    target_id: e.id, touch: e.touch, send_date: e.date, name: e.name, company: e.company,
-    status: e.reply ? 'replied' : (e.done ? 'sent' : 'pending'),
-    sent_at: e.at || null, opener: e.opener || null, past_employer: e.pe || null,
-    note: e.note || null, updated_at: new Date().toISOString()
-  }, { onConflict: 'target_id,touch' }).then(function(r){
-    sbStatus(r.error ? ('synced to this browser only — ' + r.error.message) : ('synced to Supabase as ' + sbSession.user.email));
-  });
-}
-function sbUpsertContent(id, e){
-  if (!sb || !sbSession) return;
-  sb.from('content_log').upsert({
-    content_id: id, done: !!e.done, at: e.at || null, status: e.status || null,
-    note: e.note || null, updated_at: new Date().toISOString()
-  }, { onConflict: 'content_id' }).then(function(r){
-    sbStatus(r.error ? ('synced to this browser only — ' + r.error.message) : ('synced to Supabase as ' + sbSession.user.email));
-  });
-}
-function sbMergeRemote(){
-  if (!sb || !sbSession) return;
-  sb.from('send_log').select('*').then(function(r){
-    if (r.error || !r.data) return;
-    var changed = false;
-    r.data.forEach(function(row){
-      var k = row.target_id + '|' + row.touch;
-      var ts = row.updated_at ? new Date(row.updated_at).getTime() : 0;
-      if (!state.entries[k] || ts >= (state.entries[k].ts||0)) {
-        state.entries[k] = { id: row.target_id, touch: row.touch, date: row.send_date,
-          name: row.name, company: row.company, done: row.status === 'sent' || row.status === 'replied',
-          at: row.sent_at, opener: row.opener, pe: row.past_employer, note: row.note,
-          reply: row.status === 'replied' ? 1 : 0, ts: ts };
-        changed = true;
-      }
-    });
-    if (changed) { lswrite(state); render(); buildLog(); }
-  });
-  sb.from('content_log').select('*').then(function(r){
-    if (r.error || !r.data) return;
-    var changed = false;
-    r.data.forEach(function(row){
-      var ts = row.updated_at ? new Date(row.updated_at).getTime() : 0;
-      if (!state.content[row.content_id] || ts >= (state.content[row.content_id].ts||0)) {
-        state.content[row.content_id] = { done: row.done, at: row.at, status: row.status, note: row.note, ts: ts };
-        changed = true;
-      }
-    });
-    if (changed) { lswrite(state); if (window.paintContent) paintContent(); }
-  });
-}
-if (sb) {
-  sb.auth.getSession().then(function(r){
-    sbSession = r.data && r.data.session;
-    if (sbSession) { sbStatus('signed in as ' + sbSession.user.email); sbMergeRemote(); }
-    else { var el = document.getElementById('sbsignin'); if (el) el.hidden = false; sbStatus('not signed in — writes stay on this device only'); }
-  });
-  sb.auth.onAuthStateChange(function(_evt, session){
-    sbSession = session;
-    if (session) { var el = document.getElementById('sbsignin'); if (el) el.hidden = true; sbStatus('signed in as ' + session.user.email); sbMergeRemote(); }
-  });
-  var sbf = document.getElementById('sbsignin');
-  if (sbf) {
-    sbf.addEventListener('submit', function(ev){
-      ev.preventDefault();
-      var emailEl = document.getElementById('sbemail');
-      var email = emailEl ? emailEl.value.trim() : '';
-      if (!email) return;
-      sbStatus('sending link to ' + email + '...');
-      sb.auth.signInWithOtp({ email: email }).then(function(r){
-        sbStatus(r.error ? ('sign-in failed — ' + r.error.message) : ('check ' + email + ' for a sign-in link'));
-      });
-    });
-  }
-}
-
 function centralToday(){ try { return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date()); }
   catch(e){ return new Date().toISOString().slice(0,10); } }
 function defaultDay(){ var t=centralToday(), i;
@@ -550,8 +323,7 @@ function replied(id){ for(var k in state.entries){ var e=state.entries[k]; if(e.
 function setEnt(q,patch){ var e=state.entries[key(q)]||{},k;
   for(k in patch) e[k]=patch[k];
   e.id=q.id;e.touch=q.touch;e.date=q.date;e.name=q.name;e.company=q.company;e.ts=Date.now();
-  state.entries[key(q)]=e; lswrite(state); paint(); buildLog(); saveSoon(); sbUpsertEntry(e);
-  try{ fetch('/api/sync/send', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(e)}).catch(function(){}); }catch(err){} }
+  state.entries[key(q)]=e; lswrite(state); paint(); buildLog(); saveSoon(); }
 function esc(s){ var d=document.createElement('div'); d.textContent=(s==null?'':String(s)); return d.innerHTML; }
 function dayQueue(){ return QUEUE.filter(function(q){ return q.date===day; }); }
 
@@ -565,40 +337,33 @@ function rowHtml(q,i){
     +(q.storm?'<span class="chip chip-storm">Storm trigger</span>':'')
     +(halted?'<span class="chip chip-halt">Replied, halted</span>':'');
   var tabs=[], panes=[];
-  tabs.push('<button class="tab is-on" type="button" data-v="std">'+(q.storm?'PLANNED':'MESSAGE')+'</button>');
+  tabs.push('<button class="tab is-on" type="button" data-v="std">'+(q.storm?'Planned':'Message')+'</button>');
   panes.push('<p class="msg" data-v="std">'+esc(q.msg)+'</p>');
-  if(q.storm){ tabs.push('<button class="tab" type="button" data-v="storm">STORM TRIGGER</button>');
+  if(q.storm){ tabs.push('<button class="tab" type="button" data-v="storm">Storm trigger</button>');
     panes.push('<p class="msg is-hidden" data-v="storm">'+esc(q.storm)+'</p>'
       +'<p class="hint is-hidden" data-v="storm">True this week only, and it beats the planned opener where the market actually took weather. If you send this one, type <b>storm</b> in the note below so Friday can measure it.</p>'); }
-  if(q.shared){ tabs.push('<button class="tab" type="button" data-v="pe">SHARED HISTORY</button>');
+  if(q.shared){ tabs.push('<button class="tab" type="button" data-v="pe">Shared history</button>');
     panes.push('<p class="msg is-hidden" data-v="pe">'+esc(q.shared).replace(/\[CLIENT\]/g,'<mark class="ph">[CLIENT]</mark>')+'</p>'
       +'<p class="hint is-hidden" data-v="pe">Only if their profile shows a past employer that is a current Hustad client, and their time there overlaps the years we have worked it. Swap <b>[CLIENT]</b> for the company. You send it yourself.</p>'); }
   var ev='';
-  if(q.events && q.events.length){ ev='<div class="ev"><span class="lbl">VERIFIED EVENTS BEHIND THIS</span><ul>'
+  if(q.events && q.events.length){ ev='<div class="ev"><span class="lbl">Verified events behind this</span><ul>'
     +q.events.map(function(x){ return '<li><b>'+esc(x.d)+'</b> &middot; '+esc(x.w)+' &middot; '+esc(x.x)
       +' <a href="'+esc(x.s)+'" target="_blank" rel="noopener">source</a></li>'; }).join('')+'</ul></div>'; }
   var chk='';
-  if(q.vcheck){ chk='<div class="check"><p><span class="lbl">WHAT THE DESK CHECKED THIS MORNING</span>'+esc(q.vcheck)+'</p>'
-    +(q.vtrig?'<p><span class="lbl">LIVE TRIGGER</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
-  var profUrl = q.url || '';
-  if (!profUrl || profUrl.indexOf('example.invalid') !== -1 || profUrl.indexOf('http') !== 0) {
-    var slug = (q.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-    profUrl = 'https://www.linkedin.com/in/' + (slug || 'linkedin-user');
-  }
+  if(q.vcheck){ chk='<div class="check"><p><span class="lbl">What the desk checked this morning</span>'+esc(q.vcheck)+'</p>'
+    +(q.vtrig?'<p><span class="lbl">Live trigger</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
   return '<article class="row'+(e.done?' is-done':'')+(halted?' is-halted':'')+'" data-k="'+esc(key(q))+'">'
-   +'<div class="row-grid"><div class="row-left">'
    +'<header class="row-head"><span class="seq">'+String(i+1).padStart(2,'0')+'</span>'
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
-   +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>REPLIED</span></label>'
-   +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>SENT</span></label></div></header>'
-   +'<div class="meta">'+chips+'<a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href,\'_blank\');return false;">Open profile &rarr;</a></div>'
-   +'<div class="why"><span class="lbl">WHY NOW</span><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6">'+esc(q.why)+'</p></div>'+chk+ev
-   +'</div><div class="row-right">'
+   +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>Replied</span></label>'
+   +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>Sent</span></label></div></header>'
+   +'<div class="meta">'+chips+(q.url?'<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
+   +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
    +'<button class="copy" type="button">Copy</button></div>'+panes.join('')+'</div>'
-   +'<div class="note-row"><label><span class="lbl">PAST EMPLOYER ON THEIR PROFILE</span>'
+   +'<div class="note-row"><label><span class="lbl">Past employer on their profile</span>'
    +'<input type="text" class="pemp" value="'+esc(e.pe||'')+'" placeholder="e.g. Asset Living"></label>'
-   +'<label><span class="lbl">NOTE</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></div></div></article>';
+   +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></article>';
 }
 
 function render(){
@@ -614,14 +379,14 @@ function render(){
       storm=qs.filter(function(q){return q.storm;}).length,
       rev=qs.filter(function(q){return q.vstatus==='revised'||q.vstatus==='flagged';}).length;
   document.getElementById('tiles').innerHTML=
-     '<div class="tile"><b>'+t1.length+'</b><span>First Touch Queue</span></div>'
-    +'<div class="tile"><b>'+t2+'</b><span>Touch 2 Follow-ups</span></div>'
-    +'<div class="tile"><b>'+t3+'</b><span>Touch 3 Final Touches</span></div>'
-    +'<div class="tile"><b>'+(storm||rev)+'</b><span>'+(storm?'Live Storm Events':'Verified Deliveries')+'</span></div>';
+     '<div class="tile"><b>'+t1.length+'</b><span>first touches</span></div>'
+    +'<div class="tile"><b>'+t2+'</b><span>touch 2 follow ups</span></div>'
+    +'<div class="tile"><b>'+t3+'</b><span>touch 3 close the loops</span></div>'
+    +'<div class="tile"><b>'+(storm||rev)+'</b><span>'+(storm?'with a live storm trigger':'verified by the desk')+'</span></div>';
   var dp=document.getElementById('deskpanel');
-  if(storm||rev){ dp.style.display=''; dp.innerHTML='<h3>System Validation Summary</h3>'
-    +'<p>Every first touch in today\'s queue was verified against live intelligence before execution: verified organization data, market leadership updates, and NWS severe weather alerts in operator territories.</p>'
-    +'<p>'+storm+' targets carry verified storm triggers. '+rev+' target records were validated clean for execution.</p>'; }
+  if(storm||rev){ dp.style.display=''; dp.innerHTML='<h3>What the desk did this morning</h3>'
+    +'<p>Every first touch below was re-checked against live sources before the block: the stored company fact, recent news, leadership changes, and National Weather Service records for severe weather in each operator\'s markets. Stale numbers were corrected in the plan itself. Where a market actually took weather there is a second draft on the toggle.</p>'
+    +'<p>'+storm+' of today\'s first touches have a verified storm trigger. '+rev+' needed a correction or a read before sending.</p>'; }
   else { dp.style.display='none'; }
   document.getElementById('rows').innerHTML = qs.length ? qs.map(rowHtml).join('')
     : '<div class="empty">No sends scheduled this day.</div>';
@@ -630,14 +395,9 @@ function render(){
 function paint(){
   var qs=dayQueue(), n=0;
   qs.forEach(function(q){ if(ent(q).done) n++; });
-  var pdoneEl = document.getElementById('pdone');
-  var ptotEl = document.getElementById('ptot');
-  if (pdoneEl) pdoneEl.textContent = n;
-  if (ptotEl) ptotEl.textContent = qs.length;
-  var pbarEl = document.getElementById('pbar');
-  if (pbarEl) pbarEl.style.width = (qs.length ? (n / qs.length * 100) : 0) + '%';
-  var qcntEl = document.getElementById('outreach-count');
-  if (qcntEl) qcntEl.textContent = qs.length;
+  document.getElementById('pdone').textContent=n;
+  document.getElementById('ptot').textContent=' of '+qs.length+' sent';
+  document.getElementById('pbar').style.width=(qs.length?(n/qs.length*100):0)+'%';
   qs.forEach(function(q){ var el=document.querySelector('[data-k="'+key(q)+'"]'); if(!el)return;
     var e=ent(q); el.classList.toggle('is-done',!!e.done);
     el.classList.toggle('is-halted', q.touch>1 && replied(q.id) && !e.done); });
@@ -678,17 +438,17 @@ function toCsv(r){ function q(v){ v=(v==null?'':String(v)); return /[",\n]/.test
   return [HDR.join(',')].concat(r.map(function(x){return x.map(q).join(',');})).join('\n'); }
 function toTsv(r){ return [HDR.join('\t')].concat(r.map(function(x){
   return x.map(function(v){return String(v==null?'':v).replace(/[\t\n]/g,' ');}).join('\t');})).join('\n'); }
-function buildLog(){ var r=logRows(), el=document.getElementById('out'); if(el) el.value=r.length?toCsv(r):''; }
-function bindCopy(id,fn,label){ var el=document.getElementById(id); if(!el) return; el.addEventListener('click',function(ev){
+function buildLog(){ var r=logRows(); document.getElementById('out').value=r.length?toCsv(r):''; }
+function bindCopy(id,fn,label){ document.getElementById(id).addEventListener('click',function(ev){
   var r=logRows(); if(!r.length) return;
   navigator.clipboard.writeText(fn(r)).then(function(){ ev.currentTarget.textContent='Copied';
     setTimeout(function(){ ev.currentTarget.textContent=label; },1400); }); }); }
 bindCopy('copytsv',toTsv,'Copy for Excel'); bindCopy('copycsv',toCsv,'Copy CSV text');
 function go(d){ day=d; try{ sessionStorage.setItem('hustad-day',d); }catch(e){} render(); }
-var dsEl=document.getElementById('dayselect'); if(dsEl) dsEl.addEventListener('change',function(e){ go(e.target.value); });
-var pdEl=document.getElementById('prevday'); if(pdEl) pdEl.addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i>0) go(DAYS[i-1]); });
-var ndEl=document.getElementById('nextday'); if(ndEl) ndEl.addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i<DAYS.length-1) go(DAYS[i+1]); });
-var tdEl=document.getElementById('today'); if(tdEl) tdEl.addEventListener('click',function(){ go(defaultDay()); });
+document.getElementById('dayselect').addEventListener('change',function(e){ go(e.target.value); });
+document.getElementById('prevday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i>0) go(DAYS[i-1]); });
+document.getElementById('nextday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i<DAYS.length-1) go(DAYS[i+1]); });
+document.getElementById('today').addEventListener('click',function(){ go(defaultDay()); });
 
 var cap=null, saveTimer=null, dirty=false;
 function hydrate(){ return atob(B64).replace('__B64'+'QUINE__',B64)
@@ -696,12 +456,12 @@ function hydrate(){ return atob(B64).replace('__B64'+'QUINE__',B64)
 function saveSoon(){ dirty=true; if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(doSave,5000); }
 function doSave(){ if(!cap||!dirty) return; dirty=false;
   try{ sessionStorage.setItem('hustad-scroll',String(window.scrollY)); sessionStorage.setItem('hustad-day',day); }catch(e){}
-  cap.publish(hydrate()).then(function(){ var el=document.getElementById('savestat'); if(el){
-    el.textContent='log saved on every device'; el.classList.add('on'); } })
+  cap.publish(hydrate()).then(function(){ var el=document.getElementById('savestat');
+    el.textContent='log saved on every device'; el.classList.add('on'); })
   .catch(function(err){ var c=err&&err.code;
     if(c==='conflict'){ dirty=false; return; }
     if(c==='rate_limited'){ dirty=true; saveTimer=setTimeout(doSave,20000); return; }
-    cap=null; var el=document.getElementById('savestat'); if(el) el.textContent='log saved on this device'; }); }
+    cap=null; document.getElementById('savestat').textContent='log saved on this device'; }); }
 window.addEventListener('pagehide',function(){ if(dirty) doSave(); });
 // Download works two ways: through the host capability inside the Claude viewer, which
 // sandboxes ordinary downloads, and through a plain Blob anywhere else. Same button.
@@ -711,11 +471,11 @@ function blobSave(data){ try{
   a.href=u; a.download='send_log.csv'; document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(u); a.parentNode && a.parentNode.removeChild(a); },0);
 }catch(e){} }
-(function(){ var b=document.getElementById('download'); if(b){ b.hidden=false;
+(function(){ var b=document.getElementById('download'); b.hidden=false;
   b.addEventListener('click',function(){ var r=logRows(); if(!r.length) return;
     var data=toCsv(r)+'\n';
     if(dlcap) dlcap.save({filename:'send_log.csv', data:data}).catch(function(){ blobSave(data); });
-    else blobSave(data); }); } })();
+    else blobSave(data); }); })();
 if(window.claude && window.claude.use){
   window.claude.use('artifact').then(function(ns){ cap=ns; if(ns&&dirty) doSave(); });
   window.claude.use('downloads').then(function(ns){ dlcap=ns; }); }
@@ -736,10 +496,10 @@ def _splice(t):
              .replace('__STUDIO_JS__', sj))
 TEMPLATE = _splice(TEMPLATE)
 
-runtime = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ).replace('__CONFIG__', CONFIGJSON) \
+runtime = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ) \
                   .replace('__STATE__', '__STATEQUINE__').replace('__B64__', '__B64QUINE__')
 b64 = base64.b64encode(runtime.encode()).decode()
-full = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ).replace('__CONFIG__', CONFIGJSON) \
+full = TEMPLATE.replace('__QUEUE__', QJSON).replace('__DAYS__', DAYSJ) \
                .replace('__STATE__', json.dumps(seed, ensure_ascii=False).replace('</', '<\\/')) \
                .replace('__B64__', b64)
 
