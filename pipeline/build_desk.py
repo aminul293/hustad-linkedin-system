@@ -276,12 +276,8 @@ nav.tabs button.is-on .count, nav.tabs button.active .count{color:var(--teal); b
 .row.is-done{opacity:.4}
 .row.is-halted{opacity:.6;border-style:dashed;border-color:var(--good)}
 .row-grid{display:block}
-@media(min-width:1024px){
-  .row-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-}
 .row-left{min-width:0}
-.row-right{min-width:0}
-@media(min-width:1024px){.row-right .draft{margin-top:0}}
+.row-right{min-width:0;margin-top:16px}
 .row-head{display:flex;gap:14px;align-items:flex-start}
 .seq{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--teal);padding-top:2px;min-width:26px}
 .who{flex:1;min-width:0}
@@ -299,8 +295,7 @@ nav.tabs button.is-on .count, nav.tabs button.active .count{color:var(--teal); b
 .chip-id{font-variant-numeric:tabular-nums;color:var(--ink-faint)}
 .chip-storm,.chip-warn{background:var(--amber-soft);border-color:rgba(224,164,88,0.35);color:var(--amber);font-weight:700}
 .chip-ok,.chip-halt{background:var(--good-soft);border-color:rgba(95,212,196,0.35);color:var(--good);font-weight:700}
-.profile-action{display:flex;justify-content:flex-end;margin-top:12px}
-.profile{font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:.03em;color:#211505;text-decoration:none;background:var(--amber);padding:7px 16px;border-radius:6px;transition:all 0.2s ease;display:inline-block}
+.profile{margin-left:auto;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:.03em;color:#211505;text-decoration:none;background:var(--amber);padding:7px 16px;border-radius:6px;transition:all 0.2s ease;display:inline-block}
 .profile:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .why{margin:18px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
 .check{margin:16px 0 0;padding:12px 16px;background:var(--surface-raised);border-left:3px solid var(--teal);border-radius:6px}
@@ -592,8 +587,7 @@ function rowHtml(q,i){
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
    +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>REPLIED</span></label>'
    +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>SENT</span></label></div></header>'
-   +'<div class="meta">'+chips+'</div>'
-   +'<div class="profile-action"><a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a></div>'
+   +'<div class="meta">'+chips+'<a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a></div>'
    +'<div class="why"><span class="lbl">WHY NOW</span><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6">'+esc(q.why)+'</p></div>'+chk+ev
    +'</div><div class="row-right">'
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
