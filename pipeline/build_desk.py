@@ -150,13 +150,14 @@ TEMPLATE = r'''<!doctype html>
 body{margin:0;background:#05070B;color:var(--ink);font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;background-image:radial-gradient(circle at 50% 0%, rgba(0,242,254,0.12) 0%, rgba(255,183,3,0.06) 40%, transparent 80%);background-attachment:fixed}
 .wrap{max-width:1280px;margin:0 auto;padding:0 32px 100px}
 .lbl{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-cyan);margin-bottom:4px}
-header.top{position:sticky;top:0;z-index:30;background:rgba(5,7,11,0.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,242,254,0.15);padding:14px 0 0;margin-bottom:28px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+header.top{position:sticky;top:0;z-index:30;background:rgba(5,7,11,0.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,242,254,0.18);padding:16px 0;margin-bottom:28px;box-shadow:0 10px 30px rgba(0,0,0,0.7)}
 .top-in{max-width:1280px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:nowrap}
+.brand-block{min-width:max-content}
 .brand{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--neon-gold);margin:0 0 2px}
-h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:21px;font-weight:800;margin:0;letter-spacing:-.02em;color:var(--ink)}
+h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:22px;font-weight:800;margin:0;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
 .savestat{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:2px 0 0}
 .savestat.on{color:var(--good)}
-.header-actions{display:flex;align-items:center;gap:12px}
+.header-actions{display:flex;align-items:center;gap:12px;white-space:nowrap}
 .daynav{display:flex;gap:6px;align-items:center}
 .daynav select{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:600;padding:7px 12px;background:rgba(10,14,23,0.9);color:var(--ink);border:1px solid rgba(0,242,254,0.2);border-radius:8px;outline:none}
 .daynav select:focus{border-color:var(--neon-cyan)}
@@ -168,9 +169,9 @@ h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:21px;font-weight:800;mar
 .upload-btn{color:var(--neon-gold);border-color:rgba(255,183,3,0.3);background:rgba(255,183,3,0.06)}
 .upload-btn:hover{border-color:var(--neon-gold);color:#FFFFFF;box-shadow:0 0 12px rgba(255,183,3,0.3)}
 .signout-btn:hover{border-color:var(--neon-cyan);color:var(--ink)}
-.tabrail{max-width:1280px;margin:16px auto 0;padding:0 32px;display:flex;align-items:center;justify-content:center}
+.tabrail{max-width:1280px;margin:16px auto 0;padding:0 32px;display:flex;align-items:center;justify-content:flex-start}
 .tabrail-segment{display:inline-flex;align-items:center;background:rgba(10,14,23,0.92);border:1px solid rgba(0,242,254,0.22);border-radius:12px;padding:4px;gap:4px;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
-.tabrail-segment button{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0!important;border-radius:8px!important;padding:8px 18px!important;cursor:pointer;transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);outline:none;margin:0!important}
+.tabrail-segment button{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0!important;border-radius:8px!important;padding:8px 20px!important;cursor:pointer;transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);outline:none;margin:0!important;white-space:nowrap}
 .tabrail-segment button:hover{color:var(--ink);background:rgba(255,255,255,0.05)}
 .tabrail-segment button.is-on{background:linear-gradient(135deg, #00F2FE, #4FACFE)!important;color:#05070B!important;font-weight:800!important;box-shadow:0 0 16px rgba(0,242,254,0.4)!important}
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0 0 24px}
@@ -259,7 +260,7 @@ body.tab-other .daynav,body.tab-other .prog-pill{display:none}
 <div class="app-root">
 <header class="top">
   <div class="top-in">
-    <div>
+    <div class="brand-block">
       <p class="brand">Hustad Commercial &middot; Executive Outreach</p>
       <h1>LinkedIn Command Center</h1>
     </div>
