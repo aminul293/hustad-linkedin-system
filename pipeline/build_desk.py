@@ -153,6 +153,8 @@ h1{font-size:21px;font-weight:700;margin:2px 0 0;letter-spacing:-.01em}
 .prog span{font-size:13px;color:var(--ink-2)}
 .bar{height:4px;background:var(--line);margin-top:5px;overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--copper);transition:width .25s ease}
+.uploadbtn{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:8px 12px;background:var(--copper);color:#111820;border:1px solid var(--copper);text-decoration:none;white-space:nowrap}
+.uploadbtn:hover{filter:brightness(1.08)}
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:0 0 18px}
 @media(min-width:660px){.tiles{grid-template-columns:repeat(4,1fr)}}
 .tile{background:var(--card);border:1px solid var(--line);padding:10px 12px}
@@ -234,6 +236,7 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
     <button type="button" id="today">Today</button>
   </div>
   <div class="prog"><b id="pdone">0</b><span id="ptot"> of 0 sent</span><div class="bar"><i id="pbar"></i></div></div>
+  <a class="uploadbtn" href="/upload">Upload Data</a>
 </div>
 <nav class="tabrail" id="tabrail" role="tablist" aria-label="Sections">
   <button type="button" data-pane="outreach" class="is-on" role="tab" aria-selected="true">DM Outreach</button>
