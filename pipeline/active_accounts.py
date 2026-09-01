@@ -33,58 +33,6 @@ CRM_TO_LINKEDIN, INDIVIDUALS_AND_INTERNAL, ACCOUNT_MAP_SOURCE = load_account_map
 
 def load_opportunities(path=paths.s(paths.RAW / 'opportunities_2026.csv')):
     d = pd.read_csv(path)
-
-    # Column aliases
-    if 'Company' not in d.columns:
-        for c in d.columns:
-            if c.lower() in ('company name', 'account name', 'account', 'organization', 'client'):
-                d['Company'] = d[c]
-                break
-    if 'Company' not in d.columns:
-        d['Company'] = ''
-
-    if 'ID' not in d.columns:
-        if 'Opportunity ID' in d.columns:
-            d['ID'] = d['Opportunity ID']
-        elif 'Target ID' in d.columns:
-            d['ID'] = d['Target ID']
-        else:
-            d['ID'] = range(1, len(d) + 1)
-
-    if 'Sale Price' not in d.columns:
-        d['Sale Price'] = 0.0
-
-    if 'Property' not in d.columns:
-        d['Property'] = ''
-
-    if 'Product' not in d.columns:
-        d['Product'] = ''
-
-    if 'Stage' not in d.columns:
-        if 'Status' in d.columns:
-            d['Stage'] = d['Status']
-        else:
-            d['Stage'] = ''
-
-    if 'Created Date' not in d.columns:
-        if 'Stage Date' in d.columns:
-            d['Created Date'] = d['Stage Date']
-        elif 'Recent Activity' in d.columns:
-            d['Created Date'] = d['Recent Activity']
-        elif 'Date Sent' in d.columns:
-            d['Created Date'] = d['Date Sent']
-        else:
-            d['Created Date'] = None
-
-    if 'Property Account Manager' not in d.columns:
-        if 'Manager' in d.columns:
-            d['Property Account Manager'] = d['Manager']
-        else:
-            d['Property Account Manager'] = ''
-
-    if 'State' not in d.columns:
-        d['State'] = ''
-
     d['Created Date'] = pd.to_datetime(d['Created Date'], errors='coerce')
     d['Company'] = d['Company'].astype(str).str.replace('&amp;', '&').str.strip()
     return d
