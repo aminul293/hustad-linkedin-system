@@ -70,7 +70,7 @@ MEANING_LANE = {
  ],
  'VP / Director Operations': [
    "One standard across regions is most of the value: a roof report out of one region reads like the next, and no regional's negotiating their own version.",
-   "Roof items should show up on a list, not as emergencies. Scheduled inspections and same-visit repairs are how that happens; that's what we run for {proof}.",
+   "Roof items should show up on a list, not as emergencies. Scheduled inspections and same-visit repairs are how that happens; we run that for {proof}.",
    "What operations feels first is fewer repeat tickets, and a report a regional can act on that doesn't need a translator.",
  ],
  'Regional / Portfolio': [
@@ -113,18 +113,6 @@ MEANING_SEGMENT = {
  ],
  'Single family rental': [
    "Hundreds of individual roofs means the money's in small items and truck rolls. We route the inspections and fix what's fixable on the visit.",
- ],
- 'Self storage': [
-   "Self storage assets need zero tenant disruption, flat roof drainage discipline, and a clean condition record across multi-building facilities.",
- ],
- 'Healthcare': [
-   "Medical office and healthcare facilities carry strict zero-water-intrusion standards and HVAC penetration seals; we document every square foot.",
- ],
- 'Hospitality': [
-   "Guest satisfaction means quiet staging, zero disruption to check-ins, and fast same-day containment for exterior leaks.",
- ],
- 'Data center': [
-   "Mission critical facilities require thermal envelope discipline, zero-downtime work windows, and pre-scheduled roof walks.",
  ],
 }
 
@@ -591,7 +579,7 @@ def build(plan_csv, research_json, out_csv):
     company_seen = {}
     day_hooks, company_hooks = {}, {}
     fam_mid, fam_ask = {}, {}
-    def fam(c): return ' '.join(str(c).lower().replace(',', ' ').split()[:2])
+    def fam(c): return ' '.join(str(c).lower().split()[:2])
     day_mid, day_ask, day_gives, day_tail = {}, {}, {}, {}
 
     GLOBAL_CAP = 8
@@ -635,8 +623,7 @@ def build(plan_csv, research_json, out_csv):
         dkey = str(r['touch1_date'])
 
         # ---- opener
-        f_co = fam(company)
-        n_at = company_seen.get(f_co, 0); company_seen[f_co] = n_at + 1
+        n_at = company_seen.get(company, 0); company_seen[company] = n_at + 1
         raw = hook if n_at == 0 else (HOOK_ALT.get(company, '') if n_at == 1 else '')
         if not hook_fits(raw, seg): raw = ''
         fb = FALLBACK_HOOK.get(seg, []) + FALLBACK_LANE.get(lane, FALLBACK_LANE['Site level'])
@@ -644,26 +631,20 @@ def build(plan_csv, research_json, out_csv):
         # colleagues who will compare DMs, whatever their LinkedIn spelling says.
         used_h = day_hooks.setdefault(dkey, set()); used_c = company_hooks.setdefault(fam(company), set())
         h = cap_hook(raw)
-        used_c_norm = {x.strip().lower() for x in used_c}
-        used_h_norm = {x.strip().lower() for x in used_h}
-        if not h or h.strip().lower() in used_h_norm or h.strip().lower() in used_c_norm:
+        if not h or h in used_h or h in used_c:
             h = ''
             for k in range(len(fb)):
                 cand = fb[(n_at + k) % len(fb)]
-                cn = cand.strip().lower()
-                if cn not in used_h_norm and cn not in used_c_norm:
+                if cand not in used_h and cand not in used_c:
                     h = cand; break
             if not h:
+                # The day's bank is spent. Two strangers opening alike is invisible; two colleagues
+                # opening alike is the one thing this program cannot afford. Firm wins.
                 for k in range(len(fb)):
                     cand = fb[(n_at + k) % len(fb)]
-                    if cand.strip().lower() not in used_c_norm:
+                    if cand not in used_c:
                         h = cand; break
-            if not h:
-                for cand in fb:
-                    if cand.strip().lower() not in used_c_norm:
-                        h = cand; break
-            if not h:
-                h = fb[n_at % len(fb)]
+            h = h or fb[n_at % len(fb)]
         used_h.add(h); used_c.add(h)
 
         # ---- give (role stack; acquisitions titles get the condition read)
@@ -822,9 +803,8 @@ def build(plan_csv, research_json, out_csv):
 
         # ---- shared-history opener
         pe_body, pe_close = pick(PAST_EMPLOYER, seed, 'pe')
-        clean_company = re.split(r'\s*[–—]\s*', str(company))[0].strip()
         m4 = para(f"Hi {first},",
-                  pe_body.format(company=clean_company),
+                  pe_body.format(company=company),
                   pe_close)
 
         res = research.get(company, {})
