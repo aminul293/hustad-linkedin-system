@@ -128,7 +128,7 @@ TEMPLATE = r'''<!doctype html>
 <title>Hustad LinkedIn Desk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{
@@ -147,22 +147,22 @@ TEMPLATE = r'''<!doctype html>
   --neon-green:#00E676;--copper:#FFB703;--copper-soft:rgba(255,183,3,0.14);--good:#00E676;
   --good-soft:rgba(0,230,118,0.14);--draft-bg:rgba(6,9,16,0.95);--focus:#00F2FE;}
 *{box-sizing:border-box}
-body{margin:0;background:#05070B;color:var(--ink);font-family:"Plus Jakarta Sans",Inter,-apple-system,BlinkMacSystemFont,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;background-image:radial-gradient(circle at 50% 0%, rgba(0,242,254,0.16) 0%, rgba(255,183,3,0.08) 40%, transparent 80%), linear-gradient(rgba(0,242,254,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,254,0.02) 1px, transparent 1px);background-size:100% 100%, 48px 48px, 48px 48px;background-attachment:fixed}
+body{margin:0;background:#05070B;color:var(--ink);font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;background-image:radial-gradient(circle at 50% 0%, rgba(0,242,254,0.16) 0%, rgba(255,183,3,0.08) 40%, transparent 80%), linear-gradient(rgba(0,242,254,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,254,0.02) 1px, transparent 1px);background-size:100% 100%, 48px 48px, 48px 48px;background-attachment:fixed}
 .wrap{max-width:980px;margin:0 auto;padding:0 20px 100px}
-.lbl{display:block;font-family:"Space Grotesk",sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--neon-cyan);margin-bottom:4px}
+.lbl{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--neon-cyan);margin-bottom:4px}
 header.top{position:sticky;top:0;z-index:30;background:rgba(5,7,11,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,242,254,0.2);padding:16px 0 14px;margin-bottom:28px;box-shadow:0 12px 35px rgba(0,0,0,0.5), 0 1px 0 rgba(0,242,254,0.2)}
 .top-in{max-width:980px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
-.brand{font-family:Outfit,sans-serif;font-size:11px;font-weight:900;letter-spacing:.28em;text-transform:uppercase;color:var(--neon-gold);text-shadow:0 0 10px rgba(255,183,3,0.4);margin:0}
-h1{font-family:"Space Grotesk",sans-serif;font-size:25px;font-weight:700;margin:2px 0 0;letter-spacing:-.02em;background:linear-gradient(135deg, #FFFFFF 40%, #00F2FE 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 20px rgba(0,242,254,0.2)}
+.brand{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--neon-gold);text-shadow:0 0 10px rgba(255,183,3,0.4);margin:0}
+h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:24px;font-weight:800;margin:2px 0 0;letter-spacing:-.02em;background:linear-gradient(135deg, #FFFFFF 40%, #00F2FE 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 20px rgba(0,242,254,0.2)}
 .savestat{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:4px 0 0}
 .savestat.on{color:var(--good);text-shadow:0 0 8px rgba(0,230,118,0.4)}
 .daynav{display:flex;gap:8px;align-items:center}
-.daynav select{font-family:"Space Grotesk",inherit;font-size:13px;font-weight:600;padding:9px 14px;background:rgba(10,14,23,0.9);color:var(--ink);border:1px solid rgba(0,242,254,0.25);border-radius:10px;outline:none;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(0,0,0,0.4)}
+.daynav select{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:600;padding:9px 14px;background:rgba(10,14,23,0.9);color:var(--ink);border:1px solid rgba(0,242,254,0.25);border-radius:10px;outline:none;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(0,0,0,0.4)}
 .daynav select:focus{border-color:var(--neon-cyan);box-shadow:0 0 15px rgba(0,242,254,0.3)}
-.daynav button{font-family:inherit;font-size:13px;font-weight:700;padding:9px 14px;background:rgba(10,14,23,0.9);color:var(--ink);border:1px solid rgba(0,242,254,0.25);border-radius:10px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);backdrop-filter:blur(10px)}
+.daynav button{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;padding:9px 14px;background:rgba(10,14,23,0.9);color:var(--ink);border:1px solid rgba(0,242,254,0.25);border-radius:10px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);backdrop-filter:blur(10px)}
 .daynav button:hover{border-color:var(--neon-cyan);color:var(--neon-cyan);transform:translateY(-1px);box-shadow:0 0 16px rgba(0,242,254,0.3)}
 .prog{text-align:right;min-width:140px}
-.prog b{font-family:"Space Grotesk",sans-serif;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--neon-gold);text-shadow:0 0 12px rgba(255,183,3,0.4)}
+.prog b{font-family:"Plus Jakarta Sans",sans-serif;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--neon-gold);text-shadow:0 0 12px rgba(255,183,3,0.4)}
 .prog span{font-size:13px;color:var(--ink-2)}
 .bar{height:7px;background:rgba(255,255,255,0.06);margin-top:6px;border-radius:4px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.6)}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg, #00F2FE, #FFB703, #00E676);transition:width .4s cubic-bezier(0.16, 1, 0.3, 1);border-radius:4px;box-shadow:0 0 14px rgba(0,242,254,0.6)}
@@ -170,10 +170,10 @@ h1{font-family:"Space Grotesk",sans-serif;font-size:25px;font-weight:700;margin:
 @media(min-width:660px){.tiles{grid-template-columns:repeat(4,1fr)}}
 .tile{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.2);border-radius:16px;padding:18px 20px;box-shadow:0 14px 36px rgba(0,0,0,0.45);transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1)}
 .tile:hover{transform:translateY(-3px);border-color:var(--neon-cyan);box-shadow:0 20px 45px -10px rgba(0,0,0,0.6), 0 0 25px rgba(0,242,254,0.25)}
-.tile b{display:block;font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--neon-gold);line-height:1.1;text-shadow:0 0 14px rgba(255,183,3,0.35)}
+.tile b{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--neon-gold);line-height:1.1;text-shadow:0 0 14px rgba(255,183,3,0.35)}
 .tile span{font-size:12px;font-weight:600;letter-spacing:.03em;color:var(--ink-2);display:block;margin-top:5px;line-height:1.4}
 .panel{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.2);border-radius:16px;padding:22px 26px;margin-bottom:24px;box-shadow:0 14px 36px rgba(0,0,0,0.4)}
-.panel h3{font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--neon-cyan);margin:0 0 10px;text-shadow:0 0 10px rgba(0,242,254,0.3)}
+.panel h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--neon-cyan);margin:0 0 10px;text-shadow:0 0 10px rgba(0,242,254,0.3)}
 .panel p{margin:8px 0 0;font-size:14px;color:var(--ink-2);line-height:1.68}
 .panel p:first-of-type{margin-top:0}
 .panel ol{margin:0;padding-left:20px;font-size:14px;color:var(--ink-2);line-height:1.75}
@@ -183,7 +183,7 @@ h1{font-family:"Space Grotesk",sans-serif;font-size:25px;font-weight:700;margin:
 .row.is-done{opacity:.4}
 .row.is-halted{opacity:.6;border-style:dashed;border-color:var(--good);box-shadow:0 0 20px rgba(0,230,118,0.2)}
 .row-head{display:flex;gap:14px;align-items:flex-start}
-.seq{font-family:"Space Grotesk",sans-serif;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--neon-cyan);padding-top:2px;min-width:28px}
+.seq{font-family:"Plus Jakarta Sans",sans-serif;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--neon-cyan);padding-top:2px;min-width:28px}
 .who{flex:1;min-width:0}
 .who h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:20px;font-weight:800;margin:0;letter-spacing:-.01em;color:var(--ink)}
 .role{margin:3px 0 0;font-size:14px;color:var(--ink-2);font-weight:500}
@@ -199,7 +199,7 @@ h1{font-family:"Space Grotesk",sans-serif;font-size:25px;font-weight:700;margin:
 .chip-id{font-variant-numeric:tabular-nums;color:var(--ink-3)}
 .chip-storm,.chip-warn{background:rgba(255,183,3,0.12);border-color:rgba(255,183,3,0.35);color:var(--neon-gold);font-weight:800;box-shadow:0 0 10px rgba(255,183,3,0.15)}
 .chip-ok,.chip-halt{background:rgba(0,230,118,0.12);border-color:rgba(0,230,118,0.35);color:var(--good);font-weight:800;box-shadow:0 0 10px rgba(0,230,118,0.15)}
-.profile{margin-left:auto;font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;color:#05070B;text-decoration:none;background:linear-gradient(135deg, #00F2FE, #4FACFE);padding:7px 16px;border-radius:20px;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);box-shadow:0 0 16px rgba(0,242,254,0.4)}
+.profile{margin-left:auto;font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:800;letter-spacing:.04em;color:#05070B;text-decoration:none;background:linear-gradient(135deg, #00F2FE, #4FACFE);padding:7px 16px;border-radius:20px;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);box-shadow:0 0 16px rgba(0,242,254,0.4)}
 .profile:hover{color:#05070B;transform:translateY(-2px) scale(1.03);box-shadow:0 0 25px rgba(0,242,254,0.7)}
 .why{margin:18px 0 0;font-size:14px;color:var(--ink-2);line-height:1.65}
 .check{margin:18px 0 0;padding:14px 18px;background:rgba(0,242,254,0.03);border-left:3px solid var(--neon-cyan);border-radius:8px}
@@ -211,12 +211,12 @@ h1{font-family:"Space Grotesk",sans-serif;font-size:25px;font-weight:700;margin:
 .draft{margin-top:18px;border:1px solid rgba(0,242,254,0.2);border-radius:14px;overflow:hidden;background:var(--draft-bg);box-shadow:inset 0 2px 10px rgba(0,0,0,0.5)}
 .draft-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 18px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(0,242,254,0.15);flex-wrap:wrap}
 .tabs{display:flex;border:1px solid rgba(0,242,254,0.25);border-radius:10px;overflow:hidden;flex-wrap:wrap;background:rgba(0,0,0,0.3)}
-.tab{font-family:"Space Grotesk",inherit;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0;padding:8px 16px;cursor:pointer;transition:all 0.2s ease}
+.tab{font-family:"Plus Jakarta Sans",inherit;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0;padding:8px 16px;cursor:pointer;transition:all 0.2s ease}
 .tab.is-on{background:linear-gradient(135deg, #00F2FE, #4FACFE);color:#05070B;box-shadow:0 0 15px rgba(0,242,254,0.4);font-weight:800}
-.copy{font-family:"Space Grotesk",inherit;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(135deg, #FFB703, #FB8500);color:#05070B;border:0;border-radius:10px;padding:9px 20px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);box-shadow:0 0 16px rgba(255,183,3,0.35)}
+.copy{font-family:"Plus Jakarta Sans",inherit;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg, #FFB703, #FB8500);color:#05070B;border:0;border-radius:10px;padding:9px 20px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);box-shadow:0 0 16px rgba(255,183,3,0.35)}
 .copy:hover{transform:scale(1.05);box-shadow:0 0 25px rgba(255,183,3,0.6)}
 .copy.ok{background:linear-gradient(135deg, #00E676, #00B0FF);color:#05070B;box-shadow:0 0 20px rgba(0,230,118,0.5)}
-.msg{margin:0;padding:20px 22px;font-family:"Source Serif 4",Georgia,serif;font-size:16.5px;line-height:1.75;color:var(--ink);white-space:pre-line}
+.msg{margin:0;padding:20px 22px;font-family:"Plus Jakarta Sans",sans-serif;font-size:15px;line-height:1.75;color:var(--ink);white-space:pre-line}
 .msg.is-hidden,.hint.is-hidden{display:none}
 .hint{margin:0;padding:0 22px 18px;font-size:13px;line-height:1.65;color:var(--neon-gold)}
 .ph{background:var(--copper-soft);color:var(--neon-gold);font-weight:700;padding:0 5px;border-radius:4px}
@@ -225,12 +225,12 @@ h1{font-family:"Space Grotesk",sans-serif;font-size:25px;font-weight:700;margin:
 .pemp,.note{width:100%;margin-top:4px;font-family:inherit;font-size:13px;padding:11px 14px;background:rgba(5,7,11,0.8);border:1px solid rgba(0,242,254,0.2);border-radius:10px;color:var(--ink);outline:none;transition:all 0.2s ease}
 .pemp:focus,.note:focus{border-color:var(--neon-cyan);box-shadow:0 0 15px rgba(0,242,254,0.25)}
 .export{margin-top:38px;background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.2);border-radius:16px;padding:24px;box-shadow:0 14px 36px rgba(0,0,0,0.45)}
-.export h3{font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--neon-cyan);margin:0 0 8px}
+.export h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--neon-cyan);margin:0 0 8px}
 .export p{margin:0 0 14px;font-size:14px;color:var(--ink-2)}
 textarea{width:100%;min-height:120px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;padding:14px;background:rgba(5,7,11,0.8);border:1px solid rgba(0,242,254,0.2);border-radius:10px;color:var(--ink);resize:vertical;outline:none}
 textarea:focus{border-color:var(--neon-cyan);box-shadow:0 0 15px rgba(0,242,254,0.2)}
 .btns{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
-.btn{font-family:"Space Grotesk",inherit;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:12px 22px;border:0;background:linear-gradient(135deg, #00F2FE, #4FACFE);color:#05070B;border-radius:10px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);box-shadow:0 0 18px rgba(0,242,254,0.35)}
+.btn{font-family:"Plus Jakarta Sans",inherit;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:12px 22px;border:0;background:linear-gradient(135deg, #00F2FE, #4FACFE);color:#05070B;border-radius:10px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);box-shadow:0 0 18px rgba(0,242,254,0.35)}
 .btn:hover{transform:translateY(-2px);box-shadow:0 0 28px rgba(0,242,254,0.6)}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(0,242,254,0.3);box-shadow:none}
 .btn.ghost:hover{border-color:var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 15px rgba(0,242,254,0.3)}
@@ -245,7 +245,7 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
 </style></head><body>
 <div class="app-root">
 <header class="top"><div class="top-in">
-  <div><p class="brand">Hustad &middot; New Business Track</p><h1>LinkedIn Desk</h1>
+  <div><p class="brand">Hustad Commercial &middot; Executive Outreach</p><h1>LinkedIn Command Center</h1>
     <p class="savestat" id="savestat">log saved on this device</p>
     <p class="savestat" id="sbstat" hidden></p>
     <form id="sbsignin" hidden style="margin-top:6px;display:flex;gap:6px">
@@ -263,9 +263,9 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
   <div class="prog"><b id="pdone">0</b><span id="ptot"> of 0 sent</span><div class="bar"><i id="pbar"></i></div></div>
 </div>
 <nav class="tabrail" id="tabrail" role="tablist" aria-label="Sections">
-  <button type="button" data-pane="outreach" class="is-on" role="tab" aria-selected="true">DM Outreach</button>
-  <button type="button" data-pane="replies" role="tab" aria-selected="false">Reply Center</button>
-  <button type="button" data-pane="posts" role="tab" aria-selected="false">Posts</button>
+  <button type="button" data-pane="outreach" class="is-on" role="tab" aria-selected="true">Outreach Queue</button>
+  <button type="button" data-pane="replies" role="tab" aria-selected="false">Reply Inbox</button>
+  <button type="button" data-pane="posts" role="tab" aria-selected="false">Post Publishing</button>
   <button type="button" data-pane="newsletter" role="tab" aria-selected="false">Newsletter</button>
   <button type="button" data-pane="articles" role="tab" aria-selected="false">Articles</button>
 </nav></header>
@@ -274,15 +274,26 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
   <div class="tiles" id="tiles"></div>
   <section class="panel" id="deskpanel"></section>
   <section class="panel">
-    <h3>The twenty second check, before every send</h3>
+    <h3>Standard Execution Protocol</h3>
     <ol>
-      <li>Open the profile. Confirm the title and company still match the row.</li>
-      <li>Read Experience. If a past employer is a current Hustad client and their time there overlaps our work, switch to <b>Shared history</b>, put that company where [CLIENT] sits, type it in the past employer box, and send it yourself.</li>
-      <li>If their <i>current</i> company is a Hustad account, skip and note it. That is warm outreach and it runs elsewhere.</li>
-      <li>If they replied on an earlier touch, tick <b>Replied</b>. Their later touches stop automatically.</li>
-      <li>Paste, send, tick <b>Sent</b>. The log writes itself.</li>
+      <li><b>Verify Executive Profile</b>: Confirm lead title and organization match row before sending.</li>
+      <li><b>Check Past History</b>: If a past employer is an active Hustad client, switch draft to <i>Shared History</i> and state the account.</li>
+      <li><b>Exclude Active Accounts</b>: Skip warm outreach if the prospect's current organization is an active Hustad client.</li>
+      <li><b>Automated Sequence Halting</b>: Marking <i>Replied</i> automatically halts Touch 2 and Touch 3 follow-ups across all devices.</li>
+      <li><b>Execute & Log</b>: Copy draft message, send via LinkedIn DM, and check <i>Sent</i>. Activity logs automatically sync.</li>
     </ol>
-    <p>Order is deliberate: follow ups first, then first touches. If the hour runs short, defer first touches rather than rush a live conversation.</p>
+    <p>Recommended sequence priority: Execute scheduled follow-ups first, then new first touches.</p>
+  </section>
+  <div id="rows"></div>
+  <section class="export">
+    <h3>Outreach Activity Log</h3>
+    <p>Activity logs automatically persist in browser storage and backup database. Export CSV or copy TSV for Excel records anytime.</p>
+    <textarea id="out" readonly placeholder="Tick a row and the log appears here."></textarea>
+    <div class="btns">
+      <button class="btn" id="copytsv" type="button">Copy for Excel</button>
+      <button class="btn ghost" id="copycsv" type="button">Copy CSV text</button>
+      <button class="btn ghost" id="download" type="button" hidden>Download send_log.csv</button>
+    </div>
   </section>
   <div id="rows"></div>
   <section class="export">
@@ -495,14 +506,14 @@ function render(){
       storm=qs.filter(function(q){return q.storm;}).length,
       rev=qs.filter(function(q){return q.vstatus==='revised'||q.vstatus==='flagged';}).length;
   document.getElementById('tiles').innerHTML=
-     '<div class="tile"><b>'+t1.length+'</b><span>first touches</span></div>'
-    +'<div class="tile"><b>'+t2+'</b><span>touch 2 follow ups</span></div>'
-    +'<div class="tile"><b>'+t3+'</b><span>touch 3 close the loops</span></div>'
-    +'<div class="tile"><b>'+(storm||rev)+'</b><span>'+(storm?'with a live storm trigger':'verified by the desk')+'</span></div>';
+     '<div class="tile"><b>'+t1.length+'</b><span>First Touch Queue</span></div>'
+    +'<div class="tile"><b>'+t2+'</b><span>Touch 2 Follow-ups</span></div>'
+    +'<div class="tile"><b>'+t3+'</b><span>Touch 3 Final Touches</span></div>'
+    +'<div class="tile"><b>'+(storm||rev)+'</b><span>'+(storm?'Live Storm Events':'Verified Deliveries')+'</span></div>';
   var dp=document.getElementById('deskpanel');
-  if(storm||rev){ dp.style.display=''; dp.innerHTML='<h3>What the desk did this morning</h3>'
-    +'<p>Every first touch below was re-checked against live sources before the block: the stored company fact, recent news, leadership changes, and National Weather Service records for severe weather in each operator\'s markets. Stale numbers were corrected in the plan itself. Where a market actually took weather there is a second draft on the toggle.</p>'
-    +'<p>'+storm+' of today\'s first touches have a verified storm trigger. '+rev+' needed a correction or a read before sending.</p>'; }
+  if(storm||rev){ dp.style.display=''; dp.innerHTML='<h3>System Validation Summary</h3>'
+    +'<p>Every first touch in today\'s queue was verified against live intelligence before execution: verified organization data, market leadership updates, and NWS severe weather alerts in operator territories.</p>'
+    +'<p>'+storm+' targets carry verified storm triggers. '+rev+' target records were validated clean for execution.</p>'; }
   else { dp.style.display='none'; }
   document.getElementById('rows').innerHTML = qs.length ? qs.map(rowHtml).join('')
     : '<div class="empty">No sends scheduled this day.</div>';
