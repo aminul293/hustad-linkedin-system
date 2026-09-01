@@ -70,7 +70,7 @@ MEANING_LANE = {
  ],
  'VP / Director Operations': [
    "One standard across regions is most of the value: a roof report out of one region reads like the next, and no regional's negotiating their own version.",
-   "Roof items should show up on a list, not as emergencies. Scheduled inspections and same-visit repairs are how that happens; we run that for {proof}.",
+   "Roof items should show up on a list, not as emergencies. Scheduled inspections and same-visit repairs are how that happens; that's what we run for {proof}.",
    "What operations feels first is fewer repeat tickets, and a report a regional can act on that doesn't need a translator.",
  ],
  'Regional / Portfolio': [

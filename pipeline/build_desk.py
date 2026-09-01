@@ -458,12 +458,13 @@ function rowHtml(q,i){
   var chk='';
   if(q.vcheck){ chk='<div class="check"><p><span class="lbl">What the desk checked this morning</span>'+esc(q.vcheck)+'</p>'
     +(q.vtrig?'<p><span class="lbl">Live trigger</span>'+esc(q.vtrig)+'</p>':'')+'</div>'; }
+  var profUrl = (q.url && q.url.indexOf('http') === 0 && q.url.indexOf('example.invalid') === -1) ? q.url : ('https://www.linkedin.com/search/results/all/?keywords=' + encodeURIComponent(q.name + ' ' + q.company));
   return '<article class="row'+(e.done?' is-done':'')+(halted?' is-halted':'')+'" data-k="'+esc(key(q))+'">'
    +'<header class="row-head"><span class="seq">'+String(i+1).padStart(2,'0')+'</span>'
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
    +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>Replied</span></label>'
    +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>Sent</span></label></div></header>'
-   +'<div class="meta">'+chips+(q.url?'<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
+   +'<div class="meta">'+chips+'<a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a></div>'
    +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
    +'<button class="copy" type="button">Copy</button></div>'+panes.join('')+'</div>'
