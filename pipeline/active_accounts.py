@@ -53,6 +53,11 @@ def load_opportunities(path=paths.s(paths.RAW / 'opportunities_2026.csv')):
 
     if 'Sale Price' not in d.columns:
         d['Sale Price'] = 0.0
+    else:
+        d['Sale Price'] = pd.to_numeric(
+            d['Sale Price'].astype(str).str.replace(r'[$,]', '', regex=True),
+            errors='coerce'
+        ).fillna(0.0)
 
     if 'Property' not in d.columns:
         d['Property'] = ''
