@@ -13,7 +13,7 @@ import paths
 
 def get_desk_data(day: str = None) -> Dict[str, Any]:
     """Return JSON payload for the desk dashboard containing plan rows and content calendar."""
-    plan_path = paths.s(paths.PLAN_FINAL)
+    plan_path = paths.s(paths.PLAN)
     rows: List[Dict[str, Any]] = []
     
     if os.path.exists(plan_path):
@@ -24,9 +24,9 @@ def get_desk_data(day: str = None) -> Dict[str, Any]:
                     continue
                 rows.append(r)
 
-    content_path = paths.s(paths.WORK_CONTENT)
+    content_path = paths.s(paths.WORK / 'content_calendar.json')
     if not os.path.exists(content_path):
-        content_path = paths.s(paths.SAMPLE_CONTENT)
+        content_path = paths.s(paths.SAMPLE / 'plan_with_copy_final.csv')
     
     content = {}
     if os.path.exists(content_path):
@@ -46,9 +46,9 @@ def get_desk_data(day: str = None) -> Dict[str, Any]:
 
 def get_analytics_data() -> Dict[str, Any]:
     """Calculate and return conversion metrics by opener type, segment, and touch stage."""
-    plan_path = paths.s(paths.PLAN_FINAL)
+    plan_path = paths.s(paths.PLAN)
     if not os.path.exists(plan_path):
-        plan_path = paths.s(paths.SAMPLE_PLAN)
+        plan_path = paths.s(paths.SAMPLE / 'plan_with_copy_final.csv')
 
     total_targets = 0
     openers_count = {'standard': 0, 'shared_history': 0, 'storm_trigger': 0}

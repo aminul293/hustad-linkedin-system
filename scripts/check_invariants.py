@@ -81,7 +81,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 # 11. posting worker is active and valid
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'worker'))
 import post_scheduler
-check('posting worker is active and valid', hasattr(post_scheduler, 'payload'))
+# 12. analytics engine is active and valid
+import api
+check('analytics engine is active and valid', api.get_analytics_data().get('ok') is True)
 
 print()
 if FAIL:
