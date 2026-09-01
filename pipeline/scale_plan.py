@@ -51,6 +51,13 @@ elif os.path.exists(f'{paths.SAMPLE}/plan_with_copy_final.csv'):
     plan = pd.read_csv(f'{paths.SAMPLE}/plan_with_copy_final.csv')
 else:
     plan = pd.DataFrame(columns=['target_id', 'plan_role', 'touch1_date', 'touch2_date', 'touch3_date', 'day_seq', 'week', 'url_key', 'Company'])
+
+# Filter out synthetic sample records when real master contacts exist
+if 'URL' in plan.columns:
+    plan = plan[~plan['URL'].astype(str).str.contains('example.invalid', na=False)]
+if 'url_key' in plan.columns:
+    plan = plan[~plan['url_key'].astype(str).str.startswith('sample-', na=False)]
+
 master = pd.read_csv(MASTER)
 keep = plan.copy()
 pri = keep[keep.plan_role == 'PRIMARY']
