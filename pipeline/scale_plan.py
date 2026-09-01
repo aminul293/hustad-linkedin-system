@@ -14,9 +14,9 @@ import pandas as pd, collections
 from datetime import date, timedelta
 
 B = paths.s(paths.PIPELINE)
-PLAN   = f'{paths.PIPELINE}/plan_with_copy_final.csv'
-MASTER = f'{paths.PIPELINE}/master_contacts.csv'
-OUT    = f'{paths.PIPELINE}/plan_targets.csv'
+PLAN   = paths.s(paths.PLAN)
+MASTER = paths.s(paths.MASTER)
+OUT    = paths.s(paths.PLAN_TARGETS)
 REF    = f'{paths.PIPELINE}/calendar_ref.csv'
 LOG    = f'{paths.WORK}/plan_change_log_v3.csv'
 
@@ -45,7 +45,12 @@ def nb(d):
     while not is_bd(d): d += timedelta(days=1)
     return d
 
-plan = pd.read_csv(PLAN)
+if os.path.exists(PLAN):
+    plan = pd.read_csv(PLAN)
+elif os.path.exists(f'{paths.SAMPLE}/plan_with_copy_final.csv'):
+    plan = pd.read_csv(f'{paths.SAMPLE}/plan_with_copy_final.csv')
+else:
+    plan = pd.DataFrame(columns=['target_id', 'plan_role', 'touch1_date', 'touch2_date', 'touch3_date', 'day_seq', 'week', 'url_key', 'Company'])
 master = pd.read_csv(MASTER)
 keep = plan.copy()
 pri = keep[keep.plan_role == 'PRIMARY']
@@ -107,8 +112,11 @@ log.append({'target_id': '', 'name': '', 'company': '', 'position': '', 'change'
                       f'across {new.Company.nunique() if len(new) else 0} companies. Nobody already sent or scheduled was moved.',
             'was': ''})
 
-cols = [c for c in plan.columns if c in new.columns] if len(new) else []
-out = pd.concat([keep, new[cols]], ignore_index=True) if len(new) else keep
+if len(keep) > 0 and 'target_id' in keep.columns and len(keep.dropna(subset=['target_id'])) > 0:
+    out = pd.concat([keep, new], ignore_index=True)
+else:
+    out = new
+
 drop = [c for c in out.columns if c.startswith(('touch1_dm','touch2_dm','touch3_dm','past_employer',
         'touch1_words','touch2_words','touch3_words','touch1_qa','touch2_qa','touch3_qa',
         'company_hook','why_now','overlap_note','proof_used','give_offered','first_name_used',

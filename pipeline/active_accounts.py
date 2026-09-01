@@ -33,6 +33,23 @@ CRM_TO_LINKEDIN, INDIVIDUALS_AND_INTERNAL, ACCOUNT_MAP_SOURCE = load_account_map
 
 def load_opportunities(path=paths.s(paths.RAW / 'opportunities_2026.csv')):
     d = pd.read_csv(path)
+    if 'Created Date' not in d.columns:
+        if 'Stage Date' in d.columns:
+            d['Created Date'] = d['Stage Date']
+        elif 'Recent Activity' in d.columns:
+            d['Created Date'] = d['Recent Activity']
+        else:
+            d['Created Date'] = None
+
+    if 'Property Account Manager' not in d.columns:
+        if 'Manager' in d.columns:
+            d['Property Account Manager'] = d['Manager']
+        else:
+            d['Property Account Manager'] = ''
+
+    if 'State' not in d.columns:
+        d['State'] = ''
+
     d['Created Date'] = pd.to_datetime(d['Created Date'], errors='coerce')
     d['Company'] = d['Company'].astype(str).str.replace('&amp;', '&').str.strip()
     return d

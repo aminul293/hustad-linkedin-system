@@ -12,7 +12,7 @@ ACTIVE_LOOKUP, ACTIVE_SUMMARY = build_active_accounts()
 from datetime import datetime
 
 DATA = paths.s(paths.RAW)
-OUT = paths.s(paths.PIPELINE)
+OUT = paths.s(paths.WORK)
 ME = 'https://www.linkedin.com/in/eric-caturia-a0521136a'
 EXPORT_DATE = pd.Timestamp('2026-08-25')
 
@@ -33,13 +33,19 @@ def load_connections(path):
     df = df.drop_duplicates('url_key')
     return df
 
-conn = load_connections(f'{DATA}/a6350e6d-Connections.csv')
-inv = pd.read_csv(f'{DATA}/ff13996e-Invitations.csv')
+def find_raw_file(pattern):
+    for fn in os.listdir(DATA):
+        if pattern.lower() in fn.lower():
+            return os.path.join(DATA, fn)
+    return os.path.join(DATA, pattern)
+
+conn = load_connections(find_raw_file('Connections.csv'))
+inv = pd.read_csv(find_raw_file('Invitations.csv'))
 inv['Sent At'] = pd.to_datetime(inv['Sent At'], format='%m/%d/%y, %I:%M %p', errors='coerce')
-msg = pd.read_csv(f'{DATA}/86563516-messages.csv')
+msg = pd.read_csv(find_raw_file('messages.csv'))
 msg['DATE'] = pd.to_datetime(msg['DATE'], errors='coerce')
 msg['from_me'] = msg['SENDER PROFILE URL'].str.lower().str.strip() == ME
-endo = pd.read_csv(f'{DATA}/3da803c8-Endorsement_Received_Info.csv')
+endo = pd.read_csv(find_raw_file('Endorsement_Received_Info.csv'))
 
 # ----------------------------------------------------------------------------
 # 2. Engagement state from messages / invitations / endorsements
