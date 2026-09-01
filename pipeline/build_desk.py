@@ -148,10 +148,10 @@ TEMPLATE = r'''<!doctype html>
   --good-soft:rgba(0,230,118,0.14);--draft-bg:rgba(6,9,16,0.95);--focus:#00F2FE;}
 *{box-sizing:border-box}
 body{margin:0;background:#05070B;color:var(--ink);font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;background-image:radial-gradient(circle at 50% 0%, rgba(0,242,254,0.12) 0%, rgba(255,183,3,0.06) 40%, transparent 80%);background-attachment:fixed}
-.wrap{max-width:1040px;margin:0 auto;padding:0 24px 100px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px 100px}
 .lbl{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-cyan);margin-bottom:4px}
-header.top{position:sticky;top:0;z-index:30;background:rgba(5,7,11,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,242,254,0.15);padding:14px 0 0;margin-bottom:28px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-.top-in{max-width:1040px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:nowrap}
+header.top{position:sticky;top:0;z-index:30;background:rgba(5,7,11,0.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,242,254,0.15);padding:14px 0 0;margin-bottom:28px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+.top-in{max-width:1280px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:nowrap}
 .brand{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--neon-gold);margin:0 0 2px}
 h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:21px;font-weight:800;margin:0;letter-spacing:-.02em;color:var(--ink)}
 .savestat{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:2px 0 0}
@@ -164,17 +164,19 @@ h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:21px;font-weight:800;mar
 .daynav button:hover{border-color:var(--neon-cyan);color:var(--neon-cyan)}
 .prog-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(0,242,254,0.08);border:1px solid rgba(0,242,254,0.25);border-radius:20px;font-size:12px;font-weight:700;color:var(--neon-gold);white-space:nowrap}
 .prog-pill b{font-family:"Plus Jakarta Sans",sans-serif;font-size:14px;font-weight:800;color:var(--neon-gold)}
-.signout-btn{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:700;padding:7px 12px;background:rgba(255,255,255,0.03);color:var(--ink-2);border:1px solid rgba(255,255,255,0.1);border-radius:8px;text-decoration:none;transition:all 0.2s ease}
+.upload-btn,.signout-btn{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:700;padding:7px 12px;background:rgba(255,255,255,0.03);color:var(--ink-2);border:1px solid rgba(255,255,255,0.1);border-radius:8px;text-decoration:none;transition:all 0.2s ease;white-space:nowrap}
+.upload-btn{color:var(--neon-gold);border-color:rgba(255,183,3,0.3);background:rgba(255,183,3,0.06)}
+.upload-btn:hover{border-color:var(--neon-gold);color:#FFFFFF;box-shadow:0 0 12px rgba(255,183,3,0.3)}
 .signout-btn:hover{border-color:var(--neon-cyan);color:var(--ink)}
-.tabrail{max-width:1040px;margin:12px auto 0;padding:0 24px;display:flex;gap:8px;border-bottom:1px solid rgba(0,242,254,0.12)}
+.tabrail{max-width:1280px;margin:12px auto 0;padding:0 32px;display:flex;gap:8px;border-bottom:1px solid rgba(0,242,254,0.12)}
 .tabrail button{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0;border-bottom:2px solid transparent;padding:10px 16px;cursor:pointer;transition:all 0.2s ease;margin-bottom:-1px}
 .tabrail button:hover{color:var(--ink)}
 .tabrail button.is-on{color:var(--neon-cyan);border-bottom-color:var(--neon-cyan);font-weight:800;text-shadow:0 0 10px rgba(0,242,254,0.3)}
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0 0 24px}
 @media(min-width:660px){.tiles{grid-template-columns:repeat(4,1fr)}}
-.tile{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.18);border-radius:14px;padding:16px 20px;box-shadow:0 8px 24px rgba(0,0,0,0.35);transition:all 0.25s ease}
+.tile{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.18);border-radius:14px;padding:18px 22px;box-shadow:0 8px 24px rgba(0,0,0,0.35);transition:all 0.25s ease}
 .tile:hover{transform:translateY(-2px);border-color:var(--neon-cyan);box-shadow:0 12px 30px rgba(0,0,0,0.5)}
-.tile b{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--neon-gold);line-height:1.1}
+.tile b{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--neon-gold);line-height:1.1}
 .tile span{font-size:12px;font-weight:600;color:var(--ink-2);display:block;margin-top:4px}
 .panel{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.18);border-radius:14px;padding:20px 24px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
 .panel h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-cyan);margin:0 0 8px}
@@ -182,10 +184,17 @@ h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:21px;font-weight:800;mar
 .panel p:first-of-type{margin-top:0}
 .panel ol{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-2);line-height:1.7}
 .panel ol li::marker{color:var(--neon-cyan);font-weight:700}
-.row{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.18);border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 12px 32px rgba(0,0,0,0.4);transition:all 0.25s ease}
+.row{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.18);border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 12px 32px rgba(0,0,0,0.4);transition:all 0.25s ease}
 .row:hover{border-color:var(--neon-cyan);transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,0.5)}
 .row.is-done{opacity:.4}
 .row.is-halted{opacity:.6;border-style:dashed;border-color:var(--good)}
+.row-grid{display:block}
+@media(min-width:1024px){
+  .row-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+}
+.row-left{min-width:0}
+.row-right{min-width:0}
+@media(min-width:1024px){.row-right .draft{margin-top:0}}
 .row-head{display:flex;gap:14px;align-items:flex-start}
 .seq{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--neon-cyan);padding-top:2px;min-width:26px}
 .who{flex:1;min-width:0}
@@ -261,6 +270,7 @@ body.tab-other .daynav,body.tab-other .prog-pill{display:none}
         <button type="button" id="today">Today</button>
       </div>
       <div class="prog-pill"><b id="pdone">0</b><span id="ptot"> / 0 Sent</span></div>
+      <a href="/upload" class="upload-btn">📤 Upload CSV</a>
       <a href="/logout" class="signout-btn">🔒 Sign Out</a>
     </div>
   </div>
@@ -483,17 +493,19 @@ function rowHtml(q,i){
     profUrl = 'https://www.linkedin.com/in/' + (slug || 'linkedin-user');
   }
   return '<article class="row'+(e.done?' is-done':'')+(halted?' is-halted':'')+'" data-k="'+esc(key(q))+'">'
+   +'<div class="row-grid"><div class="row-left">'
    +'<header class="row-head"><span class="seq">'+String(i+1).padStart(2,'0')+'</span>'
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
    +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>Replied</span></label>'
    +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>Sent</span></label></div></header>'
    +'<div class="meta">'+chips+'<a class="profile" href="'+esc(profUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a></div>'
    +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
+   +'</div><div class="row-right">'
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
    +'<button class="copy" type="button">Copy</button></div>'+panes.join('')+'</div>'
    +'<div class="note-row"><label><span class="lbl">Past employer on their profile</span>'
    +'<input type="text" class="pemp" value="'+esc(e.pe||'')+'" placeholder="e.g. Asset Living"></label>'
-   +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></article>';
+   +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></div></div></article>';
 }
 
 function render(){
