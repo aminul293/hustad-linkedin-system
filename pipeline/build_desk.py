@@ -168,10 +168,11 @@ h1{font-family:"Plus Jakarta Sans",sans-serif;font-size:21px;font-weight:800;mar
 .upload-btn{color:var(--neon-gold);border-color:rgba(255,183,3,0.3);background:rgba(255,183,3,0.06)}
 .upload-btn:hover{border-color:var(--neon-gold);color:#FFFFFF;box-shadow:0 0 12px rgba(255,183,3,0.3)}
 .signout-btn:hover{border-color:var(--neon-cyan);color:var(--ink)}
-.tabrail{max-width:1280px;margin:12px auto 0;padding:0 32px;display:flex;gap:8px;border-bottom:1px solid rgba(0,242,254,0.12)}
-.tabrail button{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0;border-bottom:2px solid transparent;padding:10px 16px;cursor:pointer;transition:all 0.2s ease;margin-bottom:-1px}
-.tabrail button:hover{color:var(--ink)}
-.tabrail button.is-on{color:var(--neon-cyan);border-bottom-color:var(--neon-cyan);font-weight:800;text-shadow:0 0 10px rgba(0,242,254,0.3)}
+.tabrail{max-width:1280px;margin:16px auto 0;padding:0 32px;display:flex;align-items:center}
+.tabrail-segment{display:inline-flex;align-items:center;background:rgba(10,14,23,0.92);border:1px solid rgba(0,242,254,0.22);border-radius:12px;padding:4px;gap:4px;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.tabrail-segment button{font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:transparent;color:var(--ink-2);border:0!important;border-radius:8px!important;padding:8px 18px!important;cursor:pointer;transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);outline:none;margin:0!important}
+.tabrail-segment button:hover{color:var(--ink);background:rgba(255,255,255,0.05)}
+.tabrail-segment button.is-on{background:linear-gradient(135deg, #00F2FE, #4FACFE)!important;color:#05070B!important;font-weight:800!important;box-shadow:0 0 16px rgba(0,242,254,0.4)!important}
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0 0 24px}
 @media(min-width:660px){.tiles{grid-template-columns:repeat(4,1fr)}}
 .tile{background:rgba(10,14,23,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,242,254,0.18);border-radius:14px;padding:18px 22px;box-shadow:0 8px 24px rgba(0,0,0,0.35);transition:all 0.25s ease}
@@ -275,11 +276,13 @@ body.tab-other .daynav,body.tab-other .prog-pill{display:none}
     </div>
   </div>
   <nav class="tabrail" id="tabrail" role="tablist" aria-label="Sections">
-    <button type="button" data-pane="outreach" class="is-on" role="tab" aria-selected="true">Outreach Queue</button>
-    <button type="button" data-pane="replies" role="tab" aria-selected="false">Reply Inbox</button>
-    <button type="button" data-pane="posts" role="tab" aria-selected="false">Post Publishing</button>
-    <button type="button" data-pane="newsletter" role="tab" aria-selected="false">Newsletter</button>
-    <button type="button" data-pane="articles" role="tab" aria-selected="false">Articles</button>
+    <div class="tabrail-segment">
+      <button type="button" data-pane="outreach" class="is-on" role="tab" aria-selected="true">Outreach Queue</button>
+      <button type="button" data-pane="replies" role="tab" aria-selected="false">Reply Inbox</button>
+      <button type="button" data-pane="posts" role="tab" aria-selected="false">Post Publishing</button>
+      <button type="button" data-pane="newsletter" role="tab" aria-selected="false">Newsletter</button>
+      <button type="button" data-pane="articles" role="tab" aria-selected="false">Articles</button>
+    </div>
   </nav>
 </header>
 <div class="wrap">
