@@ -568,7 +568,10 @@ ACQ_TITLE = re.compile(r'acquisition|diligence|transactions?|investments?\b', re
 # ---------------------------------------------------------------------------
 def build(plan_csv, research_json, out_csv):
     plan = pd.read_csv(plan_csv)
-    research = {c['company']: c for c in json.load(open(research_json))}
+    if os.path.exists(research_json):
+        research = {c['company']: c for c in json.load(open(research_json, encoding='utf-8'))}
+    else:
+        research = {}
     rows = []
 
     plan = plan.copy()

@@ -57,6 +57,23 @@ make site       # build site/index.html
 Set `HUSTAD_DATA=/some/path/outside/the/repo` to keep real data out of the working tree entirely,
 which is the right call on a shared machine.
 
+## How Data Updates Work
+
+Data in the system gets updated in two distinct ways:
+
+### 1. Daily Activity Updates (Outreach & Replies)
+As Eric uses the desk page during his daily outreach hour:
+- **Instant Action Logging:** When he clicks "Sent", "Replied", or "Skip" on any contact card, the status is immediately saved to browser `localStorage` and recorded in the backend send log / database.
+- **Sequence Protection:** If a contact is marked as "Replied", the system automatically halts all future follow-up touches for that person across all tabs.
+- **Persistence:** Because action logs survive page reloads and rebuilds, Eric never loses track of who has been contacted.
+
+### 2. Periodic/Monthly Data Updates (New Contacts & Deals)
+When you upload a new LinkedIn `.zip` or CRM `.xlsx` file through the uploader (`http://localhost:8765/upload`):
+- **Overwrites Raw Files:** The server safely overwrites the old raw CSV files in `data/raw/` with your newly uploaded files.
+- **Discovers New Connections:** `classify.py` parses the new LinkedIn archive, identifies any newly added connections, tiers them, and updates `master_contacts.csv`.
+- **Merges CRM Pipeline:** `scale_plan.py` matches new CRM sales opportunities to existing companies so active deal accounts get proper outreach priority.
+- **Re-generates Desk:** The build process creates an updated `site/index.html` containing the new contact queue while preserving all past send logs.
+
 ## What is here
 
 ```
