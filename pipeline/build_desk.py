@@ -181,15 +181,17 @@ h1{font-size:22px;font-weight:800;margin:2px 0 0;letter-spacing:-.02em;backgroun
 .done,.replied{display:flex;gap:6px;align-items:center;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;user-select:none}
 .done input,.replied input{width:18px;height:18px;accent-color:var(--good);cursor:pointer}
 .replied input{accent-color:var(--copper)}
-.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:12px 0 0}
-.chip{font-size:11px;font-weight:600;letter-spacing:.04em;padding:4px 9px;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:4px;color:var(--ink-2)}
-.chip-touch{background:var(--copper-soft);border-color:var(--copper);color:var(--copper);font-weight:800}
-.chip-id{font-variant-numeric:tabular-nums;color:var(--ink-3)}
-.chip-storm,.chip-warn{background:var(--copper-soft);border-color:var(--copper);color:var(--copper);font-weight:700}
-.chip-ok{background:var(--good-soft);border-color:var(--good);color:var(--good);font-weight:700}
-.chip-halt{background:var(--copper-soft);border-color:var(--copper);color:var(--copper);font-weight:700}
-.profile{margin-left:auto;font-size:13px;font-weight:700;color:var(--navy);text-decoration:none;border-bottom:1px solid rgba(56,189,248,0.3);padding-bottom:1px;transition:all .2s ease}
-.profile:hover{color:#7DD3FC;border-bottom-color:#7DD3FC}
+.meta{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:12px 0 0}
+.chip{font-size:11px;font-weight:600;letter-spacing:.04em;padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:5px;color:var(--ink-2)}
+.chip-touch{background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);color:#FBBF24;font-weight:800}
+.chip-lane{background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#38BDF8;font-weight:700}
+.chip-seg{background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#A5B4FC;font-weight:700}
+.chip-id{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94A3B8;font-variant-numeric:tabular-nums}
+.chip-storm,.chip-warn{background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.4);color:#FCA5A5;font-weight:800}
+.chip-ok{background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.4);color:#6EE7B7;font-weight:800}
+.chip-halt{background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);color:#FBBF24;font-weight:800}
+.profile{margin-left:auto;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#38BDF8;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);border-radius:5px;padding:4px 10px;text-decoration:none;transition:all .2s ease}
+.profile:hover{background:rgba(56,189,248,0.25);color:#7DD3FC;transform:translateY(-1px)}
 .why{margin:14px 0 0;font-size:14px;color:var(--ink-2);line-height:1.55;background:rgba(0,0,0,0.2);padding:10px 12px;border-radius:6px;border-left:3px solid var(--line-2)}
 .check{margin:12px 0 0;padding:12px 14px;background:rgba(0,0,0,0.25);border-left:3px solid var(--copper);border-radius:6px}
 .check p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.6}
@@ -370,11 +372,11 @@ var VLABEL={clean:['Verified','ok'],revised:['Copy corrected','warn'],flagged:['
 
 function rowHtml(q,i){
   var e=ent(q), halted=q.touch>1 && replied(q.id) && !e.done, v=q.vstatus?VLABEL[q.vstatus]:null;
-  var chips='<span class="chip chip-touch">Touch '+q.touch+'</span><span class="chip">'+esc(q.lane)+'</span>'
-    +'<span class="chip">'+esc(q.segment)+'</span><span class="chip chip-id">'+esc(q.id)+'</span>'
+  var chips='<span class="chip chip-touch">Touch '+q.touch+'</span><span class="chip chip-lane">'+esc(q.lane)+'</span>'
+    +'<span class="chip chip-seg">'+esc(q.segment)+'</span><span class="chip chip-id">'+esc(q.id)+'</span>'
     +(v?'<span class="chip chip-'+v[1]+'">'+esc(v[0])+'</span>':'')
-    +(q.storm?'<span class="chip chip-storm">Storm trigger</span>':'')
-    +(halted?'<span class="chip chip-halt">Replied, halted</span>':'');
+    +(q.storm?'<span class="chip chip-storm">⚡ Storm trigger</span>':'')
+    +(halted?'<span class="chip chip-halt">🛑 Replied, halted</span>':'');
   var tabs=[], panes=[];
   tabs.push('<button class="tab is-on" type="button" data-v="std">'+(q.storm?'Planned':'Message')+'</button>');
   panes.push('<p class="msg" data-v="std">'+esc(q.msg)+'</p>');
