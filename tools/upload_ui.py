@@ -361,10 +361,8 @@ def run_step(cmd, env):
 def ensure_site_built():
     site = os.path.join(ROOT, 'site', 'index.html')
     if os.path.exists(site):
-        try:
-            os.remove(site)
-        except Exception:
-            pass
+        print("Using existing compiled site/index.html...")
+        return
     print("Building desk site on startup...")
     plan_path = os.path.join(ROOT, 'data', 'work', 'plan_with_copy_final.csv')
     raw_conn = os.path.join(ROOT, 'data', 'raw', 'Connections.csv')
@@ -376,8 +374,6 @@ def ensure_site_built():
         subprocess.run(['make', 'plan'], cwd=ROOT)
         subprocess.run(['make', 'content'], cwd=ROOT)
         subprocess.run(['make', 'site'], cwd=ROOT)
-    else:
-        subprocess.run(['make', 'sample'], cwd=ROOT)
 
 
 
