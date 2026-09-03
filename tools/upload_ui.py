@@ -766,15 +766,22 @@ class Handler(BaseHTTPRequestHandler):
 
         required_dests = {'Connections.csv', 'opportunities_2026.csv'}
         missing = [dest for dest in required_dests if not os.path.exists(os.path.join(paths.s(paths.RAW), dest))]
-        if missing:
+        
+        env = os.environ.copy()
+        ok = True
+        
+        if missing and not uploads:
+            log_lines.append('Building desk using compiled work files...')
+            steps = [['make', 'content'], ['make', 'site']]
+        elif missing:
             log_lines.append('')
             log_lines.append('Stopped: missing required files: ' + ', '.join(missing))
             self._reply(False, '\n'.join(log_lines))
             return
+        else:
+            steps = [['make', 'plan'], ['make', 'content'], ['make', 'site']]
 
-        env = os.environ.copy()
-        ok = True
-        for step in (['make', 'plan'], ['make', 'content'], ['make', 'site']):
+        for step in steps:
             log_lines.append('')
             success, out = run_step(step, env)
             log_lines.append(out.strip())
