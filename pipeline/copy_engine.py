@@ -70,7 +70,7 @@ MEANING_LANE = {
  ],
  'VP / Director Operations': [
    "One standard across regions is most of the value: a roof report out of one region reads like the next, and no regional's negotiating their own version.",
-   "Roof items should show up on a list, not as emergencies. Scheduled inspections and same-visit repairs are how that happens; we run that for {proof}.",
+   "Roof items should show up on a list, not as emergencies. Scheduled inspections and same-visit repairs are how that happens; that's what we're running for {proof}.",
    "What operations feels first is fewer repeat tickets, and a report a regional can act on that doesn't need a translator.",
  ],
  'Regional / Portfolio': [
@@ -840,3 +840,60 @@ if __name__ == '__main__':
     print(out[['touch1_words', 'touch2_words', 'touch3_words', 'past_employer_words']].describe().round(1).to_string())
     for c in ['touch1_qa', 'touch2_qa', 'touch3_qa', 'past_employer_qa']:
         print('\n', c); print(out[c].value_counts().head(8).to_string())
+
+
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+
+
+def generate_llm_draft(first_name, title, company, segment='Multifamily', lane='Asset Management', opener_type='standard'):
+    """
+    Generate dynamic AI draft using OpenAI API (GPT-4o / GPT-4o-mini) if OPENAI_API_KEY exists.
+    Enforces strict QA linter guardrails before returning.
+    """
+    api_key = os.environ.get('OPENAI_API_KEY', OPENAI_API_KEY)
+    if not api_key:
+        return None, "No OPENAI_API_KEY configured"
+
+    prompt = f"""You are Eric Hustad writing a direct 1-on-1 LinkedIn DM to {first_name}, {title} at {company}.
+Context:
+- Property Segment: {segment}
+- Outreach Lane: {lane}
+- Opener Focus: {opener_type}
+
+Strict Rules:
+1. Under 80 words total.
+2. Paragraphs separated by blank lines.
+3. Exactly ONE closing question.
+4. Natural, conversational tone with contractions (I'll, we've, don't).
+5. Zero cheesy sales buzzwords (no "hope this finds you well", no "game changer").
+6. Provide clear, role-specific exterior/roofing value for property management.
+"""
+
+    import urllib.request
+    import json
+    try:
+        req_data = json.dumps({
+            "model": "gpt-4o-mini",
+            "messages": [
+                {"role": "system", "content": "You craft concise, high-converting B2B LinkedIn DMs."},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.7,
+            "max_tokens": 150
+        }).encode('utf-8')
+        req = urllib.request.Request(
+            "https://api.openai.com/v1/chat/completions",
+            data=req_data,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            },
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read().decode('utf-8'))
+            msg = result['choices'][0]['message']['content'].strip()
+            issues = qa(msg, company=company)
+            return msg, ('; '.join(issues) or 'PASS')
+    except Exception as e:
+        return None, str(e)

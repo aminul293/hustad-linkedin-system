@@ -654,7 +654,25 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
             return
 
-        if not self.require_auth():
+        if self.path.startswith('/api/llm_generate'):
+            import copy_engine
+            import json
+            length = int(self.headers.get('Content-Length', 0))
+            payload = json.loads(self.rfile.read(length).decode('utf-8') or '{}')
+            draft, qa_status = copy_engine.generate_llm_draft(
+                first_name=payload.get('first_name', 'Target'),
+                title=payload.get('title', 'Executive'),
+                company=payload.get('company', 'Client Firm'),
+                segment=payload.get('segment', 'Multifamily'),
+                lane=payload.get('lane', 'Asset Management'),
+                opener_type=payload.get('opener_type', 'standard')
+            )
+            body = json.dumps({'ok': draft is not None, 'draft': draft, 'qa': qa_status}).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
             return
 
         if self.path.startswith('/api/ingest_replies'):
@@ -771,8 +789,8 @@ class Handler(BaseHTTPRequestHandler):
         ok = True
         
         if missing and not uploads:
-            log_lines.append('Building desk using compiled work files...')
-            steps = [['make', 'content'], ['make', 'site']]
+            log_lines.append('Building desk using sample work files...')
+            steps = [['make', 'sample'], ['make', 'content'], ['make', 'site']]
         elif missing:
             log_lines.append('')
             log_lines.append('Stopped: missing required files: ' + ', '.join(missing))

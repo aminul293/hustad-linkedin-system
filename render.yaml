@@ -17,3 +17,5 @@ services:
         value: 1b5b8d0d-ab67-4d01-a363-f1f35b80f0eb
       - key: AZURE_CLIENT_SECRET
         value: eru8Q~DAqnJsljrfAPWfp-17ZTHa6yuP6P7TUbf-
+      - key: OPENAI_API_KEY
+        value: ""
