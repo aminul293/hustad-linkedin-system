@@ -1,0 +1,1098 @@
+{
+ "v": 1,
+ "posts": [
+  {
+   "id": "C-0901",
+   "date": "2026-09-01",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Budget season opens",
+   "hook": "The exterior line in most 2027 budgets is last year's number plus a percentage. The roof does not know that.",
+   "body": [
+    "Budget season opened this week. Over the next eight weeks, exterior numbers get set for thousands of buildings, and most of them will be built the same way: take last year, add escalation, move on.",
+    "The alternative is a condition read. Which roofs are holding, which are aging, which small items become interior events by spring. It changes the argument from a percentage to a photograph.",
+    "When the committee pushes back on a number built from age and invoices, there is nothing to point at. When it pushes back on a documented condition, the documents answer."
+   ],
+   "cta": "How does your team build the exterior number: a current condition read, or age and invoices?",
+   "hashtags": [
+    "CapitalPlanning",
+    "FacilitiesManagement",
+    "PropertyManagement"
+   ],
+   "notes": "No links in the body. Reply to every comment within the hour where possible.",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0902",
+   "date": "2026-09-02",
+   "channel": "company",
+   "format": "graphic",
+   "theme": "Maintenance economics",
+   "hook": "Two similar buildings, 25 years, one difference: one had a maintenance program.",
+   "body": [
+    "An NRCA case study followed two comparable buildings for 25 years. The one on proactive maintenance cost $9.15 per square foot to own over that period. The reactive one cost $21.23, and it needed a premature replacement along the way.",
+    "Repairs were the small line. The money was in what they prevented: interior damage, emergency pricing, and a replacement that arrived a decade early."
+   ],
+   "cta": "Worth a current condition read before next year's number locks.",
+   "hashtags": [
+    "CommercialRoofing",
+    "AssetManagement",
+    "FacilitiesManagement"
+   ],
+   "fact": "nrca_25yr",
+   "asset": {
+    "template": "stat",
+    "kicker": "TWO BUILDINGS, 25 YEARS",
+    "stat": "$9.15 vs $21.23",
+    "unit": "per square foot, 25 year cost of ownership",
+    "line": "Proactive maintenance versus reactive repair, NRCA case study of two similar buildings.",
+    "source": "Source: NRCA / Professional Roofing"
+   },
+   "notes": "Company page. Attach the downloaded PNG; source stays on the graphic. Eric reshares with one line in his own words.",
+   "dow": "Wed",
+   "time": "8:15 AM CT",
+   "fact_detail": {
+    "claim": "In an NRCA case study of two similar buildings, proactive maintenance produced a 25 year ownership cost of $9.15 per square foot versus $21.23 for the reactive building.",
+    "source": "NRCA / Professional Roofing (Bradford), via Hustad reference sheet Maintenance_Extends_Useful_Life"
+   }
+  },
+  {
+   "id": "C-0903",
+   "date": "2026-09-03",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Newsletter issue 1 companion",
+   "hook": "Every portfolio has a story about the roof that surprised them. Almost none has a file that would have caught it.",
+   "body": [
+    "Today I published the first issue of The Exterior Risk File, a monthly newsletter on how exterior condition, documentation and capital planning actually connect on occupied properties.",
+    "Issue one lays out the file itself: the eight records that keep roof decisions grounded in what the buildings actually look like. A condition grade per building. The repair versus capital split. A photo record tied to dates. Warranty terms next to the maintenance they require. A storm log with sources. Priced open items. Closeouts.",
+    "None of it is exotic. What is rare is having it in one place before the year the roof tests you."
+   ],
+   "cta": "The link is in the first comment. If your team keeps a file like this, I would like to hear what is in yours.",
+   "hashtags": [
+    "AssetManagement",
+    "FacilitiesManagement",
+    "CommercialRealEstate"
+   ],
+   "notes": "Publish the newsletter first, then this post. Newsletter link goes in the first comment, not the body.",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0905",
+   "date": "2026-09-05",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, origin",
+   "hook": "Eighteen years ago I helped open our Omaha office. The lesson that stuck was not about roofs.",
+   "body": [
+    "It was about files. The jobs that went well and the jobs that went sideways had the same crews, the same materials, often the same weather. What separated them was whether anyone could show what had been decided, when, and why.",
+    "A roof is a system, but a roofing program is a record. Eighteen years later that is still the first thing I look for on any portfolio: not the condition of the roofs, the condition of the paperwork."
+   ],
+   "cta": "",
+   "hashtags": [
+    "ConstructionLeadership",
+    "FacilitiesManagement"
+   ],
+   "notes": "Saturday. Attach one real photo if a good one exists: an old job file, the Omaha office, a crew shot with everyone tied off. No client identifiers, light edits only. Text alone is fine if nothing fits.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  },
+  {
+   "id": "C-0908",
+   "date": "2026-09-08",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Inspection reports",
+   "hook": "Most roof inspection reports are photo albums. The missing page is the one that says what to do.",
+   "body": [
+    "Forty pages of photos, a couple of thermal images, a condition summary. Then it ends. No repair versus capital split, no priced list, no recommendation a budget owner can act on.",
+    "So the report gets filed, the question gets deferred, and the deferral gets repriced next year.",
+    "A report is finished when a person who was not on the roof can make a decision from it. Condition, consequence, cost, recommendation. One page. Everything else is an appendix."
+   ],
+   "cta": "Look at your last roof report. Could someone who never saw the roof make a call from it?",
+   "hashtags": [
+    "FacilitiesManagement",
+    "PropertyManagement",
+    "AssetManagement"
+   ],
+   "notes": "",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0909",
+   "date": "2026-09-09",
+   "channel": "personal",
+   "format": "carousel",
+   "theme": "The Exterior Risk File",
+   "hook": "The Exterior Risk File: the eight records we keep per building, in one card you can save.",
+   "body": [
+    "Before budget season closes, it is worth asking a simple question of every building: if the roof tested us this year, what would we be able to show?",
+    "This is the file we help operators keep. Eight records, one folder, current."
+   ],
+   "cta": "Save this one for your next capital meeting.",
+   "hashtags": [
+    "AssetManagement",
+    "CommercialRoofing",
+    "CapitalPlanning"
+   ],
+   "asset": {
+    "template": "carousel",
+    "title": "The Exterior Risk File",
+    "subtitle": "Eight records every occupied portfolio should hold",
+    "slides": [
+     {
+      "h": "A condition grade, per building",
+      "b": "A to F, set from documented condition and remaining useful life, not age alone. Refreshed on a cycle, not after a leak."
+     },
+     {
+      "h": "The repair versus capital split",
+      "b": "Which findings are maintenance dollars this year, and which belong in the capital plan. One list, priced, owned."
+     },
+     {
+      "h": "A photo record tied to dates",
+      "b": "Roof by roof, visit by visit. The record that ends most arguments before they start."
+     },
+     {
+      "h": "Warranty terms, next to the work they require",
+      "b": "Coverage lives or dies on documented owner maintenance. Keep the terms and the maintenance log on the same page."
+     },
+     {
+      "h": "A storm event log, with sources",
+      "b": "Date, verified weather record, what was inspected, what was found. Built before it is needed."
+     },
+     {
+      "h": "Open items, priced",
+      "b": "Every known deficiency with a number next to it. Once an item carries a price, deferring it is a decision someone made on purpose."
+     },
+     {
+      "h": "Closeout records",
+      "b": "Scope, changes, final photos, warranty registration. The project is not over when the crew leaves."
+     },
+     {
+      "h": "Start with one honest afternoon",
+      "b": "List what you actually hold for your five worst buildings. The gaps are the file. We build and keep these for occupied portfolios nationwide; ask for the one page version to start from."
+     }
+    ]
+   },
+   "notes": "Personal profile, document post: personal reach beats the page by a wide margin and the authority accrues to Eric, which is the roadmap goal. Reshare from the company page the same day with one line.",
+   "dow": "Wed",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0910",
+   "date": "2026-09-10",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Starting the file",
+   "hook": "You do not need a program to start the Exterior Risk File. You need a folder and one honest afternoon.",
+   "body": [
+    "Pick the five buildings that worry you most. For each one, write down what you actually hold: last inspection date, last repair invoice, warranty document, any photos with dates.",
+    "The gaps are the file. Most portfolios discover they are carrying buildings with no current condition read at all, and that the buildings they worry about least are the ones with the oldest information.",
+    "That one afternoon usually redraws the priority list before anyone sets foot on a roof."
+   ],
+   "cta": "If you ran that exercise on your five, what do you think you would find?",
+   "hashtags": [
+    "FacilitiesManagement",
+    "AssetManagement"
+   ],
+   "notes": "Companion to the week’s carousel. Reference it in a comment, not the body.",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0912",
+   "date": "2026-09-12",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, site teams",
+   "hook": "The best facilities people I know are translators.",
+   "body": [
+    "They take a maintenance tech's photo and hand an asset manager a sentence they can act on, then take a committee's number and hand a crew a scope they can build. Neither language is theirs, and they speak both all day.",
+    "Every system we build is really for them: reports that translate themselves, so the person in the middle spends less of the week explaining and more of it deciding."
+   ],
+   "cta": "",
+   "hashtags": [
+    "FacilitiesManagement",
+    "PropertyManagement"
+   ],
+   "notes": "Saturday. If there is a real photo of a site walk or a report review from the week, attach it; no client identifiers, light edits only.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  },
+  {
+   "id": "C-0915",
+   "date": "2026-09-15",
+   "channel": "personal",
+   "format": "text",
+   "theme": "The decision section",
+   "hook": "Four lines turn a roof report into a decision: condition, consequence, cost, recommendation.",
+   "body": [
+    "Condition: what we found, graded, with the photo. Consequence: what happens if nothing is done, stated plainly, no drama. Cost: the number for fixing it now, and the class of number it becomes later. Recommendation: one sentence, committed to.",
+    "Most reports stop after the first line. The reader is left to infer the other three, and inference is where deferral lives.",
+    "If a vendor will not put the fourth line in writing, that is worth noticing."
+   ],
+   "cta": "Does your inspection format commit to a recommendation, or leave it to the reader?",
+   "hashtags": [
+    "FacilitiesManagement",
+    "CommercialRoofing",
+    "AssetManagement"
+   ],
+   "notes": "",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0916",
+   "date": "2026-09-16",
+   "channel": "company",
+   "format": "graphic",
+   "theme": "Report checklist",
+   "hook": "Five questions to ask before you sign off on any roof report.",
+   "body": [
+    "A roof report is an instrument for a decision. Before it gets filed, it should survive these five questions. If it cannot, the gap belongs to the report, not to you."
+   ],
+   "cta": "Keep this next to the next report that crosses your desk.",
+   "hashtags": [
+    "FacilitiesManagement",
+    "PropertyManagement"
+   ],
+   "asset": {
+    "template": "check",
+    "kicker": "BEFORE YOU FILE IT",
+    "title": "Five questions for every roof report",
+    "items": [
+     "Is every finding graded, photographed and dated?",
+     "Is each item split repair versus capital?",
+     "Is there a price next to every open item?",
+     "Is there a one sentence recommendation, committed to in writing?",
+     "Could someone who never saw the roof make the call from this?"
+    ],
+    "source": ""
+   },
+   "notes": "Company page. Attach the PNG.",
+   "dow": "Wed",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0917",
+   "date": "2026-09-17",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Worked example",
+   "hook": "A decision ready line item runs four sentences. This is the pattern, identifiers changed.",
+   "body": [
+    "Condition: northeast parapet flashing is separated along nine feet, graded D, photos 14 through 17. Consequence: water is tracking behind the membrane and will reach the top floor ceiling cavity with the first hard freeze. Cost: a same visit repair is a maintenance line; after a freeze event this becomes interior remediation plus the repair. Recommendation: repair within 30 days under the standing cap.",
+    "No adjectives, no urgency theater. A budget owner three states away can read that and decide in under a minute.",
+    "Multiply by every open item on every roof, and that is the difference between managing a portfolio and being surprised by one."
+   ],
+   "cta": "I walk through the full format in this month's newsletter, linked in the first comment.",
+   "hashtags": [
+    "AssetManagement",
+    "FacilitiesManagement",
+    "CapitalPlanning"
+   ],
+   "notes": "Newsletter link in first comment. The example is a composite pattern, not a client property.",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0919",
+   "date": "2026-09-19",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, the pattern",
+   "hook": "The most expensive roof problems I have seen shared one trait: they were quiet.",
+   "body": [
+    "The dramatic failures get found fast. Somebody hears it, sees it, calls it in. The expensive ones are lifted seams and slow flashing separations that do not leak until the freeze, then announce themselves through a ceiling in January.",
+    "A quiet roof is easy to read as a fine one, and the space between those two is the whole case for walking on a schedule instead of waiting for the building to speak up."
+   ],
+   "cta": "",
+   "hashtags": [
+    "CommercialRoofing",
+    "FacilitiesManagement"
+   ],
+   "notes": "Saturday. A real photo of a lifted seam or quiet deficiency from the archive lands well here; no property identifiers, light edits only. No CTA on purpose; let it sit.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  },
+  {
+   "id": "C-0922",
+   "date": "2026-09-22",
+   "channel": "personal",
+   "format": "text",
+   "theme": "After the storm",
+   "hook": "After a wind event, the roofs that look fine from the ground are the ones that cost you.",
+   "body": [
+    "Visible damage gets handled. It is obvious, it is urgent, everyone agrees.",
+    "The expensive category is the roof that took the same wind and shows nothing from the parking lot. Lifted seams reseat themselves. Fastener backout hides under gravel. Neither leaks in October. Both leak in January, and by then the connection to the storm is an argument instead of a record.",
+    "The discipline is simple and unglamorous: after a verified event, walk the roofs, date the photos, file the weather record alongside. The walk takes a morning per building. Reconstructing the same facts in January takes weeks, and the answers come back worse."
+   ],
+   "cta": "Does your team walk roofs after wind events, or after leaks?",
+   "hashtags": [
+    "StormRestoration",
+    "FacilitiesManagement",
+    "RiskManagement"
+   ],
+   "notes": "",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0923",
+   "date": "2026-09-23",
+   "channel": "company",
+   "format": "graphic",
+   "theme": "Storm documentation",
+   "hook": "The storm file, built before you need it.",
+   "body": [
+    "When weather takes a market, the portfolios that recover fastest are the ones holding a file: what was inspected, what was found, when, with the weather record attached.",
+    "This is what goes in it. Nothing here is complicated. All of it is easier to gather the week of the event than the winter after it."
+   ],
+   "cta": "If a verified event touched your markets this season, the walk is worth scheduling now.",
+   "hashtags": [
+    "StormRestoration",
+    "AssetManagement",
+    "CommercialRoofing"
+   ],
+   "asset": {
+    "template": "check",
+    "kicker": "AFTER A VERIFIED EVENT",
+    "title": "What belongs in the storm file",
+    "items": [
+     "The weather record itself, from a primary source, saved",
+     "Date stamped photos of every roof section, damaged or not",
+     "A condition note per building, even when the note is clean",
+     "Scope and pricing for anything found, before work starts",
+     "The closeout: what was done, when, photographed"
+    ],
+    "source": ""
+   },
+   "notes": "Company page. No claim language, no insurance promises. The graphic stays factual.",
+   "dow": "Wed",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0924",
+   "date": "2026-09-24",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Storm file companion",
+   "hook": "Three conversations happen months after a wind event: with the carrier, with the manufacturer, and with your own committee. All three go the way the file says.",
+   "body": [
+    "Dated photos, a primary weather record, a clean note per building. Hold those and each conversation is short. Without them, February turns into archaeology: invoices, memory, and whoever still works here.",
+    "Nobody's memory holds seam locations and dates five months out. That job belongs to a file, and the file only exists if somebody built it the week of the event, while it was cheap to build.",
+    "We have run this discipline on storm programs large enough to be written about, and the lesson holds at every scale."
+   ],
+   "cta": "If a verified event touched your markets this season, start the folder this week.",
+   "hashtags": [
+    "StormRestoration",
+    "RiskManagement",
+    "PropertyManagement"
+   ],
+   "notes": "No claim outcomes, no carrier promises. Storm scale reference stays general; the trade coverage link can go in comments if asked.",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0926",
+   "date": "2026-09-26",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, storm weeks",
+   "hook": "Storm weeks show you what a company is.",
+   "body": [
+    "Schedules collapse, phones do not stop, and every property wants to be first.",
+    "The teams that hold are the ones that decided the sequence back in the quiet weeks: who walks what, who calls whom, what gets photographed no matter how loud the phones get."
+   ],
+   "cta": "",
+   "hashtags": [
+    "ConstructionLeadership",
+    "StormRestoration"
+   ],
+   "notes": "Saturday. A real crew or staging photo from a storm response week fits here if one is cleared: everyone tied off, no property identifiers, light edits only.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  },
+  {
+   "id": "C-0929",
+   "date": "2026-09-29",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Repair budget vs capital plan",
+   "hook": "A repair budget answers this year. A capital plan answers the next ten. Most portfolios have the first and improvise the second.",
+   "body": [
+    "The repair budget is real: it has an owner, a number, invoices against it. The capital plan is often a spreadsheet of installation years with an assumed life next to each roof.",
+    "Assumed life is not a plan. Two roofs installed the same year diverge fast on drainage, traffic and maintenance. One goes 25 years, its twin goes 14, and the spreadsheet said 20 for both.",
+    "A capital plan built from graded condition instead of birthdays moves money to the roof that needs it and defers the one that does not. Same total, different outcome."
+   ],
+   "cta": "Is your exterior capital plan built from condition, or from installation dates?",
+   "hashtags": [
+    "CapitalPlanning",
+    "AssetManagement",
+    "CommercialRealEstate"
+   ],
+   "notes": "",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-0930",
+   "date": "2026-09-30",
+   "channel": "personal",
+   "format": "carousel",
+   "theme": "Budget questions",
+   "hook": "Six questions before the exterior number locks.",
+   "body": [
+    "Between now and November, next year's exterior numbers get set. These six questions are the difference between a number that survives committee and a number that gets argued about."
+   ],
+   "cta": "Send this to whoever owns the exterior line.",
+   "hashtags": [
+    "CapitalPlanning",
+    "PropertyManagement",
+    "FacilitiesManagement"
+   ],
+   "asset": {
+    "template": "carousel",
+    "title": "Before the number locks",
+    "subtitle": "Six questions for the exterior budget line",
+    "slides": [
+     {
+      "h": "Is there a current condition read behind it?",
+      "b": "Or is the number last year plus a percentage? A graded read per building is the difference between a defended number and a debated one."
+     },
+     {
+      "h": "Which buildings moved this year?",
+      "b": "Weather, traffic, repairs done or deferred. A budget that treats every building like last year assumes nothing happened. Something happened."
+     },
+     {
+      "h": "What was deferred, and what does it cost now?",
+      "b": "Deferred items reprice. Carrying them unpriced hides the real number inside next year’s surprises."
+     },
+     {
+      "h": "Which repairs are actually capital?",
+      "b": "Recurring repairs on the same roof are a capital signal, not a maintenance habit. The split decides which budget carries them."
+     },
+     {
+      "h": "What does the warranty require of us?",
+      "b": "Documented maintenance keeps coverage alive. If the budget skips the required items, it quietly spends the warranty too."
+     },
+     {
+      "h": "Can we show the committee a photo?",
+      "b": "A line item with photographs behind it gets approved faster and challenged less than the same number standing alone."
+     }
+    ]
+   },
+   "notes": "Personal profile, document post. Company page reshares same day.",
+   "dow": "Wed",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1001",
+   "date": "2026-10-01",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Newsletter issue 2 companion",
+   "hook": "Issue two of The Exterior Risk File is out: why inspection reports need a decision section.",
+   "body": [
+    "The argument in one paragraph: a report that describes condition without committing to a recommendation moves the decision to the least informed person in the chain, the reader. The fix is structural, not stylistic. Condition, consequence, cost, recommendation, on one page, per item.",
+    "The issue walks the full format, shows a worked line item, and includes the five questions we think any report should survive before it gets filed."
+   ],
+   "cta": "Link in the first comment. Forward it to whoever reads roof reports at your shop.",
+   "hashtags": [
+    "FacilitiesManagement",
+    "AssetManagement"
+   ],
+   "notes": "Publish newsletter issue 2 first. Link in first comment.",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1003",
+   "date": "2026-10-03",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, future self",
+   "hook": "A capital plan is a letter to your future self. Most of them are written by someone else's past.",
+   "body": [
+    "Installation dates, assumed lives, straight line escalation: a plan inherited from whoever built the spreadsheet a decade ago.",
+    "The kindest thing you can do for whoever holds your seat in five years is leave them a plan built from what the buildings actually look like, with the photos to prove it."
+   ],
+   "cta": "What did you inherit?",
+   "hashtags": [
+    "CapitalPlanning",
+    "AssetManagement"
+   ],
+   "notes": "Saturday. If an old capital plan spreadsheet or binder photo exists with names cropped out, it makes the point better than any graphic.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  },
+  {
+   "id": "C-1006",
+   "date": "2026-10-06",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Warranty is a workflow",
+   "hook": "Most roof warranties quietly assign work to the owner: documented maintenance, prompt small repairs, records on request. Skip those and coverage erodes years before anyone tests it.",
+   "body": [
+    "The filing cabinet version, where the warranty goes in a drawer at closeout and comes out at the first big leak, finds this out at the worst possible moment.",
+    "The workflow version is boring on purpose: an annual documented inspection, the required items fixed and photographed, the file kept current. Boring, until the day that folder is the most valuable one you own."
+   ],
+   "cta": "Worth pulling one warranty this week just to read what it asks of you.",
+   "hashtags": [
+    "CommercialRoofing",
+    "FacilitiesManagement",
+    "RiskManagement"
+   ],
+   "notes": "General education only. No coverage promises; specific terms are always per the manufacturer document.",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1007",
+   "date": "2026-10-07",
+   "channel": "company",
+   "format": "graphic",
+   "theme": "Proactive economics",
+   "hook": "Proactive costs less per year and buys more years. The published numbers are not close.",
+   "body": [
+    "A published proactive versus reactive comparison: proactive inspection and repair averaged 14 cents per square foot per year with a 21 year roof life. Reactive management averaged 25 cents and 13 years.",
+    "Lower annual cost, eight more years of service. These are directional planning ranges, and the direction is the point."
+   ],
+   "cta": "The annual walk is the cheapest line in the roofing budget.",
+   "hashtags": [
+    "CommercialRoofing",
+    "CapitalPlanning",
+    "AssetManagement"
+   ],
+   "fact": "proactive_life",
+   "asset": {
+    "template": "stat",
+    "kicker": "PROACTIVE VS REACTIVE",
+    "stat": "21 yrs vs 13 yrs",
+    "unit": "average roof life, published comparison",
+    "line": "14 cents versus 25 cents per square foot per year to get there. Directional planning ranges.",
+    "source": "Source: Firestone / Prologis study, via Buildings.com"
+   },
+   "notes": "Company page. Keep the directional caveat on the graphic.",
+   "dow": "Wed",
+   "time": "8:15 AM CT",
+   "fact_detail": {
+    "claim": "A published proactive versus reactive comparison found proactive inspection and repair averaged 14 cents per square foot per year with a 21 year roof life, against 25 cents and 13 years for reactive management.",
+    "source": "Firestone / Prologis study via Buildings.com, cited in Hustad reference sheet (directional planning ranges)"
+   }
+  },
+  {
+   "id": "C-1008",
+   "date": "2026-10-08",
+   "channel": "personal",
+   "format": "text",
+   "theme": "The warranty file",
+   "hook": "Five documents make up a warranty file that actually protects you. Most portfolios hold two of them.",
+   "body": [
+    "The warranty itself, registered, with the effective date. The maintenance requirements, pulled out of the fine print into a checklist someone owns. The annual inspection reports, dated and photographed. The repair records for every small item the inspections found. And the correspondence log, every notice sent on time.",
+    "Most portfolios hold two of the five: the warranty and some invoices. The missing three are the ones that keep coverage alive.",
+    "Next month's newsletter walks the whole workflow. This week, just find out which of the five you hold."
+   ],
+   "cta": "Honest count: how many of the five does your best documented building have?",
+   "hashtags": [
+    "FacilitiesManagement",
+    "RiskManagement",
+    "PropertyManagement"
+   ],
+   "notes": "",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1010",
+   "date": "2026-10-10",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, quiet work",
+   "hook": "Nobody gets promoted for the leak that never happened.",
+   "body": [
+    "Preventive work has a visibility problem. The save is invisible; only the failure shows. Which is why reactive cultures persist even where everyone knows better: firefighting photographs well.",
+    "The operators I respect most measure the quiet things anyway: items closed before freeze, roofs walked after events, files current. It takes a certain confidence to defend a budget line whose success is that nothing happened."
+   ],
+   "cta": "Here is to the teams whose best work is invisible.",
+   "hashtags": [
+    "FacilitiesManagement",
+    "ConstructionLeadership"
+   ],
+   "notes": "Saturday. A quiet real photo works here: a clean drain, a finished repair, a crew on a roof with everyone tied off. No identifiers, light edits only.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  },
+  {
+   "id": "C-1013",
+   "date": "2026-10-13",
+   "channel": "personal",
+   "format": "text",
+   "theme": "The missing closeout",
+   "hook": "The most common gap in exterior records is the last one: the project that ended when the crew left.",
+   "body": [
+    "No final photos, no as built scope, no warranty registration confirmation, no punch list closure. The work might be excellent. The record says nothing.",
+    "Then the building sells, or the warranty gets tested, or the next vendor bids the same roof, and everyone is reconstructing what was done from invoices and memory.",
+    "A closeout package costs an afternoon at the end of a project. Reconstructing one costs weeks, years later, with worse answers."
+   ],
+   "cta": "Pull the file on your last exterior project. Is the ending in it?",
+   "hashtags": [
+    "CommercialRoofing",
+    "AssetManagement",
+    "FacilitiesManagement"
+   ],
+   "notes": "",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1014",
+   "date": "2026-10-14",
+   "channel": "company",
+   "format": "graphic",
+   "theme": "Closeout contents",
+   "hook": "A complete closeout package, in one card.",
+   "body": [
+    "A project ends twice: once when the crew leaves, and once when the file can answer questions ten years out about what was built, what changed, and who stands behind it."
+   ],
+   "cta": "If your last project file is missing pieces, the time to gather them is while people still remember.",
+   "hashtags": [
+    "CommercialRoofing",
+    "ConstructionManagement"
+   ],
+   "asset": {
+    "template": "check",
+    "kicker": "THE PROJECT IS OVER WHEN",
+    "title": "The closeout package",
+    "items": [
+     "Final scope as built, changes documented and priced",
+     "Photo record: before, during, complete",
+     "Warranty registered, confirmation in the file",
+     "Punch list closed in writing",
+     "Maintenance requirements handed to whoever owns them next"
+    ],
+    "source": ""
+   },
+   "notes": "Company page. PNG attach.",
+   "dow": "Wed",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1015",
+   "date": "2026-10-15",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Closeout as capital input",
+   "hook": "Every closeout is the first record in the next capital plan. Skip it and the plan keeps planning around a roof that no longer exists as described.",
+   "body": [
+    "A finished roof resets its line: new installation date, real scope, real warranty, real maintenance obligations. That reset only happens if somebody writes it down while the crew is still reachable.",
+    "The portfolios with credible ten year plans are the ones where every project ends with its paperwork. The plan's accuracy comes from its newest record, and the newest record comes from the closeout."
+   ],
+   "cta": "Does your capital plan get updated at closeout, or at budget season?",
+   "hashtags": [
+    "CapitalPlanning",
+    "AssetManagement"
+   ],
+   "notes": "",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1017",
+   "date": "2026-10-17",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, October crews",
+   "hook": "October is when good crews earn their reputation.",
+   "body": [
+    "The easy season is behind them, the freeze deadline is ahead, and every remaining day of workable weather has three claims on it. Watch how a company sequences October and you learn everything about how it plans.",
+    "To the crews working the shoulder season right: the buildings notice, even when nobody else does."
+   ],
+   "cta": "",
+   "hashtags": [
+    "CommercialRoofing",
+    "ConstructionLeadership"
+   ],
+   "notes": "Saturday. An October crew photo, everyone tied off, no identifiers, is the whole post. Light edits only.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  },
+  {
+   "id": "C-1020",
+   "date": "2026-10-20",
+   "channel": "personal",
+   "format": "text",
+   "theme": "The freeze deadline",
+   "hook": "Every open roof item has a deadline nobody set: the first hard freeze.",
+   "body": [
+    "Water that enters a seam in October freezes in November, expands, and reopens the seam wider. The cycle runs all winter. A repair that was a maintenance line in October is interior remediation by February.",
+    "This is the last comfortable window of the year to close small items. Crews still have capacity, sealants still cure, and the list is still short.",
+    "After the first hard freeze, the same item costs more and the repair options narrow."
+   ],
+   "cta": "How many open exterior items is your portfolio carrying into November?",
+   "hashtags": [
+    "FacilitiesManagement",
+    "PropertyManagement",
+    "CommercialRoofing"
+   ],
+   "notes": "",
+   "dow": "Tue",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1021",
+   "date": "2026-10-21",
+   "channel": "personal",
+   "format": "carousel",
+   "theme": "The fall walk",
+   "hook": "Before the first freeze: the fall roof walk, slide by slide.",
+   "body": [
+    "One walk, before the freeze, catches the items that become winter emergencies. This is the sequence our inspectors run. It fits in a morning per building."
+   ],
+   "cta": "If nobody has walked your roofs since spring, this is the week to schedule it.",
+   "hashtags": [
+    "FacilitiesManagement",
+    "CommercialRoofing",
+    "PropertyManagement"
+   ],
+   "asset": {
+    "template": "carousel",
+    "title": "The fall roof walk",
+    "subtitle": "Seven checks before the first freeze",
+    "slides": [
+     {
+      "h": "Drains and scuppers, cleared",
+      "b": "Leaves now, ice dams later. Standing water is the winter multiplier; give it somewhere to go."
+     },
+     {
+      "h": "Seams and laps, eyes on every one",
+      "b": "A lifted seam self seals in warm weather and opens with the freeze. It has to be seen, not assumed."
+     },
+     {
+      "h": "Flashings and terminations",
+      "b": "Where the roof meets everything else is where winter gets in. Check the transitions, not just the field."
+     },
+     {
+      "h": "Sealants, before they stop curing",
+      "b": "Most sealants need warmth to cure. The calendar closes this repair window weeks before the freeze itself."
+     },
+     {
+      "h": "Penetrations and rooftop units",
+      "b": "Every pipe, curb and unit is a hole somebody made on purpose. Confirm each one is still sealed on purpose."
+     },
+     {
+      "h": "Overhanging limbs and debris",
+      "b": "Ice load snaps limbs onto membranes. Clearing them now costs less than patching punctures in January."
+     },
+     {
+      "h": "Photograph all of it",
+      "b": "The walk doubles as the record: dated photos, a note per building, priced items, filed while the weather still allows the fixes."
+     }
+    ]
+   },
+   "notes": "Personal profile, document post. Company page reshares same day.",
+   "dow": "Wed",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1022",
+   "date": "2026-10-22",
+   "channel": "personal",
+   "format": "text",
+   "theme": "Capacity",
+   "hook": "Fall maintenance has a quiet constraint: everyone remembers the freeze at the same time.",
+   "body": [
+    "Crew capacity in late October is a fixed pool with rising demand. Walk the roofs in September and you choose your week. Call in November and you join a queue that is already deep, with weather working against every remaining day.",
+    "Scheduling early is just arithmetic about a finite season."
+   ],
+   "cta": "",
+   "hashtags": [
+    "FacilitiesManagement",
+    "PropertyManagement"
+   ],
+   "notes": "",
+   "dow": "Thu",
+   "time": "8:15 AM CT"
+  },
+  {
+   "id": "C-1024",
+   "date": "2026-10-24",
+   "channel": "personal",
+   "format": "photo",
+   "theme": "Human, season close",
+   "hook": "Eight weeks ago I started writing here on a schedule. The discipline taught me more than the topics did.",
+   "body": [
+    "Writing for operators every week forces you to say what you actually believe about the work, in public, where the people who know better can push back. Several did. The posts got better because of it.",
+    "The through line, reading back: every exterior problem is a documentation problem wearing a disguise. Condition, decisions, storms, warranties, closeouts. The file is the program.",
+    "The monthly deep version lives in The Exterior Risk File. The conversation lives here. Thanks for being part of it."
+   ],
+   "cta": "What should the next eight weeks cover? Asking for the calendar.",
+   "hashtags": [
+    "FacilitiesManagement",
+    "CommercialRoofing"
+   ],
+   "notes": "Saturday. Newsletter link in first comment. Genuine ask; feed answers into the next cycle.",
+   "dow": "Sat",
+   "time": "9:00 AM CT"
+  }
+ ],
+ "newsletter": {
+  "name": "The Exterior Risk File",
+  "cadence": "Monthly, first Thursday, published 8:00 AM CT. LinkedIn newsletters cannot be published by API; issue day is a ten minute manual publish from this draft.",
+  "description": "How exterior condition, documentation and capital planning connect on occupied properties. Written for portfolio executives, asset managers and facilities leaders.",
+  "issues": [
+   {
+    "n": 1,
+    "date": "2026-09-03",
+    "title": "The Exterior Risk File",
+    "subject": "The eight records that end roof arguments",
+    "status": "ready",
+    "draft": [
+     "Every portfolio has a story about the roof that surprised them. The leak that turned out to be three years of deferred flashing. The warranty that lapsed on paperwork. The capital plan that budgeted a replacement for the wrong building. Different stories, same root: the information existed once, and nobody could put a hand on it when it mattered.",
+     "This newsletter is about the file that catches those stories before they happen. Not software, not a program you buy. A folder, kept current, per building. Eight records.",
+     "One. A condition grade per building, A to F, set from documented condition and remaining useful life rather than age. A roof's age says when it went on. What it has been through since is the part the plan actually needs.",
+     "Two. The repair versus capital split. Every open finding classified: maintenance dollars this year, or capital plan. The split is a decision, and making it in the file beats making it in a hallway during budget week.",
+     "Three. A photo record tied to dates. Roof by roof, visit by visit. Most exterior disputes are chronology disputes, and dated photographs end chronology disputes.",
+     "Four. Warranty terms next to the maintenance they require. Coverage stays alive through documented owner maintenance. Keep the obligations where the maintenance schedule can see them, not in a drawer with the closing documents.",
+     "Five. A storm log with sources. When a verified event touches a market, the file gets the weather record and the post event walk, even when the note is clean. Building that record the week of the event costs a morning. Rebuilding it in February costs weeks and comes back incomplete.",
+     "Six. Open items, priced. An unpriced deficiency is invisible to a budget. Priced, it becomes a decision someone owns: fix, defer knowingly, or capital.",
+     "Seven. Closeout records. Every completed project ends with as built scope, final photos, warranty registration and punch closure. The closeout is the first record in the next capital plan.",
+     "Eight. The one page summary. Everything above, per building, on a page a committee can read. The appendix holds the detail; the page holds the decision.",
+     "None of this requires a particular vendor, including us. It requires an honest afternoon to find out what you hold, and a cadence to keep it current. Next month: why most inspection reports fail the file, and the one page format that fixes them."
+    ]
+   },
+   {
+    "n": 2,
+    "date": "2026-10-01",
+    "title": "Why Inspection Reports Need a Decision Section",
+    "subject": "The missing page in the forty page roof report",
+    "status": "ready",
+    "draft": [
+     "The forty page roof report is a familiar object: photos, thermal images, a condition narrative, sometimes a core cut. Then it ends. The reader is left holding descriptions, and the decision the report was commissioned to inform has not moved an inch.",
+     "A report is finished when a person who was not on the roof can make a decision from it. That standard produces a structural fix: every finding carries four lines.",
+     "Condition. What was found, graded, photographed, dated. The grade does the comparative work a narrative cannot: a D next to a B is an argument settled before it starts.",
+     "Consequence. What happens if nothing is done, stated plainly. Water tracks behind the membrane and reaches the ceiling cavity with the first hard freeze. No adjectives. The reader can weigh a consequence; they cannot weigh 'concerning'.",
+     "Cost. The number for fixing it now, and the class of number it becomes later. Not a scare figure: a classification. Maintenance line now, remediation plus repair after the freeze.",
+     "Recommendation. One sentence, committed to in writing. Repair within 30 days under the standing cap. This is the line most reports omit, because committing is a risk. It is also the entire value of having an expert on the roof.",
+     "Multiply the four lines by every open item and the report becomes an instrument: the repair versus capital split falls out of it, the priced open items list falls out of it, and the one page summary writes itself.",
+     "Five questions tell you whether a report you are holding meets the standard. Is every finding graded, photographed and dated. Is each item split repair versus capital. Is there a price next to every open item. Is there a written recommendation. Could someone who never saw the roof make the call from this.",
+     "If the answer to the last one is no, the gap belongs to the report, not to you. Next month: warranty as a workflow, and the five documents that keep coverage alive."
+    ]
+   },
+   {
+    "n": 3,
+    "date": "2026-11-05",
+    "title": "Warranty Is a Workflow",
+    "subject": "The coverage you keep by doing the boring things",
+    "status": "outline",
+    "draft": [
+     "Thesis: a roof warranty is a workflow with owner obligations, and coverage erodes quietly when the workflow stops. Sections: what manufacturer warranties actually require of owners; the five document warranty file (warranty registered, obligations as a checklist, annual inspection reports, small item repair records, correspondence log); how the annual documented inspection doubles as the file's heartbeat; what erosion looks like in practice, told as patterns not cases; the workflow calendar. Caveat everywhere: specific coverage is always per the manufacturer's document. No coverage promises."
+    ]
+   },
+   {
+    "n": 4,
+    "date": "2026-12-03",
+    "title": "The Difference Between a Repair Budget and a Capital Plan",
+    "subject": "One answers this year. The other answers the next ten.",
+    "status": "outline",
+    "draft": [
+     "Thesis: repair budgets are real and owned; capital plans are often installation date spreadsheets, and condition graded plans reallocate the same total to better outcomes. Sections: how age based plans miss diverging twins; what a condition based plan looks like per line; the recurring repair signal that flags hidden capital items; how closeouts keep the plan current; the December conversation with ownership, and what to bring to it. Draws on the NRCA 25 year case study with the source attached."
+    ]
+   },
+   {
+    "n": 5,
+    "date": "2027-01-07",
+    "title": "The Cost of a Missing Closeout",
+    "subject": "Projects that never ended, and what they cost later",
+    "status": "outline",
+    "draft": [
+     "Thesis: the closeout package is an afternoon at project end and weeks of reconstruction years later; its absence surfaces at sales, warranty tests and rebids. Sections: the five part closeout package; the sale scenario, the warranty scenario, the rebid scenario as patterns; closeout as the first record of the next capital plan; a January exercise, closing out last year's projects while memories are fresh."
+    ]
+   },
+   {
+    "n": 6,
+    "date": "2027-02-04",
+    "title": "The Next Standard for Exterior Asset Management",
+    "subject": "The system, assembled",
+    "status": "outline",
+    "draft": [
+     "Thesis: the five prior issues assemble into one standard: graded condition, decision ready reporting, live warranty files, storm discipline, closed loops. Synthesis issue, no new claims. Sections: the standard on one page; what adopting it costs, honestly, in hours and cadence; what it changes for each seat, asset manager, facilities lead, site team; where the industry is heading and what to watch. Ends the six month arc and asks readers what the next arc should cover."
+    ]
+   }
+  ]
+ },
+ "articles": [
+  {
+   "id": "A-01",
+   "month": "2026-09",
+   "tier": 1,
+   "outlet": "Facilities Management Advisor",
+   "title": "Why Most Roof Inspection Reports Still Leave Facility Teams Without a Decision",
+   "audience": "Facilities and operations",
+   "route": "https://facilitiesmanagementadvisor.blr.com/",
+   "route_label": "Submit an Article page",
+   "angle": "The decision section format: condition, consequence, cost, recommendation. Companion to newsletter issue 2; distinct title, examples and framing per the one outlet one article rule.",
+   "status": "draft"
+  },
+  {
+   "id": "A-02",
+   "month": "2026-09",
+   "tier": 1,
+   "outlet": "BUILDINGS",
+   "title": "The Exterior Risk File: What Building Owners Need Before the Next Storm, Sale, or Budget Cycle",
+   "audience": "Building owners and facilities",
+   "route": "https://www.buildings.com/contributors-guidelines",
+   "route_label": "Contributor guidelines",
+   "angle": "The eight record file, owner framing. Flagship piece; the newsletter name comes from it, so the examples here must be fresh.",
+   "status": "draft"
+  },
+  {
+   "id": "A-03",
+   "month": "2026-10",
+   "tier": 1,
+   "outlet": "IFMA FMJ",
+   "title": "From Repair History to Capital Plan: Building a Roof Asset Management System Executives Can Use",
+   "audience": "Facility management",
+   "route": "https://www.ifma.org/content-channels/ifmas-fmj/fmj-submissions/",
+   "route_label": "FMJ submissions",
+   "angle": "Condition graded capital planning versus installation date planning. Association credibility.",
+   "status": "planned"
+  },
+  {
+   "id": "A-04",
+   "month": "2026-10",
+   "tier": 1,
+   "outlet": "RFMA Facilitator",
+   "title": "Why Restaurant Roof Programs Fail Between Inspections and Emergency Calls",
+   "audience": "Restaurant facilities",
+   "route": "https://www.rfmaonline.com/",
+   "route_label": "Facilitator editorial calendar",
+   "angle": "The gap between annual inspection and emergency dispatch; small item discipline for distributed portfolios.",
+   "status": "planned"
+  },
+  {
+   "id": "A-05",
+   "month": "2026-11",
+   "tier": 1,
+   "outlet": "Construction Business Owner",
+   "title": "The Hidden Cost of Incomplete Closeouts in Exterior Restoration",
+   "audience": "Construction owners and leaders",
+   "route": "https://www.constructionbusinessowner.com/editorial/",
+   "route_label": "Editorial guidelines",
+   "angle": "Closeout discipline as a business system; supports the January newsletter without duplicating it.",
+   "status": "planned"
+  },
+  {
+   "id": "A-06",
+   "month": "2026-11",
+   "tier": 1,
+   "outlet": "For Construction Pros",
+   "title": "Standardization Is the Difference Between Growing a Roofing Company and Creating More Chaos",
+   "audience": "Construction industry",
+   "route": "https://www.forconstructionpros.com/expert-columns/article/22106209/guidelines-for-expert-columnists",
+   "route_label": "Expert columnist guidelines",
+   "angle": "Operator lessons on multi market execution. Trade facing, no client material.",
+   "status": "planned"
+  },
+  {
+   "id": "A-07",
+   "month": "2026-12",
+   "tier": 1,
+   "outlet": "McElroy Metal blog",
+   "title": "When Metal Roofing Is a Portfolio Decision, Not a Material Selection",
+   "audience": "Metal roofing",
+   "route": "https://www.mcelroymetal.com/",
+   "route_label": "Guest blog submission",
+   "angle": "System neutral education only, per the roadmap. Skip if the fit is not there in December.",
+   "status": "planned"
+  },
+  {
+   "id": "A-08",
+   "month": "2026-12",
+   "tier": 2,
+   "outlet": "Construction Executive",
+   "title": "Why Large Loss Claims Break Down After Field Work Begins",
+   "audience": "Construction executives",
+   "route": "https://www.constructionexec.com/",
+   "route_label": "Editorial guidelines",
+   "angle": "Documentation discipline during large loss execution. No claim outcome promises; process only.",
+   "status": "planned"
+  },
+  {
+   "id": "A-09",
+   "month": "2027-01",
+   "tier": 2,
+   "outlet": "Roofing Contractor",
+   "title": "The Emergency Is Not the Project: How Roofing Leaders Create Control During Large Loss Events",
+   "audience": "Roofing leaders",
+   "route": "https://www.roofingcontractor.com/topics/2729-guest-column",
+   "route_label": "Guest column",
+   "angle": "The best trade credibility target. Pitch with the proof packet: published bylines plus the public Offutt project coverage.",
+   "status": "planned"
+  },
+  {
+   "id": "A-10",
+   "month": "2027-01",
+   "tier": 2,
+   "outlet": "Multi Housing News",
+   "title": "The Exterior Risk File Every Multifamily Owner Should Have Before an Acquisition or Storm Season",
+   "audience": "Multifamily owners and operators",
+   "route": "https://www.multihousingnews.com/editorial-guidelines/",
+   "route_label": "Editorial guidelines",
+   "angle": "The file framework in acquisition and storm framing for the buyer audience that matters most to the DM program.",
+   "status": "planned"
+  },
+  {
+   "id": "A-11",
+   "month": "2027-02",
+   "tier": 2,
+   "outlet": "Facility Executive",
+   "title": "The Five Exterior Signals That Belong in Every Facilities Risk Review",
+   "audience": "Facility executives",
+   "route": "https://facilityexecutive.com/",
+   "route_label": "Pitch the editor with an outline",
+   "angle": "Risk review framing; the five questions become five signals with fresh examples.",
+   "status": "planned"
+  },
+  {
+   "id": "A-12",
+   "month": "2027-02",
+   "tier": 2,
+   "outlet": "IREM Journal of Property Management",
+   "title": "Warranty Is a Workflow: How Property Managers Protect Coverage Before It Is Needed",
+   "audience": "Property managers",
+   "route": "https://www.irem.org/learning/publications-news/journal-of-property-management/submit-to-jpm-form",
+   "route_label": "Submit to JPM form",
+   "angle": "The November newsletter thesis re-reported for property managers with new examples.",
+   "status": "planned"
+  },
+  {
+   "id": "A-13",
+   "month": "2027-03",
+   "tier": 2,
+   "outlet": "Colorado Real Estate Journal, Retail Properties Quarterly",
+   "title": "A Retail Roof Is a Revenue Protection System, Not a Deferred Maintenance Line Item",
+   "audience": "Retail CRE",
+   "route": "https://crej.com/",
+   "route_label": "Contribute an article",
+   "angle": "Retail framing: sales floor exposure, tenant obligations, the walk cadence.",
+   "status": "planned"
+  }
+ ],
+ "article_cadence": [
+  "Monday: pick the week’s one objective, an article, a pitch, or an interview.",
+  "Tuesday: draft or edit the asset. Angle, title, source list, bio, headshot ready.",
+  "Wednesday: send up to three personalized pitches. Log each one here.",
+  "Thursday: publish or promote the owned companion. Engage on LinkedIn.",
+  "Friday: follow up on pitches older than seven business days. Update statuses below."
+ ],
+ "repurpose": [
+  "Every published article becomes: two LinkedIn posts, one carousel, one short video, one internal sales talking point.",
+  "Never publish the article itself on the Hustad site before the outlet does; write a companion instead.",
+  "After publication: add the live link here, to the media sheet, and to the insights hub.",
+  "One outlet at a time per article. Original work only."
+ ]
+}
