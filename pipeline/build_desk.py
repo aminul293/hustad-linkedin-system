@@ -232,6 +232,25 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,mon
 .btn.ghost{background:transparent;color:var(--navy)}
 .btn.ghost:hover{background:var(--navy-soft)}
 .btn[hidden]{display:none}
+.console-layout{display:flex;gap:18px;align-items:flex-start;margin-bottom:20px;flex-direction:column}
+@media(min-width:768px){.console-layout{flex-direction:row;align-items:stretch}}
+.console-sidebar{width:100%;background:var(--card-glass);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+@media(min-width:768px){.console-sidebar{width:320px;min-width:320px;max-height:800px}}
+.search-box input{width:100%;padding:9px 12px;background:rgba(0,0,0,0.3);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:13px}
+.roster-list{display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:650px;padding-right:2px}
+.roster-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;transition:all .2s ease}
+.roster-item:hover{background:rgba(56,189,248,0.08);border-color:var(--line-2)}
+.roster-item.active{background:rgba(56,189,248,0.18);border-color:var(--navy);box-shadow:0 0 12px rgba(56,189,248,0.25)}
+.roster-item.is-done{opacity:.45}
+.roster-seq{font-size:11px;font-weight:800;color:var(--ink-3);min-width:20px}
+.roster-info{flex:1;min-width:0}
+.roster-name{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.roster-company{font-size:11px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.console-main{flex:1;width:100%;display:flex;flex-direction:column;gap:12px}
+.console-nav-bar{display:flex;align-items:center;justify-content:space-between;background:var(--card-glass);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin-bottom:6px}
+.nav-btn{background:var(--navy-soft);border:1px solid var(--line);color:var(--navy);font-size:12px;font-weight:700;padding:6px 12px;border-radius:5px;cursor:pointer;transition:all .2s ease}
+.nav-btn:hover{background:var(--navy);color:#0F172A}
+.target-counter{font-size:12px;font-weight:800;color:var(--ink-2);letter-spacing:.05em;text-transform:uppercase}
 .toast-container{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast-msg{background:#1E293B;color:#F8FAFC;border:1px solid #334155;border-left:4px solid var(--copper);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 12px 30px -5px rgba(0,0,0,0.6);opacity:0;transform:translateY(12px);transition:all .3s cubic-bezier(0.16,1,0.3,1)}
 .toast-msg.show{opacity:1;transform:translateY(0)}
@@ -281,7 +300,22 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
     </ol>
     <p>Order is deliberate: follow ups first, then first touches. If the hour runs short, defer first touches rather than rush a live conversation.</p>
   </section>
-  <div id="rows"></div>
+  <div class="console-layout">
+    <aside class="console-sidebar">
+      <div class="search-box">
+        <input type="text" id="roster-search" placeholder="Filter targets or company..." />
+      </div>
+      <div id="roster-list" class="roster-list"></div>
+    </aside>
+    <main class="console-main">
+      <div class="console-nav-bar">
+        <button type="button" id="prev-target-btn" class="nav-btn">&larr; Prev [J]</button>
+        <span id="target-counter" class="target-counter">Target 1 of 40</span>
+        <button type="button" id="next-target-btn" class="nav-btn">Next [K] &rarr;</button>
+      </div>
+      <div id="rows"></div>
+    </main>
+  </div>
   <section class="export">
     <h3>Send log</h3>
     <p>Every tick lands here automatically and stays in this browser, including across the nightly rebuild.
@@ -410,6 +444,56 @@ function rowHtml(q,i){
    +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></article>';
 }
 
+var activeTargetIndex = 0;
+var rosterSearchQuery = '';
+
+function renderRosterSidebar(qs){
+  var rosterEl = document.getElementById('roster-list');
+  if(!rosterEl) return;
+  var filtered = qs.filter(function(q){
+    if(!rosterSearchQuery) return true;
+    var term = rosterSearchQuery.toLowerCase();
+    return q.name.toLowerCase().indexOf(term) >= 0 || q.company.toLowerCase().indexOf(term) >= 0;
+  });
+  rosterEl.innerHTML = filtered.map(function(q){
+    var idx = qs.indexOf(q);
+    var e = ent(q);
+    var isActive = idx === activeTargetIndex;
+    return '<div class="roster-item'+(isActive?' active':'')+(e.done?' is-done':'')+'" data-idx="'+idx+'">'
+      +'<span class="roster-seq">'+String(idx+1).padStart(2,'0')+'</span>'
+      +'<div class="roster-info">'
+      +'<div class="roster-name">'+esc(q.name)+'</div>'
+      +'<div class="roster-company">'+esc(q.company)+'</div>'
+      +'</div>'
+      +(e.done?'<span style="color:var(--good);font-weight:800;">✓</span>':'')
+      +'</div>';
+  }).join('');
+
+  Array.prototype.forEach.call(rosterEl.querySelectorAll('.roster-item'), function(item){
+    item.addEventListener('click', function(){
+      activeTargetIndex = parseInt(item.getAttribute('data-idx'), 10) || 0;
+      renderActiveTarget(qs);
+    });
+  });
+}
+
+function renderActiveTarget(qs){
+  var rowsEl = document.getElementById('rows');
+  var counterEl = document.getElementById('target-counter');
+  if(!qs.length){
+    if(rowsEl) rowsEl.innerHTML = '<div class="empty">No sends scheduled this day.</div>';
+    if(counterEl) counterEl.textContent = '0 of 0';
+    return;
+  }
+  if(activeTargetIndex < 0) activeTargetIndex = 0;
+  if(activeTargetIndex >= qs.length) activeTargetIndex = qs.length - 1;
+  var q = qs[activeTargetIndex];
+  if(rowsEl) rowsEl.innerHTML = rowHtml(q, activeTargetIndex);
+  if(counterEl) counterEl.textContent = 'Target ' + (activeTargetIndex + 1) + ' of ' + qs.length;
+  renderRosterSidebar(qs);
+  wire(); paint();
+}
+
 function render(){
   var qs=dayQueue();
   document.getElementById('dayselect').innerHTML=DAYS.map(function(d){
@@ -432,9 +516,9 @@ function render(){
     +'<p>Every first touch below was re-checked against live sources before the block: the stored company fact, recent news, leadership changes, and National Weather Service records for severe weather in each operator\'s markets. Stale numbers were corrected in the plan itself. Where a market actually took weather there is a second draft on the toggle.</p>'
     +'<p>'+storm+' of today\'s first touches have a verified storm trigger. '+rev+' needed a correction or a read before sending.</p>'; }
   else { dp.style.display='none'; }
-  document.getElementById('rows').innerHTML = qs.length ? qs.map(rowHtml).join('')
-    : '<div class="empty">No sends scheduled this day.</div>';
-  wire(); paint(); buildLog();
+  activeTargetIndex = 0;
+  renderActiveTarget(qs);
+  buildLog();
 }
 function paint(){
   var qs=dayQueue(), n=0;
@@ -525,6 +609,43 @@ document.getElementById('dayselect').addEventListener('change',function(e){ go(e
 document.getElementById('prevday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i>0) go(DAYS[i-1]); });
 document.getElementById('nextday').addEventListener('click',function(){ var i=DAYS.indexOf(day); if(i<DAYS.length-1) go(DAYS[i+1]); });
 document.getElementById('today').addEventListener('click',function(){ go(defaultDay()); });
+
+var pBtn = document.getElementById('prev-target-btn');
+if(pBtn) pBtn.addEventListener('click', function(){
+  var qs = dayQueue();
+  if(activeTargetIndex > 0){
+    activeTargetIndex--;
+    renderActiveTarget(qs);
+  }
+});
+var nBtn = document.getElementById('next-target-btn');
+if(nBtn) nBtn.addEventListener('click', function(){
+  var qs = dayQueue();
+  if(activeTargetIndex < qs.length - 1){
+    activeTargetIndex++;
+    renderActiveTarget(qs);
+  }
+});
+var sInput = document.getElementById('roster-search');
+if(sInput) sInput.addEventListener('input', function(e){
+  rosterSearchQuery = e.target.value;
+  renderRosterSidebar(dayQueue());
+});
+document.addEventListener('keydown', function(e){
+  if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+  var qs = dayQueue();
+  if(e.key === 'j' || e.key === 'J' || e.key === 'ArrowRight'){
+    if(activeTargetIndex < qs.length - 1){
+      activeTargetIndex++;
+      renderActiveTarget(qs);
+    }
+  } else if(e.key === 'k' || e.key === 'K' || e.key === 'ArrowLeft'){
+    if(activeTargetIndex > 0){
+      activeTargetIndex--;
+      renderActiveTarget(qs);
+    }
+  }
+});
 
 var cap=null, saveTimer=null, dirty=false;
 function hydrate(){ return atob(B64).replace('__B64'+'QUINE__',B64)
