@@ -96,24 +96,27 @@ PAGE = """<!doctype html>
   </div>
 
   <div class="card-box" style="margin-top:32px;">
-    <div class="card-title" style="color:#8fbf9f">ℹ️ How Data Updates Work</div>
+    <div class="card-title" style="color:#8fbf9f">ℹ️ How Data Storage & Updates Work (Production & Local)</div>
     <div style="font-size:13.5px;line-height:1.6;color:#c7bda6;margin-top:12px;">
       <p style="margin-bottom:12px;"><strong style="color:#efe8d8">1. Daily Activity Updates (Outreach & Replies)</strong><br>
       As Eric works from the live desk during his daily outreach hour:
       <ul style="margin:6px 0 12px 20px;">
-        <li><b>Instant Action Logging:</b> Clicking "Sent", "Replied", or "Skip" saves status immediately to local storage and syncs to the database.</li>
-        <li><b>Sequence Protection:</b> Marking "Replied" automatically halts all future follow-up touches for that contact.</li>
-        <li><b>Persistence:</b> Action logs survive page reloads and rebuilds so sent contacts stay marked accurately.</li>
+        <li><b>Instant Action Logging:</b> Clicking "Sent", "Replied", or "Skip" updates browser <code style="color:#e3935f">localStorage</code> immediately for zero UI latency.</li>
+        <li><b>Supabase Cloud DB Sync:</b> Background API <code style="color:#e3935f">/api/sync/send</code> upserts records to the Supabase PostgreSQL database (<code style="color:#e3935f">send_log</code> table) for multi-device sync across laptop, mobile, and desktop.</li>
+        <li><b>Sequence Protection & Persistence:</b> Marking "Replied" automatically halts all future follow-up touches for that contact across all devices.</li>
       </ul>
       </p>
-      <p><strong style="color:#efe8d8">2. Periodic / Monthly Data Updates (New Contacts & Deals)</strong><br>
+      <p style="margin-bottom:12px;"><strong style="color:#efe8d8">2. Periodic / Monthly Data Updates (New Contacts & Deals)</strong><br>
       When uploading a new LinkedIn .zip or CRM .xlsx file through this page:
-      <ul style="margin:6px 0 0 20px;">
+      <ul style="margin:6px 0 12px 20px;">
         <li><b>Overwrites Raw Files:</b> Safely updates raw export files on disk in <code style="color:#e3935f">data/raw/</code>.</li>
-        <li><b>Discovers New Connections:</b> Identifies newly added connections, tiers them, and updates target pools.</li>
+        <li><b>Discovers New Connections:</b> Identifies newly added connections, tiers them, and updates target pools (<code style="color:#e3935f">master_contacts.csv</code>).</li>
         <li><b>Merges CRM Pipeline:</b> Matches new CRM sales opportunities to existing companies for proper outreach priority.</li>
-        <li><b>Re-generates Desk:</b> Rebuilds the desk page while preserving all past send logs and reply history.</li>
+        <li><b>Re-generates Desk:</b> Rebuilds the desk page while preserving all past send logs and reply history from Supabase.</li>
       </ul>
+      </p>
+      <p style="margin-top:8px;padding-top:10px;border-top:1px solid #3a3428;font-size:12.5px;color:#aab3c0;">
+        <strong style="color:#8fbf9f">☁️ Production Architecture:</strong> Sent actions & replies live in <b>Supabase Cloud PostgreSQL</b>. Raw contact archives live on the <b>Server File System</b>.
       </p>
     </div>
   </div>

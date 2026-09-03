@@ -55,22 +55,25 @@ Everything downstream of `classify.py` is deterministic. Same inputs, same messa
 That matters: Eric has already sent some of these, and a rebuild must not silently reword a message
 that is already in someone's inbox.
 
-### How Data Updates Work
+### How Data Storage & Updates Work (Production & Local)
 
 Data in the system gets updated in two distinct ways:
 
 1. **Daily Activity Updates (Outreach & Replies):**
    As Eric uses the desk page during his daily outreach hour:
-   * **Instant Action Logging:** When he clicks "Sent", "Replied", or "Skip" on any contact card, the status is immediately saved to browser `localStorage` and recorded in the backend send log / database.
-   * **Sequence Protection:** If a contact is marked as "Replied", the system automatically halts all future follow-up touches for that person across all tabs.
+   * **Instant Action Logging:** When he clicks "Sent", "Replied", or "Skip" on any contact card, the status is immediately saved to browser `localStorage` for zero UI latency.
+   * **Supabase Cloud DB Sync:** Background API `/api/sync/send` upserts records to the **Supabase PostgreSQL database** (`send_log` table) via `backend/db/db_sync.py` for multi-device sync across laptop, mobile, and desktop.
+   * **Sequence Protection:** If a contact is marked as "Replied", the system automatically halts all future follow-up touches for that person across all devices.
    * **Persistence:** Because action logs survive page reloads and rebuilds, Eric never loses track of who has been contacted.
 
 2. **Periodic/Monthly Data Updates (New Contacts & Deals):**
    When uploading a new LinkedIn `.zip` or CRM `.xlsx` file through the uploader UI:
-   * **Overwrites Raw Files:** The server safely overwrites the old raw CSV files in `data/raw/` with your newly uploaded files.
+   * **Overwrites Raw Files:** The server safely overwrites the old raw CSV files in `data/raw/` on the server disk.
    * **Discovers New Connections:** `classify.py` parses the new LinkedIn archive, identifies any newly added connections, tiers them, and updates `master_contacts.csv`.
    * **Merges CRM Pipeline:** `scale_plan.py` matches new CRM sales opportunities to existing companies so active deal accounts get proper outreach priority.
-   * **Re-generates Desk:** The build process creates an updated `site/index.html` containing the new contact queue while preserving all past send logs.
+   * **Re-generates Desk:** The build process creates an updated `site/index.html` containing the new contact queue while preserving all past send logs from Supabase.
+
+*Production Architecture Summary:* Sent actions & replies live in **Supabase Cloud PostgreSQL**. Raw contact archives live on the **Server File System**.
 
 ### The first thing to know: nothing real is in this repo
 
