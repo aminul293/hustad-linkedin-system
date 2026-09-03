@@ -123,16 +123,19 @@ TEMPLATE = r'''<!doctype html>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Lora:wght@500;600&family=Poppins:wght@400;500;600&display=swap">
 <style>
 :root{
-  --paper:#0B0F17;--card:#131B2B;--card-glass:rgba(19, 27, 43, 0.75);--ink:#F1F5F9;--ink-2:#94A3B8;--ink-3:#64748B;
-  --line:rgba(255,255,255,0.08);--line-2:rgba(255,255,255,0.15);--navy:#38BDF8;--navy-soft:rgba(56,189,248,0.12);--copper:#F59E0B;
-  --copper-soft:rgba(245,158,11,0.15);--good:#10B981;--good-soft:rgba(16,185,129,0.15);--draft-bg:#0F172A;--focus:#38BDF8;
+  --paper:#091D24;--card:#0E3F4E;--card-glass:rgba(14, 63, 78, 0.85);--ink:#FFFFFF;--ink-2:#CBD5E1;--ink-3:#94A3B8;
+  --line:#42806D;--line-2:rgba(66, 128, 109, 0.4);--navy:#38BDF8;--navy-soft:rgba(56,189,248,0.15);--copper:#F59E0B;
+  --copper-soft:rgba(245,158,11,0.18);--good:#10B981;--good-soft:rgba(16,185,129,0.18);--draft-bg:#0A2E38;--focus:#42806D;
+  --radius-sm:4px;--radius-md:6px;--radius-lg:9px;--radius-xl:17px;--radius-pill:9999px;
+  --shadow-card:rgba(0, 0, 0, 0.15) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px;
+  --ease:250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 @media (prefers-color-scheme:light){:root[data-theme="light"]{
-  --paper:#F8FAFC;--card:#FFFFFF;--card-glass:rgba(255,255,255,0.9);--ink:#0F172A;--ink-2:#475569;--ink-3:#94A3B8;
-  --line:#E2E8F0;--line-2:#CBD5E1;--navy:#0284C7;--navy-soft:#E0F2FE;--copper:#D97706;
-  --copper-soft:#FEF3C7;--good:#059669;--good-soft:#D1FAE5;--draft-bg:#F8FAFC;--focus:#0284C7;}}
+  --paper:#F8FAFC;--card:#FFFFFF;--card-glass:rgba(255,255,255,0.9);--ink:#0E3F4E;--ink-2:#475569;--ink-3:#64748B;
+  --line:#42806D;--line-2:#CBD5E1;--navy:#0E3F4E;--navy-soft:#E0F2FE;--copper:#D97706;
+  --copper-soft:#FEF3C7;--good:#059669;--good-soft:#D1FAE5;--draft-bg:#F8FAFC;--focus:#0E3F4E;}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse 80% 80% at 50% -20%, rgba(56, 189, 248, 0.08), rgba(255, 255, 255, 0))}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.43;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse 80% 80% at 50% -20%, rgba(66, 128, 109, 0.15), rgba(0, 0, 0, 0))}
 .wrap{max-width:920px;margin:0 auto;padding:0 20px 90px}
 .lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
 header.top{position:sticky;top:0;z-index:30;background:rgba(11, 15, 23, 0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:14px 0 10px;margin-bottom:24px}
