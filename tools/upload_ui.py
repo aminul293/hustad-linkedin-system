@@ -366,9 +366,13 @@ def ensure_site_built():
         except Exception:
             pass
     print("Building desk site on startup...")
+    plan_path = os.path.join(ROOT, 'data', 'work', 'plan_with_copy_final.csv')
     raw_conn = os.path.join(ROOT, 'data', 'raw', 'Connections.csv')
     raw_conn_alt = os.path.join(ROOT, 'data', 'raw', 'a6350e6d-Connections.csv')
-    if os.path.exists(raw_conn) or os.path.exists(raw_conn_alt):
+    if os.path.exists(plan_path):
+        subprocess.run(['make', 'content'], cwd=ROOT)
+        subprocess.run(['make', 'site'], cwd=ROOT)
+    elif os.path.exists(raw_conn) or os.path.exists(raw_conn_alt):
         subprocess.run(['make', 'plan'], cwd=ROOT)
         subprocess.run(['make', 'content'], cwd=ROOT)
         subprocess.run(['make', 'site'], cwd=ROOT)
@@ -804,13 +808,17 @@ class Handler(BaseHTTPRequestHandler):
                 matched.add(dest)
                 log_lines.append(f"saved {filename} -> data/raw/{dest} ({label})")
 
+        plan_exists = os.path.exists(os.path.join(paths.s(paths.WORK), 'plan_with_copy_final.csv'))
         required_dests = {'Connections.csv', 'opportunities_2026.csv'}
         missing = [dest for dest in required_dests if not os.path.exists(os.path.join(paths.s(paths.RAW), dest))]
         
         env = os.environ.copy()
         ok = True
         
-        if missing and not uploads:
+        if plan_exists and not uploads:
+            log_lines.append('Rebuilding live desk using existing campaign plan files...')
+            steps = [['make', 'content'], ['make', 'site']]
+        elif missing and not uploads:
             log_lines.append('Building desk using sample work files...')
             steps = [['make', 'sample'], ['make', 'content'], ['make', 'site']]
         elif missing:
