@@ -576,21 +576,18 @@ function wire(){
       copyBtn.addEventListener('click', function(ev){
         var shown = el.querySelector('.msg:not(.is-hidden)');
         var text = shown ? shown.textContent.trim() : '';
-        navigator.clipboard.writeText(text).then(function(){
-          var b = ev.currentTarget;
-          b.textContent = 'Opening LinkedIn...';
-          b.classList.add('ok');
-          showToast('Opening LinkedIn with pre-filled message...', 'good');
-          if(q.url && !q.url.includes('example.invalid')){
-            var sep = q.url.indexOf('?') >= 0 ? '&' : '?';
-            var openUrl = q.url + sep + 'messageText=' + encodeURIComponent(text) + '&text=' + encodeURIComponent(text);
-            window.open(openUrl, '_blank');
-          }
-          setTimeout(function(){
-            b.textContent = '\uD83D\uDCCB Copy & Open LinkedIn \u2192';
-            b.classList.remove('ok');
-          }, 2000);
-        });
+        try { navigator.clipboard.writeText(text); } catch(err){}
+        var b = ev.currentTarget;
+        b.textContent = 'Copied! Opening LinkedIn \u2192';
+        b.classList.add('ok');
+        showToast('Copied to clipboard! Press Cmd+V (Paste) in LinkedIn message box!', 'good');
+        if(q.url && !q.url.includes('example.invalid')){
+          window.open(q.url, '_blank');
+        }
+        setTimeout(function(){
+          b.textContent = '\uD83D\uDCCB Copy & Open LinkedIn \u2192';
+          b.classList.remove('ok');
+        }, 2000);
       });
     }
     var regenBtn = el.querySelector('.regen-btn');
