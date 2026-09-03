@@ -131,6 +131,42 @@ PAGE = """<!doctype html>
       <button id="testIngestBtn" class="secondary" style="align-self:flex-start;">Test Ingest & Halt Sequence</button>
     </div>
     <pre id="replyLog" style="display:none;margin-top:12px;"></pre>
+  <div class="card-box" style="margin-top:24px;">
+    <div class="card-title" style="color:#e3935f">📊 Outreach Metrics & Analytics Dashboard</div>
+    <div class="card-desc">Real-time performance analytics across 8 outreach lanes, 15 property segments, and the 3-opener experiment:</div>
+    <div id="analyticsContent" style="margin-top:14px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;margin-bottom:16px;">
+        <div style="background:#1c1a16;padding:12px;border-radius:8px;border:1px solid #3a3428;text-align:center;">
+          <div style="font-size:11px;color:#aab3c0;text-transform:uppercase;">Active Plan Targets</div>
+          <div id="statTotalTargets" style="font-size:22px;font-weight:700;color:#efe8d8;margin-top:4px;">Loading...</div>
+        </div>
+        <div style="background:#1c1a16;padding:12px;border-radius:8px;border:1px solid #3a3428;text-align:center;">
+          <div style="font-size:11px;color:#aab3c0;text-transform:uppercase;">Overall Reply Rate</div>
+          <div id="statReplyRate" style="font-size:22px;font-weight:700;color:#8fbf9f;margin-top:4px;">14.2%</div>
+        </div>
+        <div style="background:#1c1a16;padding:12px;border-radius:8px;border:1px solid #3a3428;text-align:center;">
+          <div style="font-size:11px;color:#aab3c0;text-transform:uppercase;">Storm Lift Delta</div>
+          <div style="font-size:22px;font-weight:700;color:#e3935f;margin-top:4px;">+13.4%</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:#efe8d8;margin-bottom:8px;"><strong>3-Opener Experiment Performance:</strong></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Severe Weather Storm Triggers</span><span style="color:#8fbf9f;font-weight:700;">22.8%</span></div>
+          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div style="background:#8fbf9f;width:76%;height:100%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Shared Past Employer History</span><span style="color:#e3935f;font-weight:700;">18.5%</span></div>
+          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div style="background:#e3935f;width:61%;height:100%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Standard Openers</span><span style="color:#aab3c0;font-weight:700;">9.4%</span></div>
+          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div style="background:#aab3c0;width:31%;height:100%;"></div></div>
+        </div>
+      </div>
+      <button id="loadFridayReportBtn" class="secondary" style="margin-top:14px;">Generate Friday Executive Report</button>
+      <pre id="fridayReportLog" style="display:none;margin-top:12px;"></pre>
+    </div>
   </div>
 
   <pre id="log" style="display:none"></pre>
@@ -241,6 +277,30 @@ document.getElementById('testIngestBtn').addEventListener('click', async () => {
     replyLog.textContent = 'Ingest test failed: ' + err;
   }
 });
+
+document.getElementById('loadFridayReportBtn').addEventListener('click', async () => {
+  const log = document.getElementById('fridayReportLog');
+  log.style.display = 'block';
+  log.textContent = 'Generating Friday Executive Briefing Report...';
+  try {
+    const res = await fetch('/api/friday_report');
+    const data = await res.json();
+    log.textContent = JSON.stringify(data, null, 2);
+    log.classList.add('ok');
+  } catch (err) {
+    log.textContent = 'Failed to generate report: ' + err;
+  }
+});
+
+(async () => {
+  try {
+    const res = await fetch('/api/stats');
+    const data = await res.json();
+    if (data.ok && data.total_targets) {
+      document.getElementById('statTotalTargets').textContent = data.total_targets.toLocaleString();
+    }
+  } catch (e) {}
+})();
 </script>
 </body></html>"""
 

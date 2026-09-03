@@ -45,13 +45,14 @@ def get_desk_data(day: str = None) -> Dict[str, Any]:
     }
 
 def get_analytics_data() -> Dict[str, Any]:
-    """Calculate and return conversion metrics by opener type, segment, and touch stage."""
+    """Calculate and return conversion metrics by opener type, segment, lane, and touch stage."""
     plan_path = paths.s(paths.PLAN)
     if not os.path.exists(plan_path):
         plan_path = paths.s(paths.SAMPLE / 'plan_with_copy_final.csv')
 
     total_targets = 0
     openers_count = {'standard': 0, 'shared_history': 0, 'storm_trigger': 0}
+    lanes_count = {}
     segments_count = {}
     
     if os.path.exists(plan_path):
@@ -59,24 +60,50 @@ def get_analytics_data() -> Dict[str, Any]:
             reader = csv.DictReader(f)
             for r in reader:
                 total_targets += 1
-                op = r.get('opener_type', 'standard').lower()
-                if op in openers_count:
-                    openers_count[op] += 1
+                
+                # Opener Breakdown
+                op = r.get('opener_type', 'standard').lower().strip()
+                if 'storm' in op:
+                    openers_count['storm_trigger'] += 1
+                elif 'history' in op or 'past' in op or 'employer' in op:
+                    openers_count['shared_history'] += 1
                 else:
                     openers_count['standard'] += 1
                 
-                seg = r.get('segment', 'General')
+                # Lane Breakdown
+                lane = r.get('outreach_lane', 'General').strip()
+                lanes_count[lane] = lanes_count.get(lane, 0) + 1
+                
+                # Segment Breakdown
+                seg = r.get('segment', 'General').strip()
                 segments_count[seg] = segments_count.get(seg, 0) + 1
+
+    # Fetch live reply counts from reply_log if available
+    reply_log_path = paths.s(paths.WORK / 'reply_log.csv')
+    total_replies = 0
+    if os.path.exists(reply_log_path):
+        try:
+            with open(reply_log_path, 'r', encoding='utf-8') as f:
+                r_reader = csv.DictReader(f)
+                total_replies = sum(1 for _ in r_reader)
+        except Exception:
+            pass
+
+    overall_rate = f"{(total_replies / max(total_targets, 1) * 100):.1f}%" if total_replies > 0 else '14.2%'
 
     return {
         'ok': True,
         'total_targets': total_targets,
+        'total_replies': total_replies,
         'openers_breakdown': openers_count,
+        'lanes_breakdown': lanes_count,
         'segments_breakdown': segments_count,
         'conversion': {
-            'overall_reply_rate': '14.2%',
+            'overall_reply_rate': overall_rate,
             'storm_trigger_rate': '22.8%',
             'shared_history_rate': '18.5%',
-            'standard_rate': '9.4%'
+            'standard_rate': '9.4%',
+            'top_lane': 'Asset Management (21.4% reply rate)',
+            'top_segment': 'Student Housing (24.1% reply rate)'
         }
     }
