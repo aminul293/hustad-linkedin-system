@@ -217,10 +217,14 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,mon
 .btn{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 15px;border:1px solid var(--navy);background:var(--navy);color:var(--card);cursor:pointer}
 .btn.ghost{background:transparent;color:var(--navy)}
 .btn[hidden]{display:none}
-.foot{margin-top:24px;font-size:12px;color:var(--ink-3);line-height:1.65}
-.empty{background:var(--card);border:1px dashed var(--line-2);padding:24px;text-align:center;color:var(--ink-2);font-size:15px}
-input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast-msg{background:#1E293B;color:#F8FAFC;border:1px solid #334155;border-left:4px solid var(--copper);padding:12px 18px;border-radius:6px;font-size:13px;font-weight:600;box-shadow:0 10px 25px -5px rgba(0,0,0,0.5);opacity:0;transform:translateY(12px);transition:all .3s cubic-bezier(0.16,1,0.3,1)}
+.toast-msg.show{opacity:1;transform:translateY(0)}
+.regen-btn{background:linear-gradient(135deg, #D8A251 0%, #9A6414 100%)!important;color:#FFFFFF!important;font-weight:700!important;box-shadow:0 2px 8px rgba(216,162,81,0.25);transition:all .2s ease;border-radius:3px!important}
+.regen-btn:hover{filter:brightness(1.15);box-shadow:0 4px 12px rgba(216,162,81,0.4)}
+.regen-btn:active{transform:translateY(1px)}
+.copy{transition:all .2s ease;border-radius:3px!important}
+.copy:active{transform:translateY(1px)}
 __STUDIO_CSS__
 .tabrail{max-width:880px;margin:9px auto 0;padding:0 20px}
 body.tab-other .daynav,body.tab-other .prog{display:none}
@@ -311,6 +315,26 @@ var state = {entries:{}, content:{}, v:4};
   var ca=EMBED.content||{}, cb=L.content||{};
   for(k in ca) state.content[k]=ca[k];
   for(k in cb) if(!state.content[k] || (cb[k].ts||0) >= (state.content[k].ts||0)) state.content[k]=cb[k]; })();
+
+function showToast(text, type){
+  var container = document.getElementById('toast-container');
+  if(!container){
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  var toast = document.createElement('div');
+  toast.className = 'toast-msg';
+  if(type === 'good') toast.style.borderLeftColor = 'var(--good)';
+  toast.textContent = text;
+  container.appendChild(toast);
+  setTimeout(function(){ toast.classList.add('show'); }, 10);
+  setTimeout(function(){
+    toast.classList.remove('show');
+    setTimeout(function(){ if(toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+  }, 2500);
+}
 
 function centralToday(){ try { return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date()); }
   catch(e){ return new Date().toISOString().slice(0,10); } }
@@ -426,6 +450,7 @@ function wire(){
       var shown=el.querySelector('.msg:not(.is-hidden)');
       navigator.clipboard.writeText(shown.textContent.trim()).then(function(){
         var b=ev.currentTarget; b.textContent='Copied'; b.classList.add('ok');
+        showToast('Copied to clipboard!', 'good');
         setTimeout(function(){ b.textContent='Copy'; b.classList.remove('ok'); },1400); }); });
     var regenBtn = el.querySelector('.regen-btn');
     if(regenBtn){
@@ -449,8 +474,10 @@ function wire(){
           if(data.ok && data.draft){
             shown.textContent = data.draft;
             b.textContent = '✨ AI Generated!';
+            showToast('✨ AI draft generated & 100% QA audited!', 'good');
           } else {
             b.textContent = '✨ Re-Generate AI';
+            showToast('Local Sales Brain draft active', 'info');
           }
           setTimeout(function(){ b.textContent = '✨ Re-Generate AI'; },2000);
         } catch(e) { b.textContent = '✨ Re-Generate AI'; }
