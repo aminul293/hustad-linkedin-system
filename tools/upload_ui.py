@@ -424,6 +424,9 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    def do_HEAD(self):
+        self.do_GET()
+
     def check_auth(self):
         if IS_LOCAL_DEV:
             return True
@@ -662,13 +665,16 @@ class Handler(BaseHTTPRequestHandler):
             res = ingest_replies.ingest_reply(
                 sender_email=payload.get('email', ''),
                 sender_name=payload.get('name', ''),
-                message_body=payload.get('body', '')
+                message_body=payload.get('body', ''),
+                sender_url=payload.get('url', '')
             )
             body = json.dumps(res).encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
+            self.wfile.write(body)
+            return
         if self.path.startswith('/api/sync/send'):
             sys.path.insert(0, os.path.join(ROOT, 'backend', 'db'))
             import db_sync
