@@ -121,6 +121,18 @@ PAGE = """<!doctype html>
     </div>
   </div>
 
+  <div class="card-box" style="margin-top:24px;">
+    <div class="card-title" style="color:#e3935f">💬 Test Reply Ingestion Engine</div>
+    <div class="card-desc">Simulate an incoming LinkedIn reply to test auto-classification (R1-R22), target matching, sequence halting, and Supabase sync:</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+      <input type="text" id="testSenderName" placeholder="Sender Full Name (e.g., Joel Perez)" style="display:block;width:100%;padding:10px;background:#1c1a16;border:1px solid #3a3428;border-radius:6px;color:#efe8d8;font-size:13px;" />
+      <input type="text" id="testSenderUrl" placeholder="LinkedIn Profile URL (optional)" style="display:block;width:100%;padding:10px;background:#1c1a16;border:1px solid #3a3428;border-radius:6px;color:#efe8d8;font-size:13px;" />
+      <textarea id="testReplyText" placeholder="Inbound Message Text (e.g., Sure, send over the deck!)" style="display:block;width:100%;height:70px;padding:10px;background:#1c1a16;border:1px solid #3a3428;border-radius:6px;color:#efe8d8;font-size:13px;font-family:inherit;"></textarea>
+      <button id="testIngestBtn" class="secondary" style="align-self:flex-start;">Test Ingest & Halt Sequence</button>
+    </div>
+    <pre id="replyLog" style="display:none;margin-top:12px;"></pre>
+  </div>
+
   <pre id="log" style="display:none"></pre>
 
 <script>
@@ -204,6 +216,30 @@ document.getElementById('buildBtn').addEventListener('click', () => {
 document.getElementById('buildExistingBtn').addEventListener('click', () => {
   const fd = new FormData();
   runBuild(fd);
+});
+
+document.getElementById('testIngestBtn').addEventListener('click', async () => {
+  const name = document.getElementById('testSenderName').value;
+  const url = document.getElementById('testSenderUrl').value;
+  const text = document.getElementById('testReplyText').value;
+  const replyLog = document.getElementById('replyLog');
+  replyLog.style.display = 'block';
+  replyLog.textContent = 'Processing reply through Sales Brain Engine...';
+  
+  try {
+    const res = await fetch('/api/ingest_replies', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email: '', body: text, url })
+    });
+    const data = await res.json();
+    replyLog.textContent = JSON.stringify(data, null, 2);
+    if (data.ok) {
+      replyLog.classList.add('ok');
+    }
+  } catch (err) {
+    replyLog.textContent = 'Ingest test failed: ' + err;
+  }
 });
 </script>
 </body></html>"""

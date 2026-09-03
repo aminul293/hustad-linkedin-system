@@ -127,6 +127,7 @@ def record_reply_and_halt(sender_url=None, sender_name=None, message_text='', ca
         category_info = classify_reply_category(message_text)
 
     # 3. Append to reply_log.csv
+    ts_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     log_file = REPLY_LOG
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
     
@@ -136,7 +137,7 @@ def record_reply_and_halt(sender_url=None, sender_name=None, message_text='', ca
         if not file_exists:
             writer.writerow(['timestamp', 'target_id', 'full_name', 'company', 'url', 'category_id', 'category_name', 'message_text', 'status'])
         writer.writerow([
-            datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            ts_now,
             target_id or 'UNKNOWN',
             full_name,
             company or '',
@@ -146,6 +147,39 @@ def record_reply_and_halt(sender_url=None, sender_name=None, message_text='', ca
             message_text,
             'HALTED'
         ])
+
+    # 4. Sync status = 'replied' and reply record to local DB & Supabase REST API
+    db_sync_res = {}
+    try:
+        sys.path.insert(0, os.path.join(paths.ROOT, 'backend', 'db'))
+        import db_sync
+        
+        # Write to reply_log table
+        db_sync_res = db_sync.sync_reply_entry({
+            'timestamp': ts_now,
+            'target_id': target_id or 'UNKNOWN',
+            'full_name': full_name,
+            'company': company or '',
+            'url': matched_url,
+            'category_id': category_info['id'],
+            'category_name': category_info['category'],
+            'message_text': message_text,
+            'status': 'HALTED'
+        })
+        
+        # Halt sequence in send_log table
+        if target_id:
+            db_sync.sync_send_entry({
+                'id': target_id,
+                'touch': 1,
+                'reply': True,
+                'done': False,
+                'name': full_name,
+                'company': company or '',
+                'note': f"Reply: {category_info['id']} {category_info['category']}"
+            })
+    except Exception as e:
+        db_sync_res = {'ok': False, 'error': str(e)}
 
     return {
         'ok': True,
@@ -157,7 +191,8 @@ def record_reply_and_halt(sender_url=None, sender_name=None, message_text='', ca
         'category_name': category_info['category'],
         'suggested_response': category_info['response'],
         'action': category_info['action'],
-        'sequence_halted': True
+        'sequence_halted': True,
+        'db_sync': db_sync_res
     }
 
 

@@ -496,10 +496,11 @@ def qa(msg, require_question=True, min_paras=3, company=''):
         if _c in msg.lower(): issues.append(f'guide crutch: {_c}')
     scan = msg
     if company:                      # a company called Elevate or YES! is not a copy problem
+        scan = scan.replace(str(company), ' ')
         for tok in sorted(set(re.split(r'[^A-Za-z0-9!]+', str(company))), key=len, reverse=True):
             if len(tok) > 2 or '!' in tok: scan = scan.replace(tok, ' ')
     low = scan.lower()
-    if '—' in msg or '–' in msg: issues.append('dash')
+    if '—' in scan or '–' in scan: issues.append('dash')
     n = wc(msg)
     if n > WORD_CEILING: issues.append(f'words {n}')
     if msg.count('?') > 1: issues.append('two questions')

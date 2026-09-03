@@ -184,3 +184,68 @@ def fetch_all_entries():
             'note': r['note']
         }
     return entries
+
+
+def sync_reply_entry(reply_data):
+    """
+    Sync an ingested reply entry to local SQLite and Supabase REST API reply_log table.
+    """
+    if not reply_data:
+        return {'ok': False, 'error': 'Invalid reply payload'}
+
+    timestamp = reply_data.get('timestamp', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    target_id = reply_data.get('target_id', 'UNKNOWN')
+    full_name = reply_data.get('full_name', '')
+    company = reply_data.get('company', '')
+    url = reply_data.get('url', '')
+    category_id = reply_data.get('category_id', 'R14')
+    category_name = reply_data.get('category_name', 'General')
+    message_text = reply_data.get('message_text', '')
+    status = reply_data.get('status', 'HALTED')
+
+    # 1. Local SQLite
+    init_local_sqlite()
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute('''
+        INSERT INTO reply_log (timestamp, target_id, full_name, company, url, category_id, category_name, message_text, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (timestamp, target_id, full_name, company, url, category_id, category_name, message_text, status))
+    conn.commit()
+    conn.close()
+
+    # 2. Supabase REST API
+    remote_synced = False
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            req_url = f"{SUPABASE_URL.rstrip('/')}/rest/v1/reply_log"
+            headers = {
+                'apikey': SUPABASE_KEY,
+                'Authorization': f'Bearer {SUPABASE_KEY}',
+                'Content-Type': 'application/json'
+            }
+            data = json.dumps([{
+                'timestamp': timestamp,
+                'target_id': target_id,
+                'full_name': full_name,
+                'company': company,
+                'url': url,
+                'category_id': category_id,
+                'category_name': category_name,
+                'message_text': message_text,
+                'status': status
+            }]).encode('utf-8')
+            req = urllib.request.Request(req_url, data=data, headers=headers, method='POST')
+            with urllib.request.urlopen(req) as resp:
+                if resp.status in (200, 201):
+                    remote_synced = True
+        except Exception:
+            pass
+
+    return {
+        'ok': True,
+        'target_id': target_id,
+        'category_id': category_id,
+        'sqlite_synced': True,
+        'remote_synced': remote_synced
+    }
