@@ -360,7 +360,7 @@ function rowHtml(q,i){
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
    +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>Replied</span></label>'
    +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>Sent</span></label></div></header>'
-   +'<div class="meta">'+chips+(q.url?'<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
+   +'<div class="meta">'+chips+(q.url && !q.url.includes('example.invalid') ? '<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
    +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
    +'<div style="display:flex;gap:6px;"><button class="copy regen-btn" type="button" style="background:var(--copper);color:#111;">✨ Re-Generate AI</button><button class="copy" type="button">Copy</button></div></div>'+panes.join('')+'</div>'
