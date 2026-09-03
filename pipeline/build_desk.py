@@ -417,7 +417,7 @@ function defaultDay(){ var t=centralToday(), i;
   for(i=0;i<DAYS.length;i++) if(DAYS[i]>=t) return DAYS[i];
   return DAYS[DAYS.length-1]; }
 var day=null; try{ day=sessionStorage.getItem('hustad-day'); }catch(e){}
-if(!day || DAYS.indexOf(day)<0) day=defaultDay();
+if(!day || DAYS.indexOf(day)<0 || day<centralToday()) day=defaultDay();
 
 function key(q){ return q.id+'|'+q.touch; }
 function ent(q){ return state.entries[key(q)]||{}; }
