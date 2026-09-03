@@ -363,7 +363,7 @@ function rowHtml(q,i){
    +'<div class="meta">'+chips+(q.url?'<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
    +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
-   +'<button class="copy" type="button">Copy</button></div>'+panes.join('')+'</div>'
+   +'<div style="display:flex;gap:6px;"><button class="copy regen-btn" type="button" style="background:var(--copper);color:#111;">✨ Re-Generate AI</button><button class="copy" type="button">Copy</button></div></div>'+panes.join('')+'</div>'
    +'<div class="note-row"><label><span class="lbl">Past employer on their profile</span>'
    +'<input type="text" class="pemp" value="'+esc(e.pe||'')+'" placeholder="e.g. Asset Living"></label>'
    +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></article>';
@@ -427,6 +427,35 @@ function wire(){
       navigator.clipboard.writeText(shown.textContent.trim()).then(function(){
         var b=ev.currentTarget; b.textContent='Copied'; b.classList.add('ok');
         setTimeout(function(){ b.textContent='Copy'; b.classList.remove('ok'); },1400); }); });
+    var regenBtn = el.querySelector('.regen-btn');
+    if(regenBtn){
+      regenBtn.addEventListener('click', async function(){
+        var b=regenBtn;
+        var shown=el.querySelector('.msg:not(.is-hidden)');
+        b.textContent='Generating...';
+        try {
+          var res = await fetch('/api/llm_generate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              first_name: q.name.split(' ')[0],
+              title: q.position,
+              company: q.company,
+              segment: q.segment,
+              lane: q.lane
+            })
+          });
+          var data = await res.json();
+          if(data.ok && data.draft){
+            shown.textContent = data.draft;
+            b.textContent = '✨ AI Generated!';
+          } else {
+            b.textContent = '✨ Re-Generate AI';
+          }
+          setTimeout(function(){ b.textContent = '✨ Re-Generate AI'; },2000);
+        } catch(e) { b.textContent = '✨ Re-Generate AI'; }
+      });
+    }
   });
 }
 var HDR=['Date','TargetID','Touch','Name','Company','Status','SentAtLocal','Opener','PastEmployer','Notes'];
