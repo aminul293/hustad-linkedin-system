@@ -225,3 +225,40 @@ def get_ingested_replies():
         for r in reader:
             replies.append(r)
     return replies
+
+
+AZURE_CLIENT_ID = os.environ.get('AZURE_CLIENT_ID', 'd0d88bed-899f-4f14-a9fc-09050031868b')
+AZURE_TENANT_ID = os.environ.get('AZURE_TENANT_ID', '1b5b8d0d-ab67-4d01-a363-f1f35b80f0eb')
+AZURE_CLIENT_SECRET = os.environ.get('AZURE_CLIENT_SECRET', 'eru8Q~DAqnJsljrfAPWfp-17ZTHa6yuP6P7TUbf-')
+
+
+def get_graph_access_token():
+    """
+    Fetch Microsoft Graph OAuth2 Client Credentials Access Token.
+    """
+    if not (AZURE_CLIENT_ID and AZURE_CLIENT_SECRET):
+        return None, 'Missing Azure credentials'
+    
+    import urllib.request
+    import urllib.parse
+    import ssl
+
+    url = f"https://login.microsoftonline.com/{AZURE_TENANT_ID or 'organizations'}/oauth2/v2.0/token"
+    payload = urllib.parse.urlencode({
+        'client_id': AZURE_CLIENT_ID,
+        'scope': 'https://graph.microsoft.com/.default',
+        'client_secret': AZURE_CLIENT_SECRET,
+        'grant_type': 'client_credentials'
+    }).encode('utf-8')
+    
+    try:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        req = urllib.request.Request(url, data=payload, method='POST')
+        req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+        with urllib.request.urlopen(req, context=ctx) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            return data.get('access_token'), None
+    except Exception as e:
+        return None, str(e)

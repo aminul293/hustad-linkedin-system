@@ -11,3 +11,9 @@ services:
         value: https://aqbmuagyokdnkolwhwws.supabase.co
       - key: SUPABASE_ANON_KEY
         value: sb_publishable_NS-Z-DRvv1Sqy6k0h84fKQ_HNw-Er4Q
+      - key: AZURE_CLIENT_ID
+        value: d0d88bed-899f-4f14-a9fc-09050031868b
+      - key: AZURE_TENANT_ID
+        value: 1b5b8d0d-ab67-4d01-a363-f1f35b80f0eb
+      - key: AZURE_CLIENT_SECRET
+        value: eru8Q~DAqnJsljrfAPWfp-17ZTHa6yuP6P7TUbf-
