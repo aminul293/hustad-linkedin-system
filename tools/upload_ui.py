@@ -142,26 +142,26 @@ PAGE = """<!doctype html>
         </div>
         <div style="background:#1c1a16;padding:12px;border-radius:8px;border:1px solid #3a3428;text-align:center;">
           <div style="font-size:11px;color:#aab3c0;text-transform:uppercase;">Overall Reply Rate</div>
-          <div id="statReplyRate" style="font-size:22px;font-weight:700;color:#8fbf9f;margin-top:4px;">14.2%</div>
+          <div id="statReplyRate" style="font-size:22px;font-weight:700;color:#8fbf9f;margin-top:4px;">0.0%</div>
         </div>
         <div style="background:#1c1a16;padding:12px;border-radius:8px;border:1px solid #3a3428;text-align:center;">
-          <div style="font-size:11px;color:#aab3c0;text-transform:uppercase;">Storm Lift Delta</div>
-          <div style="font-size:22px;font-weight:700;color:#e3935f;margin-top:4px;">+13.4%</div>
+          <div style="font-size:11px;color:#aab3c0;text-transform:uppercase;">Total Verified Replies</div>
+          <div id="statTotalReplies" style="font-size:22px;font-weight:700;color:#e3935f;margin-top:4px;">0</div>
         </div>
       </div>
-      <div style="font-size:13px;color:#efe8d8;margin-bottom:8px;"><strong>3-Opener Experiment Performance:</strong></div>
+      <div style="font-size:13px;color:#efe8d8;margin-bottom:8px;"><strong>3-Opener Target Breakdown:</strong></div>
       <div style="display:flex;flex-direction:column;gap:8px;">
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Severe Weather Storm Triggers</span><span style="color:#8fbf9f;font-weight:700;">22.8%</span></div>
-          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div style="background:#8fbf9f;width:76%;height:100%;"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Severe Weather Storm Triggers</span><span id="statStormCount" style="color:#8fbf9f;font-weight:700;">0 targets</span></div>
+          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div id="statStormBar" style="background:#8fbf9f;width:0%;height:100%;"></div></div>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Shared Past Employer History</span><span style="color:#e3935f;font-weight:700;">18.5%</span></div>
-          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div style="background:#e3935f;width:61%;height:100%;"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Shared Past Employer History</span><span id="statSharedCount" style="color:#e3935f;font-weight:700;">0 targets</span></div>
+          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div id="statSharedBar" style="background:#e3935f;width:0%;height:100%;"></div></div>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Standard Openers</span><span style="color:#aab3c0;font-weight:700;">9.4%</span></div>
-          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div style="background:#aab3c0;width:31%;height:100%;"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#c7bda6;"><span>Standard Openers</span><span id="statStandardCount" style="color:#aab3c0;font-weight:700;">0 targets</span></div>
+          <div style="background:#1c1a16;height:8px;border-radius:4px;overflow:hidden;margin-top:3px;"><div id="statStandardBar" style="background:#aab3c0;width:0%;height:100%;"></div></div>
         </div>
       </div>
       <button id="loadFridayReportBtn" class="secondary" style="margin-top:14px;">Generate Friday Executive Report</button>
@@ -296,8 +296,30 @@ document.getElementById('loadFridayReportBtn').addEventListener('click', async (
   try {
     const res = await fetch('/api/stats');
     const data = await res.json();
-    if (data.ok && data.total_targets) {
-      document.getElementById('statTotalTargets').textContent = data.total_targets.toLocaleString();
+    if (data.ok) {
+      if (data.total_targets) {
+        document.getElementById('statTotalTargets').textContent = data.total_targets.toLocaleString();
+      }
+      if (data.total_replies !== undefined) {
+        document.getElementById('statTotalReplies').textContent = data.total_replies.toLocaleString();
+        const rate = (data.total_targets ? (data.total_replies / data.total_targets * 100) : 0).toFixed(1);
+        document.getElementById('statReplyRate').textContent = rate + '%';
+      }
+      if (data.openers_breakdown) {
+        const total = data.total_targets || 1;
+        const storm = data.openers_breakdown.storm_trigger || 0;
+        const shared = data.openers_breakdown.shared_history || 0;
+        const std = data.openers_breakdown.standard || 0;
+        
+        document.getElementById('statStormCount').textContent = storm + ' targets (' + (storm/total*100).toFixed(0) + '%)';
+        document.getElementById('statStormBar').style.width = (storm/total*100) + '%';
+        
+        document.getElementById('statSharedCount').textContent = shared + ' targets (' + (shared/total*100).toFixed(0) + '%)';
+        document.getElementById('statSharedBar').style.width = (shared/total*100) + '%';
+        
+        document.getElementById('statStandardCount').textContent = std + ' targets (' + (std/total*100).toFixed(0) + '%)';
+        document.getElementById('statStandardBar').style.width = (std/total*100) + '%';
+      }
     }
   } catch (e) {}
 })();

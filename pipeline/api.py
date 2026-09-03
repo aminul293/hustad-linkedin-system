@@ -89,7 +89,7 @@ def get_analytics_data() -> Dict[str, Any]:
         except Exception:
             pass
 
-    overall_rate = f"{(total_replies / max(total_targets, 1) * 100):.1f}%" if total_replies > 0 else '14.2%'
+    overall_rate = f"{(total_replies / max(total_targets, 1) * 100):.1f}%" if total_targets > 0 else '0.0%'
 
     return {
         'ok': True,
