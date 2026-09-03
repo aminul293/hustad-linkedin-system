@@ -255,7 +255,10 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,mon
 .toast-msg{background:#1E293B;color:#F8FAFC;border:1px solid #334155;border-left:4px solid var(--copper);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 12px 30px -5px rgba(0,0,0,0.6);opacity:0;transform:translateY(12px);transition:all .3s cubic-bezier(0.16,1,0.3,1)}
 .toast-msg.show{opacity:1;transform:translateY(0)}
 .foot{margin-top:28px;font-size:12px;color:var(--ink-3);line-height:1.65;text-align:center}
-.empty{background:var(--card-glass);border:1px dashed var(--line-2);border-radius:10px;padding:32px;text-align:center;color:var(--ink-2);font-size:15px}
+.history-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px;background:var(--card-glass);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.history-table th{background:rgba(0,0,0,0.3);color:var(--copper);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.history-table td{padding:11px 14px;border-bottom:1px solid var(--line-2);color:var(--ink)}
+.history-table tr:hover td{background:rgba(255,255,255,0.03)}
 input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 @media (max-width: 767px) {
   .wrap{padding:0 12px 60px}
@@ -341,11 +344,11 @@ body.tab-other .daynav,body.tab-other .prog{display:none}
     </main>
   </div>
   <section class="export">
-    <h3>Send log</h3>
-    <p>Every tick lands here automatically and stays in this browser, including across the nightly rebuild.
-    Copy for Excel pastes into real columns. Download hands you send_log.csv for the LinkedIn folder;
-    do that once a week so the Friday review has something to read.</p>
-    <textarea id="out" readonly placeholder="Tick a row and the log appears here."></textarea>
+    <h3>Activity & Send History</h3>
+    <p>Every tick lands here automatically and stays in this browser, including across nightly rebuilds.
+    Copy for Excel pastes into real columns, or download send_log.csv for weekly reviews.</p>
+    <div id="history-table-wrapper" style="overflow-x:auto;margin-bottom:16px;"></div>
+    <textarea id="out" readonly placeholder="Tick a row and the log appears here." style="display:none;"></textarea>
     <div class="btns">
       <button class="btn" id="copytsv" type="button">Copy for Excel</button>
       <button class="btn ghost" id="copycsv" type="button">Copy CSV text</button>
@@ -635,7 +638,35 @@ function toCsv(r){ function q(v){ v=(v==null?'':String(v)); return /[",\n]/.test
   return [HDR.join(',')].concat(r.map(function(x){return x.map(q).join(',');})).join('\n'); }
 function toTsv(r){ return [HDR.join('\t')].concat(r.map(function(x){
   return x.map(function(v){return String(v==null?'':v).replace(/[\t\n]/g,' ');}).join('\t');})).join('\n'); }
-function buildLog(){ var r=logRows(); document.getElementById('out').value=r.length?toCsv(r):''; }
+function buildLog(){
+  var r = logRows();
+  var outEl = document.getElementById('out');
+  if(outEl) outEl.value = r.length ? toCsv(r) : '';
+  
+  var histContainer = document.getElementById('history-table-wrapper');
+  if(histContainer){
+    if(!r.length){
+      histContainer.innerHTML = '<p style="font-size:13px;color:var(--ink-2);margin:12px 0;">No outreach activity logged yet on this device. Tick a row as "Sent" to view live history here.</p>';
+      return;
+    }
+    var html = '<table class="history-table"><thead><tr>'
+      +'<th>Date & Time</th><th>Target Prospect</th><th>Company</th><th>Touch</th><th>Opener Type</th><th>Status</th>'
+      +'</tr></thead><tbody>';
+    r.slice().reverse().forEach(function(row){
+      var d = row[0], id = row[1], touch = row[2], name = row[3], comp = row[4], status = row[5], time = row[6], opener = row[7];
+      html += '<tr>'
+        +'<td><b>'+esc(d)+'</b> '+(time?'<span style="color:var(--ink-2);font-size:11px;">('+esc(time)+')</span>':'')+'</td>'
+        +'<td><b>'+esc(name)+'</b> <span style="font-size:11px;color:var(--ink-2);">['+esc(id)+']</span></td>'
+        +'<td><span style="color:var(--copper);font-weight:600;">'+esc(comp)+'</span></td>'
+        +'<td><span class="chip chip-touch" style="padding:2px 6px;font-size:10px;">Touch '+esc(touch)+'</span></td>'
+        +'<td><span style="font-size:12px;color:var(--ink-2);">'+esc(opener)+'</span></td>'
+        +'<td>'+(status==='Sent'?'<span class="chip chip-ok" style="padding:2px 8px;font-size:10px;">✓ Sent</span>':'<span class="chip chip-halt" style="padding:2px 8px;font-size:10px;">'+esc(status)+'</span>')+'</td>'
+        +'</tr>';
+    });
+    html += '</tbody></table>';
+    histContainer.innerHTML = html;
+  }
+}
 function bindCopy(id,fn,label){ document.getElementById(id).addEventListener('click',function(ev){
   var r=logRows(); if(!r.length) return;
   navigator.clipboard.writeText(fn(r)).then(function(){ ev.currentTarget.textContent='Copied';
