@@ -578,11 +578,13 @@ function wire(){
         var text = shown ? shown.textContent.trim() : '';
         navigator.clipboard.writeText(text).then(function(){
           var b = ev.currentTarget;
-          b.textContent = 'Copied & Opening LinkedIn \u2192';
+          b.textContent = 'Opening LinkedIn...';
           b.classList.add('ok');
-          showToast('Copied to clipboard! Opening LinkedIn...', 'good');
+          showToast('Opening LinkedIn with pre-filled message...', 'good');
           if(q.url && !q.url.includes('example.invalid')){
-            window.open(q.url, '_blank');
+            var sep = q.url.indexOf('?') >= 0 ? '&' : '?';
+            var openUrl = q.url + sep + 'messageText=' + encodeURIComponent(text) + '&text=' + encodeURIComponent(text);
+            window.open(openUrl, '_blank');
           }
           setTimeout(function(){
             b.textContent = '\uD83D\uDCCB Copy & Open LinkedIn \u2192';
