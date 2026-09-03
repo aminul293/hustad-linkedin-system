@@ -257,6 +257,30 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,mon
 .foot{margin-top:28px;font-size:12px;color:var(--ink-3);line-height:1.65;text-align:center}
 .empty{background:var(--card-glass);border:1px dashed var(--line-2);border-radius:10px;padding:32px;text-align:center;color:var(--ink-2);font-size:15px}
 input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width: 767px) {
+  .wrap{padding:0 12px 60px}
+  .top-in{padding:0 12px;gap:10px}
+  h1{font-size:18px}
+  .daynav select{max-width:140px;font-size:12px;padding:6px 8px}
+  .daynav button{padding:6px 9px;font-size:12px}
+  .uploadbtn{padding:7px 10px;font-size:10px}
+  .tiles{grid-template-columns:repeat(2,1fr);gap:8px}
+  .tile{padding:10px 12px}
+  .tile b{font-size:20px}
+  .console-sidebar{max-height:220px}
+  .roster-list{max-height:160px}
+  .console-nav-bar{padding:6px 10px}
+  .nav-btn{padding:8px 12px;font-size:12px;min-height:40px}
+  .row{padding:14px}
+  .row-head{flex-direction:column;gap:8px}
+  .marks{width:100%;justify-content:space-between;margin-top:6px}
+  .done input,.replied input{width:22px;height:22px}
+  .draft-bar{flex-direction:column;align-items:stretch;gap:10px}
+  .draft-bar > div{width:100%;justify-content:space-between}
+  .copy,.regen-btn{flex:1;text-align:center;padding:10px 14px!important;min-height:44px}
+  .tab{flex:1;text-align:center;padding:8px 10px;min-height:38px}
+  .profile{margin-left:0;display:inline-block;margin-top:6px;width:100%;text-align:center;padding:8px 12px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 __STUDIO_CSS__
 .tabrail{max-width:1400px;margin:12px auto 0;padding:0 24px;display:flex;gap:4px;border-bottom:1px solid var(--line)}
