@@ -136,10 +136,10 @@ TEMPLATE = r'''<!doctype html>
   --copper-soft:#FEF3C7;--good:#059669;--good-soft:#D1FAE5;--draft-bg:#F8FAFC;--focus:#0E3F4E;}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.43;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse 80% 80% at 50% -20%, rgba(66, 128, 109, 0.15), rgba(0, 0, 0, 0))}
-.wrap{max-width:920px;margin:0 auto;padding:0 20px 90px}
+.wrap{max-width:1400px;margin:0 auto;padding:0 24px 90px}
 .lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
 header.top{position:sticky;top:0;z-index:30;background:rgba(11, 15, 23, 0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:14px 0 10px;margin-bottom:24px}
-.top-in{max-width:920px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+.top-in{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
 .brand{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin:0;display:flex;align-items:center;gap:6px}
 .brand::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--copper);box-shadow:0 0 8px var(--copper)}
 h1{font-size:22px;font-weight:800;margin:2px 0 0;letter-spacing:-.02em;background:linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -259,7 +259,7 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,mon
 input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 __STUDIO_CSS__
-.tabrail{max-width:920px;margin:12px auto 0;padding:0 20px;display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tabrail{max-width:1400px;margin:12px auto 0;padding:0 24px;display:flex;gap:4px;border-bottom:1px solid var(--line)}
 .tabrail button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--ink-2);font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:all .2s ease}
 .tabrail button:hover{color:var(--ink)}
 .tabrail button.is-on{color:var(--copper);border-bottom-color:var(--copper)}
