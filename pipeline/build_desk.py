@@ -462,7 +462,7 @@ function rowHtml(q,i){
    +'<div class="meta">'+chips+(q.url && !q.url.includes('example.invalid') ? '<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
    +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
-   +'<div style="display:flex;gap:6px;"><button class="copy regen-btn" type="button" style="background:var(--copper);color:#111;">✨ Re-Generate AI</button><button class="copy" type="button">Copy</button></div></div>'+panes.join('')+'</div>'
+   +'<div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="copy regen-btn" type="button" style="background:var(--copper);color:#111;">✨ Re-Generate AI</button><button class="copy copy-open-btn" type="button">📋 Copy & Open LinkedIn &rarr;</button></div></div>'+panes.join('')+'</div>'
    +'<div class="note-row"><label><span class="lbl">Past employer on their profile</span>'
    +'<input type="text" class="pemp" value="'+esc(e.pe||'')+'" placeholder="e.g. Asset Living"></label>'
    +'<label><span class="lbl">Note</span><input type="text" class="note" value="'+esc(e.note||'')+'" placeholder="type storm here if you sent the storm draft"></label></div></article>';
@@ -571,12 +571,26 @@ function wire(){
           if(x.classList.contains('tab')) x.classList.toggle('is-on',x.getAttribute('data-v')===v);
           else x.classList.toggle('is-hidden',x.getAttribute('data-v')!==v); });
         setEnt(q,{variant:v}); }); });
-    el.querySelector('.copy').addEventListener('click',function(ev){
-      var shown=el.querySelector('.msg:not(.is-hidden)');
-      navigator.clipboard.writeText(shown.textContent.trim()).then(function(){
-        var b=ev.currentTarget; b.textContent='Copied'; b.classList.add('ok');
-        showToast('Copied to clipboard!', 'good');
-        setTimeout(function(){ b.textContent='Copy'; b.classList.remove('ok'); },1400); }); });
+    var copyBtn = el.querySelector('.copy-open-btn');
+    if(copyBtn){
+      copyBtn.addEventListener('click', function(ev){
+        var shown = el.querySelector('.msg:not(.is-hidden)');
+        var text = shown ? shown.textContent.trim() : '';
+        navigator.clipboard.writeText(text).then(function(){
+          var b = ev.currentTarget;
+          b.textContent = 'Copied & Opening LinkedIn \u2192';
+          b.classList.add('ok');
+          showToast('Copied to clipboard! Opening LinkedIn...', 'good');
+          if(q.url && !q.url.includes('example.invalid')){
+            window.open(q.url, '_blank');
+          }
+          setTimeout(function(){
+            b.textContent = '\uD83D\uDCCB Copy & Open LinkedIn \u2192';
+            b.classList.remove('ok');
+          }, 2000);
+        });
+      });
+    }
     var regenBtn = el.querySelector('.regen-btn');
     if(regenBtn){
       regenBtn.addEventListener('click', async function(){
