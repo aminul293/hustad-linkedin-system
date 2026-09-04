@@ -212,13 +212,14 @@ async function runBuild(formData) {
   const log = document.getElementById('log');
   btn.disabled = true; exBtn.disabled = true;
   btn.textContent = 'Building Desk...';
-  log.style.display = 'block'; log.textContent = 'Processing files & running 12-stage AI pipeline...';
+  log.style.display = 'block';
+  log.classList.remove('bad', 'ok');
+  log.textContent = 'Uploading files & starting 12-stage AI pipeline...';
 
   try {
     const res = await fetch('/build', { method: 'POST', body: formData });
     if (!res.ok) {
       const errText = await res.text();
-      log.style.display = 'block';
       log.classList.add('bad');
       log.textContent = 'Server Error (' + res.status + '): ' + errText;
       btn.textContent = 'Try again';
@@ -227,20 +228,40 @@ async function runBuild(formData) {
     }
     const data = await res.json();
     log.textContent = data.log;
-    if (data.ok) {
-      log.classList.add('ok');
-      document.getElementById('serveBtn').style.display = 'inline-block';
-      btn.textContent = 'Build Completed! Opening Desk...';
-      setTimeout(() => { window.location.href = '/desk'; }, 1200);
-    } else {
+
+    if (!data.ok) {
       log.classList.add('bad');
       btn.textContent = 'Build Failed -- see log below';
+      btn.disabled = false; exBtn.disabled = false;
+      return;
     }
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const sRes = await fetch('/api/build_status');
+        const sData = await sRes.json();
+        log.textContent = sData.log;
+        if (!sData.running) {
+          clearInterval(pollInterval);
+          btn.disabled = false; exBtn.disabled = false;
+          if (sData.ok) {
+            log.classList.add('ok');
+            document.getElementById('serveBtn').style.display = 'inline-block';
+            btn.textContent = 'Build Completed! Opening Desk...';
+            setTimeout(() => { window.location.href = '/desk'; }, 1000);
+          } else {
+            log.classList.add('bad');
+            btn.textContent = 'Build Failed -- see log below';
+          }
+        }
+      } catch (pollErr) {}
+    }, 2000);
+
   } catch (err) {
     log.textContent = 'Request failed: ' + err;
     btn.textContent = 'Try again';
+    btn.disabled = false; exBtn.disabled = false;
   }
-  btn.disabled = false; exBtn.disabled = false;
 }
 
 document.getElementById('buildBtn').addEventListener('click', () => {
@@ -374,6 +395,57 @@ def ensure_site_built():
         subprocess.run(['make', 'site'], cwd=ROOT)
     else:
         print("Using existing compiled site/index.html...")
+
+
+BUILD_LOCK = threading.Lock()
+BUILD_STATE = {
+    'running': False,
+    'ok': True,
+    'log': 'System ready.',
+    'updated_at': 0
+}
+
+def execute_async_build(steps, initial_logs):
+    global BUILD_STATE
+    with BUILD_LOCK:
+        BUILD_STATE['running'] = True
+        BUILD_STATE['ok'] = True
+        BUILD_STATE['log'] = initial_logs
+        BUILD_STATE['updated_at'] = time.time()
+
+    env = os.environ.copy()
+    ok = True
+    current_log = initial_logs
+
+    for step in steps:
+        current_log += f"\n\nExecuting step: {' '.join(step)}...\n"
+        with BUILD_LOCK:
+            BUILD_STATE['log'] = current_log
+            BUILD_STATE['updated_at'] = time.time()
+
+        success, out = run_step(step, env)
+        current_log += out.strip()
+        with BUILD_LOCK:
+            BUILD_STATE['log'] = current_log
+            BUILD_STATE['updated_at'] = time.time()
+
+        if not success:
+            ok = False
+            break
+
+    if ok:
+        work_final = os.path.join(paths.s(paths.WORK), 'plan_with_copy_final.csv')
+        pipe_targets = os.path.join(paths.s(paths.PIPELINE), 'plan_targets.csv')
+        if os.path.exists(work_final):
+            import shutil
+            shutil.copy(work_final, pipe_targets)
+        current_log += '\n\nBuilt site/index.html cleanly. Click "Open Live Desk" to view your desk!'
+
+    with BUILD_LOCK:
+        BUILD_STATE['running'] = False
+        BUILD_STATE['ok'] = ok
+        BUILD_STATE['log'] = current_log
+        BUILD_STATE['updated_at'] = time.time()
 
 
 
@@ -582,6 +654,18 @@ class Handler(BaseHTTPRequestHandler):
             import api
             import json
             data = api.get_analytics_data()
+            body = json.dumps(data).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
+        if self.path.startswith('/api/build_status'):
+            import json
+            with BUILD_LOCK:
+                data = dict(BUILD_STATE)
             body = json.dumps(data).encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
@@ -808,9 +892,6 @@ class Handler(BaseHTTPRequestHandler):
         required_dests = {'Connections.csv', 'opportunities_2026.csv'}
         missing = [dest for dest in required_dests if not os.path.exists(os.path.join(paths.s(paths.RAW), dest))]
         
-        env = os.environ.copy()
-        ok = True
-        
         if not uploads:
             log_lines.append('Rebuilding live desk using active campaign targets...')
             steps = [['make', 'content'], ['make', 'site']]
@@ -822,26 +903,18 @@ class Handler(BaseHTTPRequestHandler):
         else:
             steps = [['make', 'plan'], ['make', 'content'], ['make', 'site']]
 
-        for step in steps:
-            log_lines.append('')
-            success, out = run_step(step, env)
-            log_lines.append(out.strip())
-            if not success:
-                ok = False
-                break
+        if BUILD_STATE.get('running'):
+            self._reply(True, BUILD_STATE.get('log', 'Build already in progress...'), building=True)
+            return
 
-        if ok:
-            work_final = os.path.join(paths.s(paths.WORK), 'plan_with_copy_final.csv')
-            pipe_targets = os.path.join(paths.s(paths.PIPELINE), 'plan_targets.csv')
-            if os.path.exists(work_final):
-                import shutil
-                shutil.copy(work_final, pipe_targets)
-            log_lines.append('\nBuilt site/index.html cleanly. Click "Open the built page" to view your desk!')
-        self._reply(ok, '\n'.join(log_lines))
+        initial_log_text = '\n'.join(log_lines)
+        t = threading.Thread(target=execute_async_build, args=(steps, initial_log_text), daemon=True)
+        t.start()
+        self._reply(True, initial_log_text + '\n\nPipeline build started in background...', building=True)
 
-    def _reply(self, ok, log):
+    def _reply(self, ok, log, building=False):
         import json
-        body = json.dumps({'ok': ok, 'log': log}).encode('utf-8')
+        body = json.dumps({'ok': ok, 'building': building, 'log': log}).encode('utf-8')
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Content-Length', str(len(body)))
