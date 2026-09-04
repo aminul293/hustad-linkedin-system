@@ -360,20 +360,20 @@ def run_step(cmd, env):
 
 def ensure_site_built():
     site = os.path.join(ROOT, 'site', 'index.html')
-    if os.path.exists(site):
-        print("Using existing compiled site/index.html...")
-        return
-    print("Building desk site on startup...")
     plan_path = os.path.join(ROOT, 'data', 'work', 'plan_with_copy_final.csv')
-    raw_conn = os.path.join(ROOT, 'data', 'raw', 'Connections.csv')
-    raw_conn_alt = os.path.join(ROOT, 'data', 'raw', 'a6350e6d-Connections.csv')
-    if os.path.exists(plan_path):
+    tracked_plan = os.path.join(ROOT, 'pipeline', 'plan_targets.csv')
+
+    if not os.path.exists(plan_path) and os.path.exists(tracked_plan):
+        import shutil
+        os.makedirs(os.path.dirname(plan_path), exist_ok=True)
+        shutil.copy(tracked_plan, plan_path)
+
+    if not os.path.exists(site):
+        print("Building desk site on startup...")
         subprocess.run(['make', 'content'], cwd=ROOT)
         subprocess.run(['make', 'site'], cwd=ROOT)
-    elif os.path.exists(raw_conn) or os.path.exists(raw_conn_alt):
-        subprocess.run(['make', 'plan'], cwd=ROOT)
-        subprocess.run(['make', 'content'], cwd=ROOT)
-        subprocess.run(['make', 'site'], cwd=ROOT)
+    else:
+        print("Using existing compiled site/index.html...")
 
 
 
@@ -811,12 +811,9 @@ class Handler(BaseHTTPRequestHandler):
         env = os.environ.copy()
         ok = True
         
-        if plan_exists and not uploads:
-            log_lines.append('Rebuilding live desk using existing campaign plan files...')
+        if not uploads:
+            log_lines.append('Rebuilding live desk using active campaign targets...')
             steps = [['make', 'content'], ['make', 'site']]
-        elif missing and not uploads:
-            log_lines.append('Building desk using sample work files...')
-            steps = [['make', 'sample'], ['make', 'content'], ['make', 'site']]
         elif missing:
             log_lines.append('')
             log_lines.append('Stopped: missing required files: ' + ', '.join(missing))
@@ -834,6 +831,11 @@ class Handler(BaseHTTPRequestHandler):
                 break
 
         if ok:
+            work_final = os.path.join(paths.s(paths.WORK), 'plan_with_copy_final.csv')
+            pipe_targets = os.path.join(paths.s(paths.PIPELINE), 'plan_targets.csv')
+            if os.path.exists(work_final):
+                import shutil
+                shutil.copy(work_final, pipe_targets)
             log_lines.append('\nBuilt site/index.html cleanly. Click "Open the built page" to view your desk!')
         self._reply(ok, '\n'.join(log_lines))
 

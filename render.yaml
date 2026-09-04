@@ -4,7 +4,7 @@ services:
     name: hustad-linkedin-system
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt && make sample && make site
+    buildCommand: pip install -r requirements.txt && make site
     startCommand: python3 tools/upload_ui.py
     envVars:
       - key: SUPABASE_URL
