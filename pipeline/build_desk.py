@@ -432,6 +432,36 @@ function setEnt(q,patch){ var e=state.entries[key(q)]||{},k;
 function esc(s){ var d=document.createElement('div'); d.textContent=(s==null?'':String(s)); return d.innerHTML; }
 function dayQueue(){ return QUEUE.filter(function(q){ return q.date===day; }); }
 
+function getLinkedInUrl(q){
+  var u = q && q.url ? String(q.url).trim() : '';
+  if(u && u !== 'nan' && u !== 'None' && !u.includes('example.invalid')){
+    if(!/^https?:\/\//i.test(u)) u = 'https://' + u;
+    return u;
+  }
+  if(q && q.name && q.name.trim()){
+    return 'https://www.linkedin.com/search/results/all/?keywords=' + encodeURIComponent(q.name.trim());
+  }
+  return 'https://www.linkedin.com/feed/';
+}
+function copyTextToClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).catch(function(){ fallbackCopyText(text); });
+  } else {
+    fallbackCopyText(text);
+  }
+}
+function fallbackCopyText(text){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  ta.style.top = '-9999px';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta);
+}
+
 var VLABEL={clean:['Verified','ok'],revised:['Copy corrected','warn'],flagged:['Read this first','warn'],'no-trigger':['Verified','ok']};
 
 function rowHtml(q,i){
@@ -441,6 +471,8 @@ function rowHtml(q,i){
     +(v?'<span class="chip chip-'+v[1]+'">'+esc(v[0])+'</span>':'')
     +(q.storm?'<span class="chip chip-storm">⚡ Storm trigger</span>':'')
     +(halted?'<span class="chip chip-halt">🛑 Replied, halted</span>':'');
+  var targetUrl = getLinkedInUrl(q);
+  var profileLink = '<a class="profile" href="'+esc(targetUrl)+'" target="_blank" rel="noopener">Open profile &rarr;</a>';
   var tabs=[], panes=[];
   tabs.push('<button class="tab is-on" type="button" data-v="std">'+(q.storm?'Planned':'Message')+'</button>');
   panes.push('<p class="msg" data-v="std">'+esc(q.msg)+'</p>');
@@ -462,7 +494,7 @@ function rowHtml(q,i){
    +'<div class="who"><h2>'+esc(q.name)+'</h2><p class="role">'+esc(q.position)+'</p><p class="org">'+esc(q.company)+'</p></div>'
    +'<div class="marks"><label class="replied"><input type="checkbox" class="rchk"'+(e.reply?' checked':'')+'><span>Replied</span></label>'
    +'<label class="done"><input type="checkbox" class="chk"'+(e.done?' checked':'')+'><span>Sent</span></label></div></header>'
-   +'<div class="meta">'+chips+(q.url && !q.url.includes('example.invalid') ? '<a class="profile" href="'+esc(q.url)+'" target="_blank" rel="noopener">Open profile &rarr;</a>':'')+'</div>'
+   +'<div class="meta">'+chips+profileLink+'</div>'
    +'<p class="why"><span class="lbl">Why now</span>'+esc(q.why)+'</p>'+chk+ev
    +'<div class="draft"><div class="draft-bar"><div class="tabs" role="tablist">'+tabs.join('')+'</div>'
    +'<div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="copy regen-btn" type="button" style="background:var(--copper);color:#111;">✨ Re-Generate AI</button><button class="copy copy-open-btn" type="button">📋 Copy & Open LinkedIn &rarr;</button></div></div>'+panes.join('')+'</div>'
@@ -579,14 +611,13 @@ function wire(){
       copyBtn.addEventListener('click', function(ev){
         var shown = el.querySelector('.msg:not(.is-hidden)');
         var text = shown ? shown.textContent.trim() : '';
-        try { navigator.clipboard.writeText(text); } catch(err){}
+        copyTextToClipboard(text);
+        var targetUrl = getLinkedInUrl(q);
+        window.open(targetUrl, '_blank');
         var b = ev.currentTarget;
         b.textContent = 'Copied! Opening LinkedIn \u2192';
         b.classList.add('ok');
         showToast('Copied to clipboard! Press Cmd+V (Paste) in LinkedIn message box!', 'good');
-        if(q.url && !q.url.includes('example.invalid')){
-          window.open(q.url, '_blank');
-        }
         setTimeout(function(){
           b.textContent = '\uD83D\uDCCB Copy & Open LinkedIn \u2192';
           b.classList.remove('ok');
